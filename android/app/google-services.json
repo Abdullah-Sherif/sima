@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "497360731607",
+    "project_id": "sima-d3674",
+    "storage_bucket": "sima-d3674.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497360731607:android:b37f12f3914553ff41df92",
+        "android_client_info": {
+          "package_name": "com.example.sima"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjjporrhWduwbWw15J1VqTINFLcX6m0CU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
