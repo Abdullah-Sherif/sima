@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
 
@@ -12,7 +13,7 @@ Future<void> main() async {
 
   await _initCrashlytics();
 
-  runApp(App());
+  runApp(ProviderScope(child: App()));
 }
 
 Future<void> _initCrashlytics() async {
