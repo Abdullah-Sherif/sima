@@ -12,7 +12,7 @@ Future<void> main() async {
 
   await _initCrashlytics();
 
-  runApp(const App());
+  runApp(App());
 }
 
 Future<void> _initCrashlytics() async {
