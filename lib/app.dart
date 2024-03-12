@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sima/features/settings/presentation/states/theme_state/theme_state.dart';
 
 import 'core/barrel.dart';
 import 'features/barrel.dart';
@@ -14,6 +15,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(authControllerProvider);
     ref.watch(userConrollerProvider);
+    ref.watch(themeControllerProvider);
 
     final PageRouteInfo newRoute = ref.watch(authControllerProvider).map(
           initial: (value) => const LoadingRoute(),
@@ -38,6 +40,8 @@ class App extends ConsumerWidget {
       ),
       routeInformationParser: _appRouter.defaultRouteParser(includePrefixMatches: true),
       routeInformationProvider: _appRouter.routeInfoProvider(),
+      theme: ref.watch(themeControllerProvider) == ThemeState.dark ? AppTheme.darkTheme : AppTheme.lightTheme,
+      themeMode: ref.watch(themeControllerProvider) == ThemeState.dark ? ThemeMode.dark : ThemeMode.light,
     );
   }
 }
