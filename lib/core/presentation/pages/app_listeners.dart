@@ -5,9 +5,10 @@ import 'package:sima/core/barrel.dart';
 import 'package:sima/features/barrel.dart';
 
 class AppListeners extends ConsumerWidget {
-  const AppListeners({super.key, required this.child});
+  const AppListeners({super.key, required this.child, required this.router});
 
   final Widget child;
+  final AppRouter router;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +43,7 @@ class AppListeners extends ConsumerWidget {
       ref.read(databaseServiceProvider).init();
     }
 
-    context.router.replace(newRoute);
+    router.replace(newRoute);
 
     return child;
   }
