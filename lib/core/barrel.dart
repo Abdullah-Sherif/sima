@@ -1,5 +1,6 @@
 export 'constants/barrel.dart';
 export 'core.routes.dart';
+export 'data/barrel.dart';
 export 'domain/barrel.dart';
 export 'extensions/barrel.dart';
 export 'presentation/barrel.dart';
