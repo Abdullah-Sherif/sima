@@ -28,7 +28,7 @@ class AppListeners extends ConsumerWidget {
           return const LoadingRoute();
         }
       },
-      unauthenticated: (value) => const LoadingRoute(),
+      unauthenticated: (value) => const AuthWrapperRoute(),
     );
 
     final PlaceInApp placeInApp = authState.map(
