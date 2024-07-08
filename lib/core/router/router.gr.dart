@@ -33,6 +33,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ConfirmEmailPage(),
       );
     },
+    ForgetPasswordRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ForgetPasswordPage(),
+      );
+    },
     LoadingRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -92,6 +98,20 @@ class ConfirmEmailRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ConfirmEmailRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ForgetPasswordPage]
+class ForgetPasswordRoute extends PageRouteInfo<void> {
+  const ForgetPasswordRoute({List<PageRouteInfo>? children})
+      : super(
+          ForgetPasswordRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ForgetPasswordRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

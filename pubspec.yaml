@@ -28,6 +28,10 @@ dependencies:
   sqflite: ^2.3.3
   path: ^1.9.0
   flutter_svg: ^2.0.10+1
+  flutter_styled_toast: ^2.2.1
+  hooks_riverpod: ^2.5.1
+  flutter_hooks: ^0.20.5
+  flutter_keyboard_visibility: ^6.0.0
 
 dev_dependencies:
   flutter_test:

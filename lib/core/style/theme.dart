@@ -29,37 +29,47 @@ class AppTheme {
       ),
       textTheme: const TextTheme(
         titleLarge: TextStyle(
+          color: CustomColors.charcoal,
           fontSize: 28,
           fontWeight: FontWeight.w600,
           height: 1,
         ),
         titleMedium: TextStyle(
+          color: CustomColors.charcoal,
           fontSize: 18,
           fontWeight: FontWeight.w600,
           height: 1.5,
         ),
+        bodyLarge: TextStyle(
+          color: CustomColors.charcoal,
+        ),
         bodyMedium: TextStyle(
+          color: CustomColors.charcoal,
           fontSize: 16,
         ),
         bodySmall: TextStyle(
+          color: CustomColors.charcoal,
           fontSize: 14,
           fontWeight: FontWeight.w500,
         ),
         labelMedium: TextStyle(
+          color: CustomColors.charcoal,
           fontSize: 18,
           fontWeight: FontWeight.w600,
           height: 1.175,
         ),
         labelSmall: TextStyle(
+          color: CustomColors.charcoal,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
       ),
       colorScheme: ColorScheme.fromSwatch(
-        brightness: Brightness.light,
-        primarySwatch: Colors.grey,
-        accentColor: CustomColors.charcoal,
-      ).copyWith(error: const Color(0xFFFF0000)),
+              brightness: Brightness.light,
+              primarySwatch: Colors.grey,
+              accentColor: CustomColors.charcoal,
+              backgroundColor: CustomColors.offWhite)
+          .copyWith(error: const Color(0xFFFF0000)),
     );
   }
 

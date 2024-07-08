@@ -3,5 +3,7 @@
   "authHomeWelcomingMessage": "Welcome to Your Gym Buddy! \nSign in to start or Sign up to join us.",
   "signin": "Sign In",
   "signup": "Sign Up",
-  "authHomeSignUpMessage": "Don't have an account yet?"
+  "authHomeSignUpMessage": "Don't have an account yet?",
+  "welcomeBack": "Welcome Back",
+  "forgetPassword": "Forget Password?"
 }
