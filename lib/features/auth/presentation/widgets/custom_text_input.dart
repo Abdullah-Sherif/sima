@@ -40,8 +40,8 @@ class _CustomTextInputState extends State<CustomTextInput> {
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
-        width: context.percentOfWidth(0.75),
-        height: context.percentOfHeight(0.05),
+        width: 350,
+        height: 50,
         child: Form(
           child: TextFormField(
             focusNode: widget.focusNode,
@@ -51,12 +51,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
               color: widget.textColor,
             ),
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(
-                0,
-                context.percentOfHeight(0.015),
-                context.percentOfWidth(0.02),
-                context.percentOfHeight(0.01),
-              ),
+              contentPadding: const EdgeInsets.fromLTRB(0, 20, 10, 0),
               hintText: widget.hintText,
               hintStyle: TextStyle(
                 color: widget.textColor?.withOpacity(0.5),

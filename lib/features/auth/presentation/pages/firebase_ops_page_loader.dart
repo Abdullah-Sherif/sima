@@ -49,13 +49,15 @@ class _Error extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: const Padding(
-        padding: EdgeInsets.all(24),
-        child: Center(
-          child: Text(
-            'How did you get here? The link is broken.',
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(),
+        body: const Padding(
+          padding: EdgeInsets.all(24),
+          child: Center(
+            child: Text(
+              'How did you get here? The link is broken.',
+            ),
           ),
         ),
       ),

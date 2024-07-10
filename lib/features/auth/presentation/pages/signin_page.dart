@@ -24,9 +24,9 @@ class SignInPage extends HookConsumerWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (MediaQuery.of(context).viewInsets.isNonNegative) {
           if (emailFocusNode.hasFocus) {
-            scrollController.jumpTo(scrollController.position.maxScrollExtent - 245);
+            scrollController.jumpTo(scrollController.position.maxScrollExtent - 240);
           } else if (passwordFocusNode.hasFocus) {
-            scrollController.jumpTo(scrollController.position.maxScrollExtent - 180);
+            scrollController.jumpTo(scrollController.position.maxScrollExtent - 175);
           }
         }
       });
@@ -42,72 +42,75 @@ class SignInPage extends HookConsumerWidget {
       return null;
     }, [ref.watch(loginControllerProvider).status.isFailure]);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          iconSize: 200,
-          icon: Image.asset(
-            'assets/back_arrow.png',
-            scale: 0.75,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: context.percentOfSafeHeight(0.06),
+          leading: IconButton(
+            icon: Image.asset(
+              'assets/back_arrow.png',
+              scale: 0.75,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          onPressed: () => Navigator.of(context).pop(),
         ),
-      ),
-      body: SizedBox(
-        width: double.infinity,
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: context.percentOfWidth(0.75),
-                child: FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text(
-                    context.appTexts.welcomeBack,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontSize: 50,
-                      fontWeight: FontWeight.w600,
+        body: SizedBox(
+          width: double.infinity,
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: SizedBox(
+              height: context.percentOfSafeHeight(0.94),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 350,
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(
+                          context.appTexts.welcomeBack,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 50),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              SizedBox(height: context.percentOfHeight(0.02)),
-              SizedBox(
-                height: context.percentOfHeight(0.35),
-                child: SvgPicture.asset(
-                  'assets/welcome_light.svg',
-                ),
-              ),
-              SizedBox(height: context.percentOfHeight(0.05)),
-              CustomTextInput(
-                focusNode: emailFocusNode,
-                controller: emailTextController,
-                leadingIcon: const Icon(Icons.email),
-              ),
-              SizedBox(height: context.percentOfHeight(0.02)),
-              CustomTextInput(
-                focusNode: passwordFocusNode,
-                controller: passwordTextController,
-                leadingIcon: const Icon(Icons.lock),
-                isPassword: true,
-              ),
-              const ForgetPasswordRedirect(),
-              SizedBox(height: context.percentOfHeight(0.02)),
-              CustomTextButton(
-                text: context.appTexts.signin,
-                onPressed: () {
-                  ref.read(loginControllerProvider.notifier).updateEmail(emailTextController.text);
-                  ref.read(loginControllerProvider.notifier).updatePassword(passwordTextController.text);
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: SvgPicture.asset(
+                        'assets/welcome_light.svg',
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    CustomTextInput(
+                      focusNode: emailFocusNode,
+                      controller: emailTextController,
+                      leadingIcon: const Icon(Icons.email),
+                    ),
+                    const SizedBox(height: 15),
+                    CustomTextInput(
+                      focusNode: passwordFocusNode,
+                      controller: passwordTextController,
+                      leadingIcon: const Icon(Icons.lock),
+                      isPassword: true,
+                    ),
+                    const ForgetPasswordRedirect(),
+                    const SizedBox(height: 20),
+                    CustomTextButton(
+                      text: context.appTexts.signin,
+                      onPressed: () {
+                        ref.read(loginControllerProvider.notifier).updateEmail(emailTextController.text);
+                        ref.read(loginControllerProvider.notifier).updatePassword(passwordTextController.text);
 
-                  ref.read(loginControllerProvider.notifier).login();
-                },
-                textColor: Theme.of(context).colorScheme.background,
+                        ref.read(loginControllerProvider.notifier).login();
+                      },
+                      textColor: Theme.of(context).colorScheme.background,
+                    ),
+                    const SignUpRedirect(),
+                  ],
+                ),
               ),
-              const SignUpRedirect(),
-            ],
+            ),
           ),
         ),
       ),
@@ -123,9 +126,9 @@ class ForgetPasswordRedirect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: context.percentOfHeight(0.018)),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: SizedBox(
-        width: context.percentOfWidth(0.75),
+        width: 350,
         child: RichText(
           textAlign: TextAlign.end,
           text: TextSpan(
@@ -158,31 +161,35 @@ class SignUpRedirect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: context.percentOfHeight(0.018)),
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: "${context.appTexts.authHomeSignUpMessage} ",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.bodySmall?.color,
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: SizedBox(
+        width: 370,
+        child: RichText(
+          textAlign: TextAlign.end,
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "${context.appTexts.authHomeSignUpMessage} ",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
+                ),
               ),
-            ),
-            TextSpan(
-              text: context.appTexts.signup,
-              style: const TextStyle(
-                color: CustomColors.lightBlue,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              TextSpan(
+                text: context.appTexts.signup,
+                style: const TextStyle(
+                  color: CustomColors.lightBlue,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    context.router.push(const SignUpRoute());
+                  },
               ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  context.router.push(const SignUpRoute());
-                },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

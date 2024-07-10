@@ -10,13 +10,15 @@ class ForgetPasswordPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: Container(
-        child: CustomTextButton(
-          text: context.appTexts.authHomeSignUpMessage,
-          onPressed: () {
-            ref.read(resetPasswordProvider.notifier).sendPasswordResetEmail();
-          },
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          child: CustomTextButton(
+            text: context.appTexts.authHomeSignUpMessage,
+            onPressed: () {
+              ref.read(resetPasswordProvider.notifier).sendPasswordResetEmail();
+            },
+          ),
         ),
       ),
     );

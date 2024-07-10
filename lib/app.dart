@@ -15,29 +15,27 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SafeArea(
-      child: AppListeners(
-        router: _appRouter,
-        child: MaterialApp.router(
-          routerDelegate: AutoRouterDelegate(
-            _appRouter,
-            navigatorObservers: () => [
-              AppRouteObserver(),
-            ],
-          ),
-          routeInformationParser: _appRouter.defaultRouteParser(includePrefixMatches: true),
-          routeInformationProvider: _appRouter.routeInfoProvider(),
-          locale: AppGlobals.language.locale,
-          supportedLocales: Language.values.locales,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+    return AppListeners(
+      router: _appRouter,
+      child: MaterialApp.router(
+        routerDelegate: AutoRouterDelegate(
+          _appRouter,
+          navigatorObservers: () => [
+            AppRouteObserver(),
           ],
-          theme: ref.watch(themeControllerProvider) == ThemeState.dark ? AppTheme.darkTheme : AppTheme.lightTheme,
-          themeMode: ref.watch(themeControllerProvider) == ThemeState.dark ? ThemeMode.dark : ThemeMode.light,
         ),
+        routeInformationParser: _appRouter.defaultRouteParser(includePrefixMatches: true),
+        routeInformationProvider: _appRouter.routeInfoProvider(),
+        locale: AppGlobals.language.locale,
+        supportedLocales: Language.values.locales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        theme: ref.watch(themeControllerProvider) == ThemeState.dark ? AppTheme.darkTheme : AppTheme.lightTheme,
+        themeMode: ref.watch(themeControllerProvider) == ThemeState.dark ? ThemeMode.dark : ThemeMode.light,
       ),
     );
   }
