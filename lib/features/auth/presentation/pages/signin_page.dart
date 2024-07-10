@@ -60,12 +60,18 @@ class SignInPage extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                context.appTexts.welcomeBack,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                  fontSize: 50,
-                  fontWeight: FontWeight.w600,
+              SizedBox(
+                width: context.percentOfWidth(0.75),
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(
+                    context.appTexts.welcomeBack,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 50,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: context.percentOfHeight(0.02)),

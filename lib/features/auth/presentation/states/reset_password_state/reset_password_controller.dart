@@ -33,19 +33,31 @@ class ResetPasswordController extends StateNotifier<ResetPasswordState> {
   void sendPasswordResetEmail() async {
     if (state.emailSubmissionStatus.isInProgressOrSuccess) return;
 
-    state = state.copyWith(
-      email: RequiredInput.dirty(state.email.value),
-      emailSubmissionStatus: FetchStatus.loading,
-    );
+    // state = state.copyWith(
+    //   email: RequiredInput.dirty(state.email.value),
+    //   emailSubmissionStatus: FetchStatus.loading,
+    // );
 
-    final String? emailErrorMessages = state.email.error?.errorMessage();
+    // final String? emailErrorMessages = state.email.error?.errorMessage();
 
-    if (emailErrorMessages != null) {
-      state = state.copyWith(
-        emailSubmissionStatus: FetchStatus.failure,
-      );
-    } else {
-      final result = await authRepository.sendResetPassEmail(state.email.value);
+    // if (emailErrorMessages != null) {
+    //   state = state.copyWith(
+    //     emailSubmissionStatus: FetchStatus.failure,
+    //   );
+    // } else {
+    //   final result = await authRepository.sendResetPassEmail(state.email.value);
+
+    //   if (!mounted) return;
+
+    //   state = state.copyWith(
+    //     emailSubmissionStatus: result.fold(
+    //       (failure) => FetchStatus.failure,
+    //       (success) => FetchStatus.success,
+    //     ),
+    //   );
+    // }
+
+    final result = await authRepository.sendResetPassEmail("abdullahsherif73@gmail.com");
 
       if (!mounted) return;
 
@@ -55,7 +67,6 @@ class ResetPasswordController extends StateNotifier<ResetPasswordState> {
           (success) => FetchStatus.success,
         ),
       );
-    }
   }
 
   void password1Changed(String value) {

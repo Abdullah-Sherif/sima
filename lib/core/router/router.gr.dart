@@ -33,6 +33,23 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ConfirmEmailPage(),
       );
     },
+    FirebaseOpsRouteLoader.name: (routeData) {
+      final queryParams = routeData.queryParams;
+      final args = routeData.argsAs<FirebaseOpsRouteLoaderArgs>(
+          orElse: () => FirebaseOpsRouteLoaderArgs(
+                mode: queryParams.optString('mode'),
+                oobCode: queryParams.optString('oobCode'),
+                apiKey: queryParams.optString('apiKey'),
+              ));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: FirebaseOpsPageLoader(
+          mode: args.mode,
+          oobCode: args.oobCode,
+          apiKey: args.apiKey,
+        ),
+      );
+    },
     ForgetPasswordRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -43,6 +60,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const LoadingPage(),
+      );
+    },
+    ResetPasswordRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ResetPasswordPage(),
       );
     },
     SignInRoute.name: (routeData) {
@@ -103,6 +126,53 @@ class ConfirmEmailRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [FirebaseOpsPageLoader]
+class FirebaseOpsRouteLoader extends PageRouteInfo<FirebaseOpsRouteLoaderArgs> {
+  FirebaseOpsRouteLoader({
+    String? mode,
+    String? oobCode,
+    String? apiKey,
+    List<PageRouteInfo>? children,
+  }) : super(
+          FirebaseOpsRouteLoader.name,
+          args: FirebaseOpsRouteLoaderArgs(
+            mode: mode,
+            oobCode: oobCode,
+            apiKey: apiKey,
+          ),
+          rawQueryParams: {
+            'mode': mode,
+            'oobCode': oobCode,
+            'apiKey': apiKey,
+          },
+          initialChildren: children,
+        );
+
+  static const String name = 'FirebaseOpsRouteLoader';
+
+  static const PageInfo<FirebaseOpsRouteLoaderArgs> page = PageInfo<FirebaseOpsRouteLoaderArgs>(name);
+}
+
+class FirebaseOpsRouteLoaderArgs {
+  const FirebaseOpsRouteLoaderArgs({
+    this.mode,
+    this.oobCode,
+    this.apiKey,
+  });
+
+  final String? mode;
+
+  final String? oobCode;
+
+  final String? apiKey;
+
+  @override
+  String toString() {
+    return 'FirebaseOpsRouteLoaderArgs{mode: $mode, oobCode: $oobCode, apiKey: $apiKey}';
+  }
+}
+
+/// generated route for
 /// [ForgetPasswordPage]
 class ForgetPasswordRoute extends PageRouteInfo<void> {
   const ForgetPasswordRoute({List<PageRouteInfo>? children})
@@ -126,6 +196,20 @@ class LoadingRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'LoadingRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ResetPasswordPage]
+class ResetPasswordRoute extends PageRouteInfo<void> {
+  const ResetPasswordRoute({List<PageRouteInfo>? children})
+      : super(
+          ResetPasswordRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ResetPasswordRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
