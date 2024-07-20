@@ -43,7 +43,12 @@ class AppListeners extends ConsumerWidget {
       ref.read(databaseServiceProvider).init();
     }
 
-    router.replace(newRoute);
+    if (newRoute is AuthWrapperRoute) {
+      const ImageProvider backgroundImage = AssetImage('assets/auth_home_background.jpg');
+      precacheImage(backgroundImage, context).then((_) => router.replace(newRoute));
+    } else {
+      router.replace(newRoute);
+    }
 
     return child;
   }
