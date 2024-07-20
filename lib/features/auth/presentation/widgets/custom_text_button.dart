@@ -1,30 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:sima/core/extensions/context_extension.dart';
 
 class CustomTextButton extends StatelessWidget {
-  const CustomTextButton({super.key, required this.text, required this.onPressed, this.backgroundColor, this.textColor});
+  const CustomTextButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.backgroundColor,
+    this.textColor,
+    this.width = 380,
+    this.height = 55,
+    this.borderRadius = 7,
+    this.isLoading = false,
+    this.isDisabled = false,
+  });
 
   final String text;
   final Function() onPressed;
   final Color? backgroundColor;
   final Color? textColor;
+  final double width;
+  final double height;
+  final double borderRadius;
+  final bool isLoading;
+  final bool isDisabled;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 380,
-      height: 55,
+      width: width,
+      height: height,
       child: TextButton(
-        onPressed: onPressed,
+        onPressed: isDisabled ? () {} : onPressed,
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(backgroundColor),
+          splashFactory: isDisabled ? NoSplash.splashFactory : null,
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(7),
+              borderRadius: BorderRadius.circular(borderRadius),
             ),
           ),
         ),
-        child: Text(text, style: TextStyle(color: textColor, fontSize: 20)),
+        child: isLoading
+            ? SizedBox.square(
+                dimension: 20,
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.background,
+                  strokeWidth: 3,
+                ),
+              )
+            : Text(text, style: TextStyle(color: textColor, fontSize: 20)),
       ),
     );
   }

@@ -12,6 +12,8 @@ class CustomTextInput extends StatefulWidget {
     this.borderColor,
     this.textColor,
     this.focusNode,
+    this.borderRadius = 6,
+    this.width = 350,
   }) : super(key: key);
 
   final Icon? leadingIcon;
@@ -22,6 +24,8 @@ class CustomTextInput extends StatefulWidget {
   final Color? borderColor;
   final Color? textColor;
   final FocusNode? focusNode;
+  final double borderRadius;
+  final double width;
 
   @override
   State<CustomTextInput> createState() => _CustomTextInputState();
@@ -40,8 +44,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
-        width: 350,
-        height: 50,
+        width: widget.width,
         child: Form(
           child: TextFormField(
             focusNode: widget.focusNode,
@@ -51,7 +54,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
               color: widget.textColor,
             ),
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.fromLTRB(0, 20, 10, 0),
+              contentPadding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
               hintText: widget.hintText,
               hintStyle: TextStyle(
                 color: widget.textColor?.withOpacity(0.5),
@@ -73,7 +76,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
               fillColor: widget.backgroundColor,
               filled: widget.backgroundColor != null,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(widget.borderRadius),
                 borderSide: BorderSide(
                   color: widget.borderColor ?? Colors.transparent,
                 ),

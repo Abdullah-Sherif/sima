@@ -5,5 +5,9 @@
   "signup": "Sign Up",
   "authHomeSignUpMessage": "Don't have an account yet?",
   "welcomeBack": "Welcome Back",
-  "forgetPassword": "Forget Password?"
+  "forgotPassword": "Forgot Password?",
+  "resetPassword": "Reset Password",
+  "resetPasswordEmailSent": "Password reset email sent",
+  "errorOccured": "An error occured",
+  "forgotPasswordMessage": "Please enter your email address below and an email should be sent to you with a link"
 }
