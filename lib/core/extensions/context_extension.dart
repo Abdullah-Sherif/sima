@@ -8,6 +8,9 @@ extension BuildContextData on BuildContext {
   double get safePadding => MediaQuery.of(this).padding.top + MediaQuery.of(this).padding.bottom;
   double get safeHeight => height - safePadding;
 
+  ThemeData get theme => Theme.of(this);
+  TextTheme get textTheme => theme.textTheme;
+
   double percentOfHeight(double percent) => height * percent;
   double percentOfSafeHeight(double percent) => safeHeight * percent;
   double percentOfWidth(double percent) => width * percent;

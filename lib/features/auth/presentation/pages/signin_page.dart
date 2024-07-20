@@ -49,7 +49,7 @@ class SignInPage extends HookConsumerWidget {
                       fit: BoxFit.fitWidth,
                       child: Text(
                         context.appTexts.welcomeBack,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 50),
+                        style: context.textTheme.titleLarge?.copyWith(fontSize: 50),
                       ),
                     ),
                   ),
@@ -80,7 +80,7 @@ class SignInPage extends HookConsumerWidget {
 
                       ref.read(loginControllerProvider.notifier).login();
                     },
-                    textColor: Theme.of(context).colorScheme.background,
+                    textColor: context.theme.colorScheme.background,
                   ),
                   const SignUpRedirect(),
                 ],
@@ -148,7 +148,7 @@ class SignUpRedirect extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Theme.of(context).textTheme.bodySmall?.color,
+                  color: context.textTheme.bodySmall?.color,
                 ),
               ),
               TextSpan(

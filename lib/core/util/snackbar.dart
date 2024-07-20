@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:sima/core/barrel.dart';
 
 void showSnackbar({
   required BuildContext context,
@@ -9,11 +10,11 @@ void showSnackbar({
     text,
     context: context,
     alignment: Alignment.topCenter,
-    backgroundColor: Theme.of(context).colorScheme.background,
+    backgroundColor: context.theme.colorScheme.background,
     shapeBorder: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(7),
       side: BorderSide(
-        color: Theme.of(context).colorScheme.secondary,
+        color: context.theme.colorScheme.secondary,
         width: 1.5,
       ),
     ),
@@ -23,7 +24,7 @@ void showSnackbar({
     curve: Curves.fastOutSlowIn,
     reverseCurve: Curves.fastOutSlowIn,
     fullWidth: true,
-    textStyle: Theme.of(context).textTheme.titleMedium,
+    textStyle: context.textTheme.titleMedium,
     position: StyledToastPosition.top,
     toastHorizontalMargin: 10,
   );

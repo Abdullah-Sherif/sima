@@ -9,5 +9,13 @@
   "resetPassword": "Reset Password",
   "resetPasswordEmailSent": "Password reset email sent",
   "errorOccured": "An error occured",
-  "forgotPasswordMessage": "Please enter your email address below and an email should be sent to you with a link"
+  "forgotPasswordMessage": "Please enter your email address below and an email should be sent to you with a link",
+  "resetPasswordPageMessage": "Please enter your new password below",
+  "resetPasswordInput1": "New Password",
+  "resetPasswordInput2": "Confirm New Password",
+  "resetPasswordErrorCode": "An error occurred while verifying the password reset code.",
+  "resetPasswordError": "An error occurred while resetting the password.",
+  "resetPasswordSuccess": "Password reset successfully",
+  "fieldCantBeEmpty": "Field can't be empty",
+  "fieldsDontMatch": "Fields Don't match, please retype password"
 }

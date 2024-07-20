@@ -43,6 +43,7 @@ class AuthHomePage extends StatelessWidget {
                     width: context.percentOfWidth(0.7),
                     child: SvgPicture.asset(
                       "assets/logo.svg",
+                      // ignore: deprecated_member_use
                       color: CustomColors.offWhite,
                       fit: BoxFit.contain,
                     ),

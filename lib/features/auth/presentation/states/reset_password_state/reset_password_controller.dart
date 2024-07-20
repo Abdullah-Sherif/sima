@@ -59,14 +59,11 @@ class ResetPasswordController extends StateNotifier<ResetPasswordState> {
   }
 
   void password1Changed(String value) {
-    state = state.copyWith(
-      password1: PasswordInput.pure(value: value)
-    );
+    state = state.copyWith(password1: PasswordInput.pure(value: value));
   }
 
   void password2Changed(String value) {
-    state = state.copyWith(password2: value);
-
+    state = state.copyWith(password2: RetypeRequriedInput.pure(value));
   }
 
   void checkPasswordCode() async {
@@ -90,26 +87,27 @@ class ResetPasswordController extends StateNotifier<ResetPasswordState> {
 
     state = state.copyWith(
       password1: PasswordInput.dirty(state.password1.value),
+      password2: RetypeRequriedInput.dirty(state.password2.value),
+    );
+
+    if (state.password1.isNotValid || state.password2.isNotValid) return;
+
+    state = state.copyWith(
       passwordSubmissionStatus: FetchStatus.loading,
     );
 
-    if (state.checkPasswordCodeStatus != FetchStatus.success ||
-        state.password1.isNotValid ||
-        state.password2 != state.password1.value) {
-      state = state.copyWith(
-        passwordSubmissionStatus: FetchStatus.failure,
-      );
-    } else {
-      final result = await authRepository.resetPassword(state.code!, state.password1.value);
+    final result = await authRepository.resetPassword(
+      state.code!,
+      state.password1.value,
+    );
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      state = state.copyWith(
-        passwordSubmissionStatus: result.fold(
-          (failure) => FetchStatus.failure,
-          (success) => FetchStatus.success,
-        ),
-      );
-    }
+    state = state.copyWith(
+      passwordSubmissionStatus: result.fold(
+        (failure) => FetchStatus.failure,
+        (success) => FetchStatus.success,
+      ),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sima/core/barrel.dart';
 
 class CustomTextButton extends StatelessWidget {
   const CustomTextButton({
@@ -44,11 +45,17 @@ class CustomTextButton extends StatelessWidget {
             ? SizedBox.square(
                 dimension: 20,
                 child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.background,
+                  color: context.theme.colorScheme.background,
                   strokeWidth: 3,
                 ),
               )
-            : Text(text, style: TextStyle(color: textColor, fontSize: 20)),
+            : Text(
+                text,
+                style: TextStyle(
+                  color: textColor ?? context.theme.colorScheme.background,
+                  fontSize: 20,
+                ),
+              ),
       ),
     );
   }

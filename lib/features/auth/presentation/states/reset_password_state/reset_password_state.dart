@@ -8,18 +8,18 @@ class ResetPasswordState extends Equatable {
     this.passwordSubmissionStatus = FetchStatus.initial,
     this.checkPasswordCodeStatus = FetchStatus.initial,
     PasswordInput? password1,
-    String? password2,
+    RetypeRequriedInput? password2,
     this.code,
   })  : email = email ?? const RequiredInput.pure(),
         password1 = password1 ?? const PasswordInput.pure(),
-        password2 = password2 ?? "";
+        password2 = password2 ?? const RetypeRequriedInput.pure();
 
   final RequiredInput email;
   final FetchStatus emailSubmissionStatus;
   final FetchStatus passwordSubmissionStatus;
   final FetchStatus checkPasswordCodeStatus;
   final PasswordInput password1;
-  final String password2;
+  final RetypeRequriedInput password2;
   final String? code;
 
   ResetPasswordState copyWith({
@@ -28,7 +28,7 @@ class ResetPasswordState extends Equatable {
     FetchStatus? passwordSubmissionStatus,
     FetchStatus? checkPasswordCodeStatus,
     PasswordInput? password1,
-    String? password2,
+    RetypeRequriedInput? password2,
     String? code,
   }) {
     return ResetPasswordState(
