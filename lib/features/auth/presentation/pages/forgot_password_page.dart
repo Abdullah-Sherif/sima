@@ -6,6 +6,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sima/core/barrel.dart';
 import 'package:sima/features/auth/barrel.dart';
 
+String? _getTextFromEmailError({
+  required BuildContext context,
+  required RequiredInputError? error,
+}) {
+  if (error == null) return null;
+
+  return context.appTexts.fieldCantBeEmpty;
+}
+
 @RoutePage()
 class ForgetPasswordPage extends HookConsumerWidget {
   const ForgetPasswordPage({super.key});
@@ -65,6 +74,11 @@ class ForgetPasswordPage extends HookConsumerWidget {
                     controller: emailController,
                     leadingIcon: const Icon(Icons.email),
                     width: 380,
+                    onChanged: (value) {
+                      ref.read(resetPasswordProvider.notifier).emailChanged(value);
+                    },
+                    errorMessage:
+                        _getTextFromEmailError(context: context, error: ref.watch(resetPasswordProvider).email.displayError),
                   ),
                   const SizedBox(height: 15),
                   CustomTextButton(

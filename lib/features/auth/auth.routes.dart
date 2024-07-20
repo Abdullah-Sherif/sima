@@ -10,8 +10,8 @@ final authRoutes = <AutoRoute>[
   AutoRoute(page: AuthWrapperRoute.page, children: [
     AutoRoute(page: AuthHomeRoute.page),
     AutoRoute(page: SignInRoute.page),
-    AutoRoute(page: ForgetPasswordRoute.page),
-    AutoRoute(page: ResetPasswordRoute.page, initial: true),
+    AutoRoute(page: ForgetPasswordRoute.page, initial: true),
+    AutoRoute(page: ResetPasswordRoute.page),
     AutoRoute(page: SignUpRoute.page),
   ])
 ];

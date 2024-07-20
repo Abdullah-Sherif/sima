@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sima/core/extensions/context_extension.dart';
 
 class CustomTextInput extends StatefulWidget {
   const CustomTextInput({
@@ -100,13 +101,13 @@ class _CustomTextInputState extends State<CustomTextInput> {
               ),
             ),
             if (widget.errorMessage != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(
-                  widget.errorMessage!,
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontSize: 12,
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    widget.errorMessage!,
+                    style: context.textTheme.labelSmall?.copyWith(color: Colors.red),
                   ),
                 ),
               ),
