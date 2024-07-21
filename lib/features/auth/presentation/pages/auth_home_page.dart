@@ -67,33 +67,42 @@ class AuthHomePage extends StatelessWidget {
                     backgroundColor: CustomColors.offWhite,
                     textColor: CustomColors.black,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: context.percentOfHeight(0.018)),
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "${context.appTexts.authHomeSignUpMessage} ",
-                            style: const TextStyle(color: CustomColors.offWhite, fontSize: 18),
-                          ),
-                          TextSpan(
-                            text: context.appTexts.signup,
-                            style: const TextStyle(
-                              color: CustomColors.lightBlue,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                context.router.push(const SignUpRoute());
-                              },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  const _SignUpRedirect(),
                 ],
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SignUpRedirect extends StatelessWidget {
+  const _SignUpRedirect();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: context.percentOfHeight(0.018)),
+      child: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: "${context.appTexts.authHomeSignUpMessage} ",
+              style: const TextStyle(color: CustomColors.offWhite, fontSize: 18),
+            ),
+            TextSpan(
+              text: context.appTexts.signup,
+              style: const TextStyle(
+                color: CustomColors.lightBlue,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  context.router.push(const SignUpRoute());
+                },
             ),
           ],
         ),

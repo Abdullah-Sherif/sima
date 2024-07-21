@@ -70,7 +70,7 @@ class SignInPage extends HookConsumerWidget {
                     leadingIcon: const Icon(Icons.lock),
                     isPassword: true,
                   ),
-                  const ForgetPasswordRedirect(),
+                  const _ForgetPasswordRedirect(),
                   const SizedBox(height: 20),
                   CustomTextButton(
                     text: context.appTexts.signin,
@@ -82,7 +82,7 @@ class SignInPage extends HookConsumerWidget {
                     },
                     textColor: context.theme.colorScheme.background,
                   ),
-                  const SignUpRedirect(),
+                  const _SignUpRedirect(),
                 ],
               ),
             ),
@@ -93,10 +93,8 @@ class SignInPage extends HookConsumerWidget {
   }
 }
 
-class ForgetPasswordRedirect extends StatelessWidget {
-  const ForgetPasswordRedirect({
-    super.key,
-  });
+class _ForgetPasswordRedirect extends StatelessWidget {
+  const _ForgetPasswordRedirect();
 
   @override
   Widget build(BuildContext context) {
@@ -128,10 +126,8 @@ class ForgetPasswordRedirect extends StatelessWidget {
   }
 }
 
-class SignUpRedirect extends StatelessWidget {
-  const SignUpRedirect({
-    super.key,
-  });
+class _SignUpRedirect extends StatelessWidget {
+  const _SignUpRedirect();
 
   @override
   Widget build(BuildContext context) {

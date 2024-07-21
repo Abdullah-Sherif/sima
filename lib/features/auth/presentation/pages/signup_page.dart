@@ -45,9 +45,6 @@ class SignUpPage extends HookConsumerWidget {
               context: context,
               text: context.appTexts.registerSuccess,
             );
-            // context.router.replaceAll([
-            //   const AuthWrapperRoute(children: [AuthHomeRoute(), SignInRoute()])
-            // ]);
             break;
           case FetchStatus.failure:
             showSnackbar(
@@ -116,7 +113,7 @@ class SignUpPage extends HookConsumerWidget {
                       ref.read(signupControllerProvider.notifier).signup();
                     },
                   ),
-                  const SignInRedirect(),
+                  const _SignInRedirect(),
                 ],
               ),
             ),
@@ -127,10 +124,8 @@ class SignUpPage extends HookConsumerWidget {
   }
 }
 
-class SignInRedirect extends StatelessWidget {
-  const SignInRedirect({
-    super.key,
-  });
+class _SignInRedirect extends StatelessWidget {
+  const _SignInRedirect();
 
   @override
   Widget build(BuildContext context) {
