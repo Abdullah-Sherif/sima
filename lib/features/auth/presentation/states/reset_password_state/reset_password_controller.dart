@@ -63,7 +63,7 @@ class ResetPasswordController extends StateNotifier<ResetPasswordState> {
   }
 
   void password2Changed(String value) {
-    state = state.copyWith(password2: RetypeRequriedInput.pure(value));
+    state = state.copyWith(password2: RetypeRequriedInput.pure(state.password1.value, value));
   }
 
   void checkPasswordCode() async {
@@ -87,7 +87,7 @@ class ResetPasswordController extends StateNotifier<ResetPasswordState> {
 
     state = state.copyWith(
       password1: PasswordInput.dirty(state.password1.value),
-      password2: RetypeRequriedInput.dirty(state.password2.value),
+      password2: RetypeRequriedInput.dirty(state.password1.value, state.password2.value),
     );
 
     if (state.password1.isNotValid || state.password2.isNotValid) return;

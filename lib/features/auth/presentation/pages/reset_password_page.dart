@@ -56,7 +56,6 @@ class ResetPasswordPage extends HookConsumerWidget {
               context: context,
               text: context.appTexts.resetPasswordErrorCode,
             );
-
             break;
           default:
         }
@@ -72,6 +71,9 @@ class ResetPasswordPage extends HookConsumerWidget {
               context: context,
               text: context.appTexts.resetPasswordSuccess,
             );
+            context.router.replaceAll([
+              const AuthWrapperRoute(children: [AuthHomeRoute(), SignInRoute()])
+            ]);
             break;
           case FetchStatus.failure:
             showSnackbar(
