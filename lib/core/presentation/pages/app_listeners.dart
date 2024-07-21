@@ -23,7 +23,7 @@ class AppListeners extends ConsumerWidget {
       initial: (value) => const LoadingRoute(),
       authenticated: (value) {
         if (!value.isEmailVerified) {
-          return const LoadingRoute();
+          return const ConfirmEmailRoute();
         } else {
           return const LoadingRoute();
         }
@@ -37,7 +37,9 @@ class AppListeners extends ConsumerWidget {
       unauthenticated: (value) => PlaceInApp.landing,
     );
 
-    ref.read(placeInAppControllerProvider.notifier).setPlaceInApp(placeInApp);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(placeInAppControllerProvider.notifier).setPlaceInApp(placeInApp);
+    });
 
     if (authState.isLoggedIn) {
       ref.read(databaseServiceProvider).init();

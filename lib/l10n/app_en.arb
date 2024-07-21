@@ -17,5 +17,20 @@
   "resetPasswordError": "An error occurred while resetting the password.",
   "resetPasswordSuccess": "Password reset successfully",
   "fieldCantBeEmpty": "Field can't be empty",
-  "fieldsDontMatch": "Fields Don't match, please retype password"
+  "fieldsDontMatch": "Fields Don't match, please retype password",
+  "register": "Register",
+  "registerMessage": "Create your account",
+  "continueString": "Continue",
+  "registerSuccess": "Account registered suucessfully",
+  "registerSigninMessage": "Already have an account?",
+  "checkEmailForLink": "Please check your email for a link",
+  "confirmEmail": "Confirm Email",
+  "emailVerifiedSuccessfully": "Email verified successfully",
+  "emailVerifyError": "An error occurred while verifying the email",
+  "invalidCode": "Invalid Code",
+  "expiredCode": "Expired Code",
+  "emailSent": "Email sent successfully",
+  "emailSendError": "An error occurred while sending the email",
+  "resendEmail": "Resend Email",
+  "signout": "Sign Out"
 }

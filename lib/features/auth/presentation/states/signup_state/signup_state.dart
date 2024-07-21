@@ -8,5 +8,6 @@ class SignupState with _$SignupState {
   const factory SignupState({
     required EmailInput email,
     required PasswordInput password,
+    @Default(FetchStatus.initial) FetchStatus signupStatus,
   }) = _SignupState;
 }

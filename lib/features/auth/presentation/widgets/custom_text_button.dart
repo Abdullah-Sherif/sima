@@ -31,7 +31,7 @@ class CustomTextButton extends StatelessWidget {
       width: width,
       height: height,
       child: TextButton(
-        onPressed: isDisabled ? () {} : onPressed,
+        onPressed: isDisabled || isLoading ? () {} : onPressed,
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(backgroundColor),
           splashFactory: isDisabled ? NoSplash.splashFactory : null,

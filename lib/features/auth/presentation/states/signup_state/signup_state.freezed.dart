@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SignupState {
   EmailInput get email => throw _privateConstructorUsedError;
   PasswordInput get password => throw _privateConstructorUsedError;
+  FetchStatus get signupStatus => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SignupStateCopyWith<SignupState> get copyWith =>
@@ -30,7 +31,8 @@ abstract class $SignupStateCopyWith<$Res> {
           SignupState value, $Res Function(SignupState) then) =
       _$SignupStateCopyWithImpl<$Res, SignupState>;
   @useResult
-  $Res call({EmailInput email, PasswordInput password});
+  $Res call(
+      {EmailInput email, PasswordInput password, FetchStatus signupStatus});
 }
 
 /// @nodoc
@@ -48,6 +50,7 @@ class _$SignupStateCopyWithImpl<$Res, $Val extends SignupState>
   $Res call({
     Object? email = null,
     Object? password = null,
+    Object? signupStatus = null,
   }) {
     return _then(_value.copyWith(
       email: null == email
@@ -58,6 +61,10 @@ class _$SignupStateCopyWithImpl<$Res, $Val extends SignupState>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as PasswordInput,
+      signupStatus: null == signupStatus
+          ? _value.signupStatus
+          : signupStatus // ignore: cast_nullable_to_non_nullable
+              as FetchStatus,
     ) as $Val);
   }
 }
@@ -70,7 +77,8 @@ abstract class _$$SignupStateImplCopyWith<$Res>
       __$$SignupStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({EmailInput email, PasswordInput password});
+  $Res call(
+      {EmailInput email, PasswordInput password, FetchStatus signupStatus});
 }
 
 /// @nodoc
@@ -86,6 +94,7 @@ class __$$SignupStateImplCopyWithImpl<$Res>
   $Res call({
     Object? email = null,
     Object? password = null,
+    Object? signupStatus = null,
   }) {
     return _then(_$SignupStateImpl(
       email: null == email
@@ -96,6 +105,10 @@ class __$$SignupStateImplCopyWithImpl<$Res>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as PasswordInput,
+      signupStatus: null == signupStatus
+          ? _value.signupStatus
+          : signupStatus // ignore: cast_nullable_to_non_nullable
+              as FetchStatus,
     ));
   }
 }
@@ -103,16 +116,22 @@ class __$$SignupStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SignupStateImpl implements _SignupState {
-  const _$SignupStateImpl({required this.email, required this.password});
+  const _$SignupStateImpl(
+      {required this.email,
+      required this.password,
+      this.signupStatus = FetchStatus.initial});
 
   @override
   final EmailInput email;
   @override
   final PasswordInput password;
+  @override
+  @JsonKey()
+  final FetchStatus signupStatus;
 
   @override
   String toString() {
-    return 'SignupState(email: $email, password: $password)';
+    return 'SignupState(email: $email, password: $password, signupStatus: $signupStatus)';
   }
 
   @override
@@ -122,11 +141,13 @@ class _$SignupStateImpl implements _SignupState {
             other is _$SignupStateImpl &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
-                other.password == password));
+                other.password == password) &&
+            (identical(other.signupStatus, signupStatus) ||
+                other.signupStatus == signupStatus));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, email, password);
+  int get hashCode => Object.hash(runtimeType, email, password, signupStatus);
 
   @JsonKey(ignore: true)
   @override
@@ -138,12 +159,15 @@ class _$SignupStateImpl implements _SignupState {
 abstract class _SignupState implements SignupState {
   const factory _SignupState(
       {required final EmailInput email,
-      required final PasswordInput password}) = _$SignupStateImpl;
+      required final PasswordInput password,
+      final FetchStatus signupStatus}) = _$SignupStateImpl;
 
   @override
   EmailInput get email;
   @override
   PasswordInput get password;
+  @override
+  FetchStatus get signupStatus;
   @override
   @JsonKey(ignore: true)
   _$$SignupStateImplCopyWith<_$SignupStateImpl> get copyWith =>

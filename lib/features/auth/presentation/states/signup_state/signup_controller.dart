@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sima/core/barrel.dart';
 import 'package:sima/features/barrel.dart';
@@ -35,29 +34,32 @@ class SignupController extends StateNotifier<SignupState> {
     );
   }
 
-  Future<Either<Failure, Success>> signup() async {
+  void signup() async {
+    if (state.signupStatus.isInProgressOrSuccess) return;
+
     state = state.copyWith(
       email: EmailInput.dirty(state.email.value),
       password: PasswordInput.dirty(state.password.value),
     );
 
-    final String? emailErrorMessages = state.email.error?.text;
-    final String? passwordErrorMessages = state.password.error?.text;
+    if (state.email.isNotValid || state.password.isNotValid) return;
 
-    if (emailErrorMessages != null || passwordErrorMessages != null) {
-      return left(const Failure('Invalid email or password'));
-    } else {
-      final result = await authRepository.createUser(
-        CreateUserParams(
-          email: state.email.value,
-          password: state.password.value,
-        ),
-      );
+    state = state.copyWith(signupStatus: FetchStatus.loading);
 
-      return result.fold(
-        (failure) => left(failure),
-        (success) => right(success),
-      );
-    }
+    final result = await authRepository.createUser(
+      CreateUserParams(
+        email: state.email.value,
+        password: state.password.value,
+      ),
+    );
+
+    if (!mounted) return;
+
+    state = state.copyWith(
+      signupStatus: result.fold(
+        (failure) => FetchStatus.failure,
+        (success) => FetchStatus.success,
+      ),
+    );
   }
 }

@@ -44,6 +44,7 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: FirebaseOpsPageLoader(
+          key: args.key,
           mode: args.mode,
           oobCode: args.oobCode,
           apiKey: args.apiKey,
@@ -129,6 +130,7 @@ class ConfirmEmailRoute extends PageRouteInfo<void> {
 /// [FirebaseOpsPageLoader]
 class FirebaseOpsRouteLoader extends PageRouteInfo<FirebaseOpsRouteLoaderArgs> {
   FirebaseOpsRouteLoader({
+    Key? key,
     String? mode,
     String? oobCode,
     String? apiKey,
@@ -136,6 +138,7 @@ class FirebaseOpsRouteLoader extends PageRouteInfo<FirebaseOpsRouteLoaderArgs> {
   }) : super(
           FirebaseOpsRouteLoader.name,
           args: FirebaseOpsRouteLoaderArgs(
+            key: key,
             mode: mode,
             oobCode: oobCode,
             apiKey: apiKey,
@@ -155,10 +158,13 @@ class FirebaseOpsRouteLoader extends PageRouteInfo<FirebaseOpsRouteLoaderArgs> {
 
 class FirebaseOpsRouteLoaderArgs {
   const FirebaseOpsRouteLoaderArgs({
+    this.key,
     this.mode,
     this.oobCode,
     this.apiKey,
   });
+
+  final Key? key;
 
   final String? mode;
 
@@ -168,7 +174,7 @@ class FirebaseOpsRouteLoaderArgs {
 
   @override
   String toString() {
-    return 'FirebaseOpsRouteLoaderArgs{mode: $mode, oobCode: $oobCode, apiKey: $apiKey}';
+    return 'FirebaseOpsRouteLoaderArgs{key: $key, mode: $mode, oobCode: $oobCode, apiKey: $apiKey}';
   }
 }
 
