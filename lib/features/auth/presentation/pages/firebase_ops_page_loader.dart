@@ -7,10 +7,10 @@ import 'package:sima/features/barrel.dart';
 @RoutePage()
 class FirebaseOpsPageLoader extends ConsumerWidget {
   const FirebaseOpsPageLoader({
+    super.key,
     @QueryParam() this.mode,
     @QueryParam() this.oobCode,
     @QueryParam() this.apiKey,
-    super.key,
   });
 
   final String? mode;
@@ -27,15 +27,15 @@ class FirebaseOpsPageLoader extends ConsumerWidget {
           );
     });
 
-    // final currentUser = FirebaseAuth.instance.currentUser;
+    final currentUser = FirebaseAuth.instance.currentUser;
 
     switch (mode) {
-      // case 'verifyEmail':
-      //   return currentUser == null
-      //       ? const _Error()
-      //       : const ConfirmEmailPage(
-      //           verify: true,
-      //         );
+      case 'verifyEmail':
+        return currentUser == null
+            ? const _Error()
+            : const ConfirmEmailPage(
+                verify: true,
+              );
       case 'resetPassword':
         return const ResetPasswordPage();
       default:

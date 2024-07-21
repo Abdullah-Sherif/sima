@@ -7,11 +7,11 @@ final authRoutes = <AutoRoute>[
     page: FirebaseOpsRouteLoader.page,
   ),
   AutoRoute(page: ConfirmEmailRoute.page),
+  AutoRoute(page: ResetPasswordRoute.page),
   AutoRoute(page: AuthWrapperRoute.page, children: [
     AutoRoute(page: AuthHomeRoute.page, initial: true),
     AutoRoute(page: SignInRoute.page),
     AutoRoute(page: ForgetPasswordRoute.page),
-    AutoRoute(page: ResetPasswordRoute.page),
     AutoRoute(page: SignUpRoute.page),
   ])
 ];
