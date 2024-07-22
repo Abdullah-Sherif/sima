@@ -18,11 +18,13 @@ class HomeWrapper extends StatelessWidget {
       routes: routes,
       physics: const NeverScrollableScrollPhysics(),
       builder: (context, child, pageController) {
+        final tabsRouter = AutoTabsRouter.of(context);
+
         return SafeArea(
           child: Scaffold(
-            body: child,
+            body: HomeListeners(child: child),
             resizeToAvoidBottomInset: false,
-            bottomNavigationBar: const CustomBottomNavigationBar(),
+            bottomNavigationBar: CustomBottomNavigationBar(tabsRouter: tabsRouter),
           ),
         );
       },

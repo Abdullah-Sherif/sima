@@ -64,6 +64,28 @@ class AppTheme {
           fontWeight: FontWeight.w500,
         ),
       ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        selectedItemColor: CustomColors.black,
+        unselectedItemColor: CustomColors.charcoal,
+        selectedLabelStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: CustomColors.charcoal,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: CustomColors.grey,
+        ),
+        selectedIconTheme: IconThemeData(
+          size: 35,
+          color: CustomColors.charcoal,
+        ),
+        unselectedIconTheme: IconThemeData(
+          size: 35,
+          color: CustomColors.grey,
+        ),
+      ),
       colorScheme: ColorScheme.fromSwatch(
               brightness: Brightness.light,
               primarySwatch: Colors.grey,
