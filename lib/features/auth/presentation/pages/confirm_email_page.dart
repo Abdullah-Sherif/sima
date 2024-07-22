@@ -59,7 +59,7 @@ class ConfirmEmailPage extends HookConsumerWidget {
               context: context,
               text: text,
             );
-            context.router.replace(const ConfirmEmailRoute());
+            context.router.replace(ConfirmEmailRoute());
             break;
           case ConfirmEmailStatus.verified:
             ref.read(authControllerProvider.notifier).setEmailVerified(user: ref.read(userConrollerProvider).user);

@@ -23,9 +23,9 @@ class AppListeners extends ConsumerWidget {
       initial: (value) => const LoadingRoute(),
       authenticated: (value) {
         if (!value.isEmailVerified) {
-          return const ConfirmEmailRoute();
+          return ConfirmEmailRoute();
         } else {
-          return const LoadingRoute();
+          return const HomeWrapperRoute();
         }
       },
       unauthenticated: (value) => const AuthWrapperRoute(),

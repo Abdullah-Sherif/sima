@@ -28,9 +28,20 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ConfirmEmailRoute.name: (routeData) {
+      final args = routeData.argsAs<ConfirmEmailRouteArgs>(
+          orElse: () => const ConfirmEmailRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ConfirmEmailPage(),
+        child: ConfirmEmailPage(
+          key: args.key,
+          verify: args.verify,
+        ),
+      );
+    },
+    DataRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const DataPage(),
       );
     },
     FirebaseOpsRouteLoader.name: (routeData) {
@@ -57,6 +68,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ForgetPasswordPage(),
       );
     },
+    HomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HomePage(),
+      );
+    },
+    HomeWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HomeWrapper(),
+      );
+    },
     LoadingRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -67,6 +90,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ResetPasswordPage(),
+      );
+    },
+    SettingRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SettingPage(),
       );
     },
     SignInRoute.name: (routeData) {
@@ -114,14 +143,52 @@ class AuthWrapperRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ConfirmEmailPage]
-class ConfirmEmailRoute extends PageRouteInfo<void> {
-  const ConfirmEmailRoute({List<PageRouteInfo>? children})
-      : super(
+class ConfirmEmailRoute extends PageRouteInfo<ConfirmEmailRouteArgs> {
+  ConfirmEmailRoute({
+    Key? key,
+    bool verify = false,
+    List<PageRouteInfo>? children,
+  }) : super(
           ConfirmEmailRoute.name,
+          args: ConfirmEmailRouteArgs(
+            key: key,
+            verify: verify,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ConfirmEmailRoute';
+
+  static const PageInfo<ConfirmEmailRouteArgs> page =
+      PageInfo<ConfirmEmailRouteArgs>(name);
+}
+
+class ConfirmEmailRouteArgs {
+  const ConfirmEmailRouteArgs({
+    this.key,
+    this.verify = false,
+  });
+
+  final Key? key;
+
+  final bool verify;
+
+  @override
+  String toString() {
+    return 'ConfirmEmailRouteArgs{key: $key, verify: $verify}';
+  }
+}
+
+/// generated route for
+/// [DataPage]
+class DataRoute extends PageRouteInfo<void> {
+  const DataRoute({List<PageRouteInfo>? children})
+      : super(
+          DataRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DataRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -153,7 +220,8 @@ class FirebaseOpsRouteLoader extends PageRouteInfo<FirebaseOpsRouteLoaderArgs> {
 
   static const String name = 'FirebaseOpsRouteLoader';
 
-  static const PageInfo<FirebaseOpsRouteLoaderArgs> page = PageInfo<FirebaseOpsRouteLoaderArgs>(name);
+  static const PageInfo<FirebaseOpsRouteLoaderArgs> page =
+      PageInfo<FirebaseOpsRouteLoaderArgs>(name);
 }
 
 class FirebaseOpsRouteLoaderArgs {
@@ -193,6 +261,34 @@ class ForgetPasswordRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [HomePage]
+class HomeRoute extends PageRouteInfo<void> {
+  const HomeRoute({List<PageRouteInfo>? children})
+      : super(
+          HomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [HomeWrapper]
+class HomeWrapperRoute extends PageRouteInfo<void> {
+  const HomeWrapperRoute({List<PageRouteInfo>? children})
+      : super(
+          HomeWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [LoadingPage]
 class LoadingRoute extends PageRouteInfo<void> {
   const LoadingRoute({List<PageRouteInfo>? children})
@@ -216,6 +312,20 @@ class ResetPasswordRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ResetPasswordRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SettingPage]
+class SettingRoute extends PageRouteInfo<void> {
+  const SettingRoute({List<PageRouteInfo>? children})
+      : super(
+          SettingRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SettingRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
