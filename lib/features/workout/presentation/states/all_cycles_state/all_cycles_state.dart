@@ -3,10 +3,10 @@ import 'package:sima/features/workout/barrel.dart';
 
 part 'all_cycles_state.freezed.dart';
 
-
 @freezed
 abstract class AllCyclesState with _$AllCyclesState {
   factory AllCyclesState({
     required CycleEntity cycle,
+    @Default('') String activeExerciseKey,
   }) = _AllCyclesState;
 }

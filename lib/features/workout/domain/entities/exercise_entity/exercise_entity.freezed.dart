@@ -24,6 +24,8 @@ mixin _$ExerciseEntity {
   String get description => throw _privateConstructorUsedError;
   ExerciseType get type => throw _privateConstructorUsedError;
   String get key => throw _privateConstructorUsedError;
+  bool get forceCompleted => throw _privateConstructorUsedError;
+  bool get isActive => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +39,13 @@ abstract class $ExerciseEntityCopyWith<$Res> {
           ExerciseEntity value, $Res Function(ExerciseEntity) then) =
       _$ExerciseEntityCopyWithImpl<$Res, ExerciseEntity>;
   @useResult
-  $Res call({String name, String description, ExerciseType type, String key});
+  $Res call(
+      {String name,
+      String description,
+      ExerciseType type,
+      String key,
+      bool forceCompleted,
+      bool isActive});
 }
 
 /// @nodoc
@@ -57,6 +65,8 @@ class _$ExerciseEntityCopyWithImpl<$Res, $Val extends ExerciseEntity>
     Object? description = null,
     Object? type = null,
     Object? key = null,
+    Object? forceCompleted = null,
+    Object? isActive = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -75,6 +85,14 @@ class _$ExerciseEntityCopyWithImpl<$Res, $Val extends ExerciseEntity>
           ? _value.key
           : key // ignore: cast_nullable_to_non_nullable
               as String,
+      forceCompleted: null == forceCompleted
+          ? _value.forceCompleted
+          : forceCompleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isActive: null == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -87,7 +105,13 @@ abstract class _$$ExerciseEntityImplCopyWith<$Res>
       __$$ExerciseEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, String description, ExerciseType type, String key});
+  $Res call(
+      {String name,
+      String description,
+      ExerciseType type,
+      String key,
+      bool forceCompleted,
+      bool isActive});
 }
 
 /// @nodoc
@@ -105,6 +129,8 @@ class __$$ExerciseEntityImplCopyWithImpl<$Res>
     Object? description = null,
     Object? type = null,
     Object? key = null,
+    Object? forceCompleted = null,
+    Object? isActive = null,
   }) {
     return _then(_$ExerciseEntityImpl(
       name: null == name
@@ -123,6 +149,14 @@ class __$$ExerciseEntityImplCopyWithImpl<$Res>
           ? _value.key
           : key // ignore: cast_nullable_to_non_nullable
               as String,
+      forceCompleted: null == forceCompleted
+          ? _value.forceCompleted
+          : forceCompleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isActive: null == isActive
+          ? _value.isActive
+          : isActive // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -134,7 +168,9 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
       {required this.name,
       required this.description,
       this.type = ExerciseType.reps,
-      required this.key});
+      required this.key,
+      this.forceCompleted = false,
+      this.isActive = false});
 
   factory _$ExerciseEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExerciseEntityImplFromJson(json);
@@ -148,10 +184,16 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
   final ExerciseType type;
   @override
   final String key;
+  @override
+  @JsonKey()
+  final bool forceCompleted;
+  @override
+  @JsonKey()
+  final bool isActive;
 
   @override
   String toString() {
-    return 'ExerciseEntity(name: $name, description: $description, type: $type, key: $key)';
+    return 'ExerciseEntity(name: $name, description: $description, type: $type, key: $key, forceCompleted: $forceCompleted, isActive: $isActive)';
   }
 
   @override
@@ -163,12 +205,17 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.key, key) || other.key == key));
+            (identical(other.key, key) || other.key == key) &&
+            (identical(other.forceCompleted, forceCompleted) ||
+                other.forceCompleted == forceCompleted) &&
+            (identical(other.isActive, isActive) ||
+                other.isActive == isActive));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, description, type, key);
+  int get hashCode => Object.hash(
+      runtimeType, name, description, type, key, forceCompleted, isActive);
 
   @JsonKey(ignore: true)
   @override
@@ -190,7 +237,9 @@ abstract class _ExerciseEntity implements ExerciseEntity {
       {required final String name,
       required final String description,
       final ExerciseType type,
-      required final String key}) = _$ExerciseEntityImpl;
+      required final String key,
+      final bool forceCompleted,
+      final bool isActive}) = _$ExerciseEntityImpl;
 
   factory _ExerciseEntity.fromJson(Map<String, dynamic> json) =
       _$ExerciseEntityImpl.fromJson;
@@ -203,6 +252,10 @@ abstract class _ExerciseEntity implements ExerciseEntity {
   ExerciseType get type;
   @override
   String get key;
+  @override
+  bool get forceCompleted;
+  @override
+  bool get isActive;
   @override
   @JsonKey(ignore: true)
   _$$ExerciseEntityImplCopyWith<_$ExerciseEntityImpl> get copyWith =>

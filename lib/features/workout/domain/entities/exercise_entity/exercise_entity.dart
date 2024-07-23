@@ -11,7 +11,21 @@ class ExerciseEntity with _$ExerciseEntity {
     required String description,
     @Default(ExerciseType.reps) ExerciseType type,
     required String key,
+    @Default(false) bool forceCompleted,
+    @Default(false) bool isActive,
   }) = _ExerciseEntity;
 
   factory ExerciseEntity.fromJson(Map<String, Object?> json) => _$ExerciseEntityFromJson(json);
+}
+
+extension ExerciseEntityX on ExerciseEntity {
+  bool get isCompleted => forceCompleted;
+
+  ExerciseEntity forceComplete() {
+    return copyWith(forceCompleted: true);
+  }
+
+  ExerciseEntity toggleActive() {
+    return copyWith(isActive: !isActive);
+  }
 }

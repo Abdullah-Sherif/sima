@@ -50,8 +50,4 @@ class WeekController extends StateNotifier<WeekState> {
     int currentWeekWOffset = currentWeekNumber + (state.offset ~/ 7);
     return currentWeekWOffset;
   }
-
-  int getTotalDaysAsIndex() {
-    return ((getCurrentWeekNumberWithOffset() - 1) * 7) + (getCurrentDayNumberWithOffset() - 1);
-  }
 }

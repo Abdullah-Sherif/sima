@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sima/core/barrel.dart';
 import 'package:sima/features/barrel.dart';
 
@@ -19,7 +20,7 @@ class HomePage extends ConsumerWidget {
           _WorkoutName(),
           SizedBox(height: 15),
           _CustomContainer(
-            child: Placeholder(),
+            child: _WorkoutExercises(),
           ),
         ],
       ),
@@ -61,5 +62,47 @@ class _CustomContainer extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _WorkoutExercises extends ConsumerWidget {
+  const _WorkoutExercises();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(weekControllerProvider).offset;
+    final cycle = ref.watch(allcyclesControllerProvider).cycle;
+    final dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset();
+    final isRestDay = cycle.workouts[dayNum - 1].isRestDay;
+
+    return cycle.isEmpty
+        ? const Placeholder()
+        : isRestDay
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SvgPicture.asset('assets/rest.svg'),
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final exercise = cycle.workouts[dayNum - 1].getExerciseByIndex(index);
+
+                    return Align(
+                      alignment: Alignment.center,
+                      child: CustomExerciseTile(
+                        exercise: exercise,
+                        onExpand: () {
+                          ref.read(allcyclesControllerProvider.notifier).activateExercise(dayNum - 1, exercise.key);
+                        },
+                        isExpanded: exercise.isActive,
+                        width: 400,
+                      ),
+                    );
+                  },
+                  itemCount: cycle.workouts[dayNum - 1].exerciseLength,
+                ),
+              );
   }
 }

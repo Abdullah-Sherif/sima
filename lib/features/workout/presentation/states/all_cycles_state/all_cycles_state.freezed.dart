@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AllCyclesState {
   CycleEntity get cycle => throw _privateConstructorUsedError;
+  String get activeExerciseKey => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AllCyclesStateCopyWith<AllCyclesState> get copyWith =>
@@ -29,7 +30,7 @@ abstract class $AllCyclesStateCopyWith<$Res> {
           AllCyclesState value, $Res Function(AllCyclesState) then) =
       _$AllCyclesStateCopyWithImpl<$Res, AllCyclesState>;
   @useResult
-  $Res call({CycleEntity cycle});
+  $Res call({CycleEntity cycle, String activeExerciseKey});
 
   $CycleEntityCopyWith<$Res> get cycle;
 }
@@ -48,12 +49,17 @@ class _$AllCyclesStateCopyWithImpl<$Res, $Val extends AllCyclesState>
   @override
   $Res call({
     Object? cycle = null,
+    Object? activeExerciseKey = null,
   }) {
     return _then(_value.copyWith(
       cycle: null == cycle
           ? _value.cycle
           : cycle // ignore: cast_nullable_to_non_nullable
               as CycleEntity,
+      activeExerciseKey: null == activeExerciseKey
+          ? _value.activeExerciseKey
+          : activeExerciseKey // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -74,7 +80,7 @@ abstract class _$$AllCyclesStateImplCopyWith<$Res>
       __$$AllCyclesStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({CycleEntity cycle});
+  $Res call({CycleEntity cycle, String activeExerciseKey});
 
   @override
   $CycleEntityCopyWith<$Res> get cycle;
@@ -92,12 +98,17 @@ class __$$AllCyclesStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? cycle = null,
+    Object? activeExerciseKey = null,
   }) {
     return _then(_$AllCyclesStateImpl(
       cycle: null == cycle
           ? _value.cycle
           : cycle // ignore: cast_nullable_to_non_nullable
               as CycleEntity,
+      activeExerciseKey: null == activeExerciseKey
+          ? _value.activeExerciseKey
+          : activeExerciseKey // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -105,14 +116,17 @@ class __$$AllCyclesStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AllCyclesStateImpl implements _AllCyclesState {
-  _$AllCyclesStateImpl({required this.cycle});
+  _$AllCyclesStateImpl({required this.cycle, this.activeExerciseKey = ''});
 
   @override
   final CycleEntity cycle;
+  @override
+  @JsonKey()
+  final String activeExerciseKey;
 
   @override
   String toString() {
-    return 'AllCyclesState(cycle: $cycle)';
+    return 'AllCyclesState(cycle: $cycle, activeExerciseKey: $activeExerciseKey)';
   }
 
   @override
@@ -120,11 +134,13 @@ class _$AllCyclesStateImpl implements _AllCyclesState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AllCyclesStateImpl &&
-            (identical(other.cycle, cycle) || other.cycle == cycle));
+            (identical(other.cycle, cycle) || other.cycle == cycle) &&
+            (identical(other.activeExerciseKey, activeExerciseKey) ||
+                other.activeExerciseKey == activeExerciseKey));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, cycle);
+  int get hashCode => Object.hash(runtimeType, cycle, activeExerciseKey);
 
   @JsonKey(ignore: true)
   @override
@@ -135,11 +151,14 @@ class _$AllCyclesStateImpl implements _AllCyclesState {
 }
 
 abstract class _AllCyclesState implements AllCyclesState {
-  factory _AllCyclesState({required final CycleEntity cycle}) =
-      _$AllCyclesStateImpl;
+  factory _AllCyclesState(
+      {required final CycleEntity cycle,
+      final String activeExerciseKey}) = _$AllCyclesStateImpl;
 
   @override
   CycleEntity get cycle;
+  @override
+  String get activeExerciseKey;
   @override
   @JsonKey(ignore: true)
   _$$AllCyclesStateImplCopyWith<_$AllCyclesStateImpl> get copyWith =>

@@ -13,6 +13,8 @@ _$ExerciseEntityImpl _$$ExerciseEntityImplFromJson(Map<String, dynamic> json) =>
       type: $enumDecodeNullable(_$ExerciseTypeEnumMap, json['type']) ??
           ExerciseType.reps,
       key: json['key'] as String,
+      forceCompleted: json['forceCompleted'] as bool? ?? false,
+      isActive: json['isActive'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$ExerciseEntityImplToJson(
@@ -22,6 +24,8 @@ Map<String, dynamic> _$$ExerciseEntityImplToJson(
       'description': instance.description,
       'type': _$ExerciseTypeEnumMap[instance.type]!,
       'key': instance.key,
+      'forceCompleted': instance.forceCompleted,
+      'isActive': instance.isActive,
     };
 
 const _$ExerciseTypeEnumMap = {

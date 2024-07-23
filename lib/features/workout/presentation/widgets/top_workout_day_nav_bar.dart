@@ -30,7 +30,7 @@ class WorkoutDayNavBar extends ConsumerWidget {
                 icon: const Icon(Icons.arrow_back),
               ),
               Text(
-                '${context.appTexts.week} ${ref.read(weekControllerProvider.notifier).getCurrentWeekNumberWithOffset()}',
+                '${context.appTexts.cycle} ${ref.read(weekControllerProvider.notifier).getCurrentWeekNumberWithOffset()}',
                 textAlign: TextAlign.center,
                 style: context.textTheme.titleLarge,
               ),

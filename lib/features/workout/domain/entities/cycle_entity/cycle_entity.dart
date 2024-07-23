@@ -11,3 +11,7 @@ abstract class CycleEntity implements _$CycleEntity {
   }) = _CycleEntity;
   factory CycleEntity.fromJson(Map<String, dynamic> json) => _$CycleEntityFromJson(json);
 }
+
+extension CycleEntityX on CycleEntity {
+  bool get isEmpty => workouts.isEmpty;
+}

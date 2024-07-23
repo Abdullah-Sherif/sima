@@ -33,6 +33,6 @@
   "emailSendError": "An error occurred while sending the email",
   "resendEmail": "Resend Email",
   "signout": "Sign Out",
-  "week": "Week",
+  "cycle": "Cycle",
   "day": "Day"
 }
