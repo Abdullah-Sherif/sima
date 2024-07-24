@@ -30,28 +30,29 @@ WorkoutEntity _$WorkoutEntityFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$WorkoutEntity {
   String get name => throw _privateConstructorUsedError;
+  String get key => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            List<ExerciseEntity> exercises, String name, bool forceCompleted)
+    required TResult Function(Map<String, ExerciseEntity> exercises,
+            String name, String key, bool forceCompleted)
         workoutDay,
-    required TResult Function(String name) restDay,
+    required TResult Function(String name, String key) restDay,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            List<ExerciseEntity> exercises, String name, bool forceCompleted)?
+    TResult? Function(Map<String, ExerciseEntity> exercises, String name,
+            String key, bool forceCompleted)?
         workoutDay,
-    TResult? Function(String name)? restDay,
+    TResult? Function(String name, String key)? restDay,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            List<ExerciseEntity> exercises, String name, bool forceCompleted)?
+    TResult Function(Map<String, ExerciseEntity> exercises, String name,
+            String key, bool forceCompleted)?
         workoutDay,
-    TResult Function(String name)? restDay,
+    TResult Function(String name, String key)? restDay,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -86,7 +87,7 @@ abstract class $WorkoutEntityCopyWith<$Res> {
           WorkoutEntity value, $Res Function(WorkoutEntity) then) =
       _$WorkoutEntityCopyWithImpl<$Res, WorkoutEntity>;
   @useResult
-  $Res call({String name});
+  $Res call({String name, String key});
 }
 
 /// @nodoc
@@ -103,11 +104,16 @@ class _$WorkoutEntityCopyWithImpl<$Res, $Val extends WorkoutEntity>
   @override
   $Res call({
     Object? name = null,
+    Object? key = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -121,7 +127,11 @@ abstract class _$$WorkoutDayImplCopyWith<$Res>
       __$$WorkoutDayImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<ExerciseEntity> exercises, String name, bool forceCompleted});
+  $Res call(
+      {Map<String, ExerciseEntity> exercises,
+      String name,
+      String key,
+      bool forceCompleted});
 }
 
 /// @nodoc
@@ -137,16 +147,21 @@ class __$$WorkoutDayImplCopyWithImpl<$Res>
   $Res call({
     Object? exercises = null,
     Object? name = null,
+    Object? key = null,
     Object? forceCompleted = null,
   }) {
     return _then(_$WorkoutDayImpl(
       exercises: null == exercises
           ? _value._exercises
           : exercises // ignore: cast_nullable_to_non_nullable
-              as List<ExerciseEntity>,
+              as Map<String, ExerciseEntity>,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
               as String,
       forceCompleted: null == forceCompleted
           ? _value.forceCompleted
@@ -160,8 +175,10 @@ class __$$WorkoutDayImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WorkoutDayImpl implements _WorkoutDay {
   _$WorkoutDayImpl(
-      {final List<ExerciseEntity> exercises = const <ExerciseEntity>[],
+      {final Map<String, ExerciseEntity> exercises =
+          const <String, ExerciseEntity>{},
       required this.name,
+      required this.key,
       this.forceCompleted = false,
       final String? $type})
       : _exercises = exercises,
@@ -170,17 +187,19 @@ class _$WorkoutDayImpl implements _WorkoutDay {
   factory _$WorkoutDayImpl.fromJson(Map<String, dynamic> json) =>
       _$$WorkoutDayImplFromJson(json);
 
-  final List<ExerciseEntity> _exercises;
+  final Map<String, ExerciseEntity> _exercises;
   @override
   @JsonKey()
-  List<ExerciseEntity> get exercises {
-    if (_exercises is EqualUnmodifiableListView) return _exercises;
+  Map<String, ExerciseEntity> get exercises {
+    if (_exercises is EqualUnmodifiableMapView) return _exercises;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_exercises);
+    return EqualUnmodifiableMapView(_exercises);
   }
 
   @override
   final String name;
+  @override
+  final String key;
   @override
   @JsonKey()
   final bool forceCompleted;
@@ -190,7 +209,7 @@ class _$WorkoutDayImpl implements _WorkoutDay {
 
   @override
   String toString() {
-    return 'WorkoutEntity.workoutDay(exercises: $exercises, name: $name, forceCompleted: $forceCompleted)';
+    return 'WorkoutEntity.workoutDay(exercises: $exercises, name: $name, key: $key, forceCompleted: $forceCompleted)';
   }
 
   @override
@@ -201,14 +220,19 @@ class _$WorkoutDayImpl implements _WorkoutDay {
             const DeepCollectionEquality()
                 .equals(other._exercises, _exercises) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.key, key) || other.key == key) &&
             (identical(other.forceCompleted, forceCompleted) ||
                 other.forceCompleted == forceCompleted));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_exercises), name, forceCompleted);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_exercises),
+      name,
+      key,
+      forceCompleted);
 
   @JsonKey(ignore: true)
   @override
@@ -219,36 +243,36 @@ class _$WorkoutDayImpl implements _WorkoutDay {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            List<ExerciseEntity> exercises, String name, bool forceCompleted)
+    required TResult Function(Map<String, ExerciseEntity> exercises,
+            String name, String key, bool forceCompleted)
         workoutDay,
-    required TResult Function(String name) restDay,
+    required TResult Function(String name, String key) restDay,
   }) {
-    return workoutDay(exercises, name, forceCompleted);
+    return workoutDay(exercises, name, key, forceCompleted);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            List<ExerciseEntity> exercises, String name, bool forceCompleted)?
+    TResult? Function(Map<String, ExerciseEntity> exercises, String name,
+            String key, bool forceCompleted)?
         workoutDay,
-    TResult? Function(String name)? restDay,
+    TResult? Function(String name, String key)? restDay,
   }) {
-    return workoutDay?.call(exercises, name, forceCompleted);
+    return workoutDay?.call(exercises, name, key, forceCompleted);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            List<ExerciseEntity> exercises, String name, bool forceCompleted)?
+    TResult Function(Map<String, ExerciseEntity> exercises, String name,
+            String key, bool forceCompleted)?
         workoutDay,
-    TResult Function(String name)? restDay,
+    TResult Function(String name, String key)? restDay,
     required TResult orElse(),
   }) {
     if (workoutDay != null) {
-      return workoutDay(exercises, name, forceCompleted);
+      return workoutDay(exercises, name, key, forceCompleted);
     }
     return orElse();
   }
@@ -294,16 +318,19 @@ class _$WorkoutDayImpl implements _WorkoutDay {
 
 abstract class _WorkoutDay implements WorkoutEntity {
   factory _WorkoutDay(
-      {final List<ExerciseEntity> exercises,
+      {final Map<String, ExerciseEntity> exercises,
       required final String name,
+      required final String key,
       final bool forceCompleted}) = _$WorkoutDayImpl;
 
   factory _WorkoutDay.fromJson(Map<String, dynamic> json) =
       _$WorkoutDayImpl.fromJson;
 
-  List<ExerciseEntity> get exercises;
+  Map<String, ExerciseEntity> get exercises;
   @override
   String get name;
+  @override
+  String get key;
   bool get forceCompleted;
   @override
   @JsonKey(ignore: true)
@@ -319,7 +346,7 @@ abstract class _$$RestDayImplCopyWith<$Res>
       __$$RestDayImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name});
+  $Res call({String name, String key});
 }
 
 /// @nodoc
@@ -334,11 +361,16 @@ class __$$RestDayImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
+    Object? key = null,
   }) {
     return _then(_$RestDayImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -347,7 +379,8 @@ class __$$RestDayImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$RestDayImpl implements _RestDay {
-  const _$RestDayImpl({this.name = 'Rest', final String? $type})
+  const _$RestDayImpl(
+      {this.name = 'Rest', required this.key, final String? $type})
       : $type = $type ?? 'restDay';
 
   factory _$RestDayImpl.fromJson(Map<String, dynamic> json) =>
@@ -356,13 +389,15 @@ class _$RestDayImpl implements _RestDay {
   @override
   @JsonKey()
   final String name;
+  @override
+  final String key;
 
   @JsonKey(name: 'runtimeType')
   final String $type;
 
   @override
   String toString() {
-    return 'WorkoutEntity.restDay(name: $name)';
+    return 'WorkoutEntity.restDay(name: $name, key: $key)';
   }
 
   @override
@@ -370,12 +405,13 @@ class _$RestDayImpl implements _RestDay {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RestDayImpl &&
-            (identical(other.name, name) || other.name == name));
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.key, key) || other.key == key));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name);
+  int get hashCode => Object.hash(runtimeType, name, key);
 
   @JsonKey(ignore: true)
   @override
@@ -386,36 +422,36 @@ class _$RestDayImpl implements _RestDay {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            List<ExerciseEntity> exercises, String name, bool forceCompleted)
+    required TResult Function(Map<String, ExerciseEntity> exercises,
+            String name, String key, bool forceCompleted)
         workoutDay,
-    required TResult Function(String name) restDay,
+    required TResult Function(String name, String key) restDay,
   }) {
-    return restDay(name);
+    return restDay(name, key);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            List<ExerciseEntity> exercises, String name, bool forceCompleted)?
+    TResult? Function(Map<String, ExerciseEntity> exercises, String name,
+            String key, bool forceCompleted)?
         workoutDay,
-    TResult? Function(String name)? restDay,
+    TResult? Function(String name, String key)? restDay,
   }) {
-    return restDay?.call(name);
+    return restDay?.call(name, key);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            List<ExerciseEntity> exercises, String name, bool forceCompleted)?
+    TResult Function(Map<String, ExerciseEntity> exercises, String name,
+            String key, bool forceCompleted)?
         workoutDay,
-    TResult Function(String name)? restDay,
+    TResult Function(String name, String key)? restDay,
     required TResult orElse(),
   }) {
     if (restDay != null) {
-      return restDay(name);
+      return restDay(name, key);
     }
     return orElse();
   }
@@ -460,12 +496,15 @@ class _$RestDayImpl implements _RestDay {
 }
 
 abstract class _RestDay implements WorkoutEntity {
-  const factory _RestDay({final String name}) = _$RestDayImpl;
+  const factory _RestDay({final String name, required final String key}) =
+      _$RestDayImpl;
 
   factory _RestDay.fromJson(Map<String, dynamic> json) = _$RestDayImpl.fromJson;
 
   @override
   String get name;
+  @override
+  String get key;
   @override
   @JsonKey(ignore: true)
   _$$RestDayImplCopyWith<_$RestDayImpl> get copyWith =>

@@ -20,7 +20,7 @@ CycleEntity _$CycleEntityFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CycleEntity {
-  List<WorkoutEntity> get workouts => throw _privateConstructorUsedError;
+  Map<String, WorkoutEntity> get workouts => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +34,7 @@ abstract class $CycleEntityCopyWith<$Res> {
           CycleEntity value, $Res Function(CycleEntity) then) =
       _$CycleEntityCopyWithImpl<$Res, CycleEntity>;
   @useResult
-  $Res call({List<WorkoutEntity> workouts});
+  $Res call({Map<String, WorkoutEntity> workouts});
 }
 
 /// @nodoc
@@ -56,7 +56,7 @@ class _$CycleEntityCopyWithImpl<$Res, $Val extends CycleEntity>
       workouts: null == workouts
           ? _value.workouts
           : workouts // ignore: cast_nullable_to_non_nullable
-              as List<WorkoutEntity>,
+              as Map<String, WorkoutEntity>,
     ) as $Val);
   }
 }
@@ -69,7 +69,7 @@ abstract class _$$CycleEntityImplCopyWith<$Res>
       __$$CycleEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<WorkoutEntity> workouts});
+  $Res call({Map<String, WorkoutEntity> workouts});
 }
 
 /// @nodoc
@@ -89,7 +89,7 @@ class __$$CycleEntityImplCopyWithImpl<$Res>
       workouts: null == workouts
           ? _value._workouts
           : workouts // ignore: cast_nullable_to_non_nullable
-              as List<WorkoutEntity>,
+              as Map<String, WorkoutEntity>,
     ));
   }
 }
@@ -98,19 +98,20 @@ class __$$CycleEntityImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CycleEntityImpl implements _CycleEntity {
   _$CycleEntityImpl(
-      {final List<WorkoutEntity> workouts = const <WorkoutEntity>[]})
+      {final Map<String, WorkoutEntity> workouts =
+          const <String, WorkoutEntity>{}})
       : _workouts = workouts;
 
   factory _$CycleEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$CycleEntityImplFromJson(json);
 
-  final List<WorkoutEntity> _workouts;
+  final Map<String, WorkoutEntity> _workouts;
   @override
   @JsonKey()
-  List<WorkoutEntity> get workouts {
-    if (_workouts is EqualUnmodifiableListView) return _workouts;
+  Map<String, WorkoutEntity> get workouts {
+    if (_workouts is EqualUnmodifiableMapView) return _workouts;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_workouts);
+    return EqualUnmodifiableMapView(_workouts);
   }
 
   @override
@@ -146,14 +147,14 @@ class _$CycleEntityImpl implements _CycleEntity {
 }
 
 abstract class _CycleEntity implements CycleEntity {
-  factory _CycleEntity({final List<WorkoutEntity> workouts}) =
+  factory _CycleEntity({final Map<String, WorkoutEntity> workouts}) =
       _$CycleEntityImpl;
 
   factory _CycleEntity.fromJson(Map<String, dynamic> json) =
       _$CycleEntityImpl.fromJson;
 
   @override
-  List<WorkoutEntity> get workouts;
+  Map<String, WorkoutEntity> get workouts;
   @override
   @JsonKey(ignore: true)
   _$$CycleEntityImplCopyWith<_$CycleEntityImpl> get copyWith =>

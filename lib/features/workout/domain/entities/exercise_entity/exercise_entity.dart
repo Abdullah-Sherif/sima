@@ -20,9 +20,11 @@ class ExerciseEntity with _$ExerciseEntity {
 
 extension ExerciseEntityX on ExerciseEntity {
   bool get isCompleted => forceCompleted;
+  bool get isReps => type == ExerciseType.reps;
+  bool get isDuration => type == ExerciseType.duration;
 
-  ExerciseEntity forceComplete() {
-    return copyWith(forceCompleted: true);
+  ExerciseEntity setForceComplete(bool value) {
+    return copyWith(forceCompleted: value);
   }
 
   ExerciseEntity toggleActive() {

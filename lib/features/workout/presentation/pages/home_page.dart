@@ -73,7 +73,7 @@ class _WorkoutExercises extends ConsumerWidget {
     ref.watch(weekControllerProvider).offset;
     final cycle = ref.watch(allcyclesControllerProvider).cycle;
     final dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset();
-    final isRestDay = cycle.workouts[dayNum - 1].isRestDay;
+    final isRestDay = cycle.workouts.values.elementAt(dayNum - 1).isRestDay;
 
     return cycle.isEmpty
         ? const Placeholder()
@@ -87,21 +87,27 @@ class _WorkoutExercises extends ConsumerWidget {
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    final exercise = cycle.workouts[dayNum - 1].getExerciseByIndex(index);
+                    final exercise = cycle.workouts.values.elementAt(dayNum - 1).getExerciseByIndex(index);
 
                     return Align(
                       alignment: Alignment.center,
                       child: CustomExerciseTile(
-                        exercise: exercise,
+                        exerciseKey: exercise.key,
                         onExpand: () {
                           ref.read(allcyclesControllerProvider.notifier).activateExercise(dayNum - 1, exercise.key);
                         },
                         isExpanded: exercise.isActive,
                         width: 400,
+                        onCheck: (value) {
+                          ref
+                              .read(allcyclesControllerProvider.notifier)
+                              .setForceCompleteExercise(dayNum - 1, exercise.key, value);
+                        },
+                        onPlay: () {},
                       ),
                     );
                   },
-                  itemCount: cycle.workouts[dayNum - 1].exerciseLength,
+                  itemCount: cycle.workouts.values.elementAt(dayNum - 1).exerciseLength,
                 ),
               );
   }

@@ -7,7 +7,7 @@ part 'cycle_entity.g.dart';
 @freezed
 abstract class CycleEntity implements _$CycleEntity {
   factory CycleEntity({
-    @Default(<WorkoutEntity>[]) List<WorkoutEntity> workouts,
+    @Default(<String, WorkoutEntity>{}) Map<String, WorkoutEntity> workouts,
   }) = _CycleEntity;
   factory CycleEntity.fromJson(Map<String, dynamic> json) => _$CycleEntityFromJson(json);
 }

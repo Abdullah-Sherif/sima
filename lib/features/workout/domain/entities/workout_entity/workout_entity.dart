@@ -7,12 +7,14 @@ part 'workout_entity.g.dart';
 @freezed
 abstract class WorkoutEntity implements _$WorkoutEntity {
   factory WorkoutEntity.workoutDay({
-    @Default(<ExerciseEntity>[]) List<ExerciseEntity> exercises,
+    @Default(<String, ExerciseEntity>{}) Map<String, ExerciseEntity> exercises,
     required String name,
+    required String key,
     @Default(false) bool forceCompleted,
   }) = _WorkoutDay;
   const factory WorkoutEntity.restDay({
     @Default('Rest') String name,
+    required String key,
   }) = _RestDay;
   factory WorkoutEntity.fromJson(Map<String, dynamic> json) => _$WorkoutEntityFromJson(json);
 }
@@ -22,34 +24,47 @@ extension WorkoutEntityX on WorkoutEntity {
   bool get isRestDay => this is _RestDay;
 
   int get exerciseLength => (this as _WorkoutDay).exercises.length;
-
   bool get isCompleted =>
       isWorkoutDay &&
-      ((this as _WorkoutDay).forceCompleted || (this as _WorkoutDay).exercises.every((element) => element.isCompleted));
+      ((this as _WorkoutDay).forceCompleted || (this as _WorkoutDay).exercises.values.every((element) => element.isCompleted));
 
-  WorkoutEntity forceComplete() {
+  WorkoutEntity setForceComplete(bool value) {
     if (isWorkoutDay) {
-      return (this as _WorkoutDay).copyWith(forceCompleted: true);
+      return (this as _WorkoutDay).copyWith(forceCompleted: value);
     }
     return this;
   }
 
-  int getExerciseIndexByKey(String exerciseKey) {
-    return (this as _WorkoutDay).exercises.indexWhere((element) => element.key == exerciseKey);
+  WorkoutEntity setForceCompleteExercise(String exerciseKey, bool value) {
+    if (isWorkoutDay) {
+      final exercises = (this as _WorkoutDay).exercises;
+      final exercise = exercises[exerciseKey];
+      final newExercise = exercise?.setForceComplete(value);
+      if (newExercise != null) {
+        final newExercises = Map<String, ExerciseEntity>.from(exercises);
+        newExercises[exerciseKey] = newExercise;
+        return (this as _WorkoutDay).copyWith(exercises: newExercises);
+      }
+    }
+    return this;
+  }
+
+  ExerciseEntity? getExerciseByKey(String exerciseKey) {
+    return (this as _WorkoutDay).exercises[exerciseKey];
   }
 
   ExerciseEntity getExerciseByIndex(int index) {
-    return (this as _WorkoutDay).exercises[index];
+    return (this as _WorkoutDay).exercises.values.elementAt(index);
   }
 
   WorkoutEntity toggleActiveExercise(String exerciseKey) {
     if (isWorkoutDay) {
-      final index = getExerciseIndexByKey(exerciseKey);
       final exercises = (this as _WorkoutDay).exercises;
-      final exercise = exercises[index];
+      final exercise = exercises[exerciseKey];
+      if (exercise == null) return this;
       final newExercise = exercise.toggleActive();
-      final newExercises = List<ExerciseEntity>.from(exercises);
-      newExercises[index] = newExercise;
+      final newExercises = Map<String, ExerciseEntity>.from(exercises);
+      newExercises[exerciseKey] = newExercise;
       return (this as _WorkoutDay).copyWith(exercises: newExercises);
     }
     return this;
