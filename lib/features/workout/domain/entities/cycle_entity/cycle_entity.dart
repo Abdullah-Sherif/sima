@@ -14,4 +14,5 @@ abstract class CycleEntity implements _$CycleEntity {
 
 extension CycleEntityX on CycleEntity {
   bool get isEmpty => workouts.isEmpty;
+  bool get isCompleted => workouts.values.every((element) => element.isCompleted);
 }

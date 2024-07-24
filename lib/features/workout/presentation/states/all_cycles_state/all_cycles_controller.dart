@@ -9,7 +9,7 @@ final mockCycle = CycleEntity(workouts: {
     key: '1',
     exercises: {
       '1': const ExerciseEntity(
-          name: 'dumbbelle',
+          name: 'dumbbelle jrbfruvburvbubvubv',
           description: 'lift heavily towards yourself more text more text more text more text more text more text more text',
           key: '1'),
       '2': const ExerciseEntity(name: 'barbell', description: 'lift heavily towards yourself', key: '2'),

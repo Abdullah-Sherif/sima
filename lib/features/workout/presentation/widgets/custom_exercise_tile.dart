@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -77,80 +78,100 @@ class CustomExerciseTileState extends ConsumerState<CustomExerciseTile> {
             children: [
               Row(
                 children: [
-                  Text(
-                    exercise!.name,
-                    style: context.textTheme.titleMedium?.copyWith(fontSize: 23),
+                  SizedBox(
+                    width: widget.width * 0.4,
+                    child: Text(
+                      exercise!.name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: context.textTheme.titleMedium?.copyWith(fontSize: 23),
+                    ),
                   ),
                   const Spacer(),
                   _AnimatedExpandedWidgets(widget: widget, exercise: exercise),
-                  _CustomExpandButton(
-                    widget: widget,
-                    onExpand: () {
-                      widget.isExpanded ? _toggleContentVisibility() : _contentVisible = true;
-                      widget.onExpand();
-                    },
-                    iconSize: 27,
-                    isExpanded: widget.isExpanded,
-                  ),
+                  AnimatedRotation(
+                    turns: widget.isExpanded ? -0.25 : 0.25,
+                    duration: const Duration(milliseconds: 300),
+                    child: IconButton(
+                      iconSize: 27,
+                      icon: const Icon(Icons.arrow_back_ios_new_outlined),
+                      onPressed: () {
+                        widget.isExpanded ? _toggleContentVisibility() : _contentVisible = true;
+                        widget.onExpand();
+                      },
+                    ),
+                  )
                 ],
               ),
               if (_contentVisible)
                 SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 8, 0),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 15, 0),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          crossAxisAlignment: descriptionVisible ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                           children: [
                             Expanded(
                               child: AnimatedSize(
                                 alignment: Alignment.topCenter,
                                 curve: Curves.easeInOut,
                                 duration: const Duration(milliseconds: 200),
-                                child: Text(
-                                  exercise.description,
-                                  maxLines: descriptionVisible ? null : 1,
-                                  overflow: descriptionVisible ? TextOverflow.visible : TextOverflow.ellipsis,
-                                  style: context.textTheme.bodyLarge,
+                                child: TextButton(
+                                  onPressed: _toggleDescriptionVisibility,
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                                    splashFactory: NoSplash.splashFactory,
+                                    padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+                                  ),
+                                  child: Text(
+                                    exercise.description,
+                                    maxLines: descriptionVisible ? null : 1,
+                                    overflow: descriptionVisible ? TextOverflow.visible : TextOverflow.ellipsis,
+                                    style: context.textTheme.bodyLarge,
+                                  ),
                                 ),
                               ),
                             ),
-                            _CustomExpandButton(
-                              widget: widget,
-                              onExpand: () {
-                                _toggleDescriptionVisibility();
-                              },
-                              iconSize: 13,
-                              isExpanded: descriptionVisible,
-                            )
                           ],
                         ),
                         const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            Text(
-                              'Set',
-                              style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(width: 40),
-                            if (exercise.isReps) ...[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 50, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
                               Text(
-                                'Reps',
+                                context.appTexts.set,
                                 style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                               ),
-                              const SizedBox(width: 40),
-                              Text(
-                                'Weight',
-                                style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
-                              ),
-                            ] else ...[
-                              Text(
-                                'Duration',
-                                style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
-                              ),
+                              if (exercise.isReps) ...[
+                                Text(
+                                  context.appTexts.reps,
+                                  style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  context.appTexts.weight,
+                                  style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                                ),
+                              ] else ...[
+                                Text(
+                                  context.appTexts.duration,
+                                  style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                              const Icon(Icons.check),
                             ],
-                          ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 150,
+                          child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              return const CustomSetTile();
+                            },
+                            itemCount: exercise.sets.length,
+                          ),
                         ),
                       ],
                     ),
@@ -159,33 +180,6 @@ class CustomExerciseTileState extends ConsumerState<CustomExerciseTile> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _CustomExpandButton extends StatelessWidget {
-  const _CustomExpandButton({
-    required this.widget,
-    required this.onExpand,
-    this.iconSize,
-    required this.isExpanded,
-  });
-
-  final CustomExerciseTile widget;
-  final Function() onExpand;
-  final double? iconSize;
-  final bool isExpanded;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedRotation(
-      turns: isExpanded ? -0.25 : 0.25,
-      duration: const Duration(milliseconds: 300),
-      child: IconButton(
-        iconSize: iconSize,
-        icon: const Icon(Icons.arrow_back_ios_new_outlined),
-        onPressed: onExpand,
       ),
     );
   }

@@ -22,6 +22,7 @@ ExerciseEntity _$ExerciseEntityFromJson(Map<String, dynamic> json) {
 mixin _$ExerciseEntity {
   String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  Map<String, SetEntity> get sets => throw _privateConstructorUsedError;
   ExerciseType get type => throw _privateConstructorUsedError;
   String get key => throw _privateConstructorUsedError;
   bool get forceCompleted => throw _privateConstructorUsedError;
@@ -42,6 +43,7 @@ abstract class $ExerciseEntityCopyWith<$Res> {
   $Res call(
       {String name,
       String description,
+      Map<String, SetEntity> sets,
       ExerciseType type,
       String key,
       bool forceCompleted,
@@ -63,6 +65,7 @@ class _$ExerciseEntityCopyWithImpl<$Res, $Val extends ExerciseEntity>
   $Res call({
     Object? name = null,
     Object? description = null,
+    Object? sets = null,
     Object? type = null,
     Object? key = null,
     Object? forceCompleted = null,
@@ -77,6 +80,10 @@ class _$ExerciseEntityCopyWithImpl<$Res, $Val extends ExerciseEntity>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      sets: null == sets
+          ? _value.sets
+          : sets // ignore: cast_nullable_to_non_nullable
+              as Map<String, SetEntity>,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -108,6 +115,7 @@ abstract class _$$ExerciseEntityImplCopyWith<$Res>
   $Res call(
       {String name,
       String description,
+      Map<String, SetEntity> sets,
       ExerciseType type,
       String key,
       bool forceCompleted,
@@ -127,6 +135,7 @@ class __$$ExerciseEntityImplCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
     Object? description = null,
+    Object? sets = null,
     Object? type = null,
     Object? key = null,
     Object? forceCompleted = null,
@@ -141,6 +150,10 @@ class __$$ExerciseEntityImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      sets: null == sets
+          ? _value._sets
+          : sets // ignore: cast_nullable_to_non_nullable
+              as Map<String, SetEntity>,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -167,10 +180,12 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
   const _$ExerciseEntityImpl(
       {required this.name,
       required this.description,
+      final Map<String, SetEntity> sets = const <String, SetEntity>{},
       this.type = ExerciseType.reps,
       required this.key,
       this.forceCompleted = false,
-      this.isActive = false});
+      this.isActive = false})
+      : _sets = sets;
 
   factory _$ExerciseEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExerciseEntityImplFromJson(json);
@@ -179,6 +194,15 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
   final String name;
   @override
   final String description;
+  final Map<String, SetEntity> _sets;
+  @override
+  @JsonKey()
+  Map<String, SetEntity> get sets {
+    if (_sets is EqualUnmodifiableMapView) return _sets;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_sets);
+  }
+
   @override
   @JsonKey()
   final ExerciseType type;
@@ -193,7 +217,7 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
 
   @override
   String toString() {
-    return 'ExerciseEntity(name: $name, description: $description, type: $type, key: $key, forceCompleted: $forceCompleted, isActive: $isActive)';
+    return 'ExerciseEntity(name: $name, description: $description, sets: $sets, type: $type, key: $key, forceCompleted: $forceCompleted, isActive: $isActive)';
   }
 
   @override
@@ -204,6 +228,7 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
                 other.description == description) &&
+            const DeepCollectionEquality().equals(other._sets, _sets) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.key, key) || other.key == key) &&
             (identical(other.forceCompleted, forceCompleted) ||
@@ -215,7 +240,14 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, name, description, type, key, forceCompleted, isActive);
+      runtimeType,
+      name,
+      description,
+      const DeepCollectionEquality().hash(_sets),
+      type,
+      key,
+      forceCompleted,
+      isActive);
 
   @JsonKey(ignore: true)
   @override
@@ -236,6 +268,7 @@ abstract class _ExerciseEntity implements ExerciseEntity {
   const factory _ExerciseEntity(
       {required final String name,
       required final String description,
+      final Map<String, SetEntity> sets,
       final ExerciseType type,
       required final String key,
       final bool forceCompleted,
@@ -248,6 +281,8 @@ abstract class _ExerciseEntity implements ExerciseEntity {
   String get name;
   @override
   String get description;
+  @override
+  Map<String, SetEntity> get sets;
   @override
   ExerciseType get type;
   @override

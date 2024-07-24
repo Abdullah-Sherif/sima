@@ -34,5 +34,9 @@
   "resendEmail": "Resend Email",
   "signout": "Sign Out",
   "cycle": "Cycle",
-  "day": "Day"
+  "day": "Day",
+  "set": "Set",
+  "weight": "Weight",
+  "reps": "Reps",
+  "duration": "Duration"
 }
