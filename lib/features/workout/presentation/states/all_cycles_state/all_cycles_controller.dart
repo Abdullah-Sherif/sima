@@ -9,6 +9,7 @@ final mockCycle = CycleEntity(workouts: {
     key: '1',
     exercises: {
       '1': const ExerciseEntity(name: 'dumbbelle', description: 'lift heavily towards yourself', key: '1'),
+      '2': const ExerciseEntity(name: 'barbell', description: 'lift heavily towards yourself', key: '2'),
     },
   ),
   '2': const WorkoutEntity.restDay(key: '2'),
@@ -35,10 +36,28 @@ class AllCyclesController extends StateNotifier<AllCyclesState> {
     return state.cycle.workouts.values.elementAt(dayNum - 1).name;
   }
 
+  void setFirstExerciseActiveForCurrentDay(int offset, int workoutIndex) {
+    if (offset != 0) return;
+    final workout = state.cycle.workouts.values.elementAt(workoutIndex);
+    if (workout.isRestDay || workout.exerciseLength == 0) return;
+    final exerciseKey = workout.getExerciseByIndex(0);
+    setIsActiveExercise(workoutIndex, exerciseKey!.key, true);
+  }
+
+  void setIsActiveExercise(int workoutIndex, String exerciseKey, bool value) {
+    WorkoutEntity tempWorkout = state.cycle.workouts.values.elementAt(workoutIndex);
+    tempWorkout = tempWorkout.setIsActiveExercise(exerciseKey, value);
+    final newCycle = state.cycle.copyWith(workouts: {
+      ...state.cycle.workouts,
+      tempWorkout.key: tempWorkout,
+    });
+    state = state.copyWith(cycle: newCycle);
+  }
+
   void activateExercise(int workoutIndex, String exerciseKey) {
     WorkoutEntity tempWorkout = state.cycle.workouts.values.elementAt(workoutIndex);
     if (state.activeExerciseKey != '' && state.activeExerciseKey != exerciseKey) {
-      tempWorkout = tempWorkout.toggleActiveExercise(state.activeExerciseKey);
+      tempWorkout = tempWorkout.setIsActiveExercise(state.activeExerciseKey, false);
     }
     tempWorkout = tempWorkout.toggleActiveExercise(exerciseKey);
     final newCycle = state.cycle.copyWith(workouts: {

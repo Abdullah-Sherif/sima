@@ -46,7 +46,11 @@ class WorkoutDayNavBar extends ConsumerWidget {
               ),
               IconButton(
                 onPressed: () {
+                  int offset = ref.read(weekControllerProvider).offset;
+                  int dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset();
+
                   ref.read(weekControllerProvider.notifier).incrementOffset();
+                  ref.read(allcyclesControllerProvider.notifier).setFirstExerciseActiveForCurrentDay(offset, dayNum - 1);
                 },
                 iconSize: 30,
                 icon: const Icon(Icons.arrow_forward),

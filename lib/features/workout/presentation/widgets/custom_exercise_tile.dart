@@ -74,7 +74,7 @@ class CustomExerciseTileState extends ConsumerState<CustomExerciseTile> {
                     style: context.textTheme.titleMedium?.copyWith(fontSize: 23),
                   ),
                   const Spacer(),
-                  if (_contentVisible) _AnimatedExpandedWidgets(widget: widget, exercise: exercise),
+                  _AnimatedExpandedWidgets(widget: widget, exercise: exercise),
                   AnimatedRotation(
                     turns: widget.isExpanded ? -0.25 : 0.25,
                     duration: const Duration(milliseconds: 300),
@@ -111,9 +111,10 @@ class _AnimatedExpandedWidgets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 120,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
       height: 48,
+      width: widget.isExpanded ? 120 : 0,
       child: Stack(
         alignment: Alignment.centerRight,
         children: [

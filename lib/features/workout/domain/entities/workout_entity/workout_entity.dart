@@ -53,7 +53,8 @@ extension WorkoutEntityX on WorkoutEntity {
     return (this as _WorkoutDay).exercises[exerciseKey];
   }
 
-  ExerciseEntity getExerciseByIndex(int index) {
+  ExerciseEntity? getExerciseByIndex(int index) {
+    if (index >= exerciseLength) return null;
     return (this as _WorkoutDay).exercises.values.elementAt(index);
   }
 
@@ -63,6 +64,19 @@ extension WorkoutEntityX on WorkoutEntity {
       final exercise = exercises[exerciseKey];
       if (exercise == null) return this;
       final newExercise = exercise.toggleActive();
+      final newExercises = Map<String, ExerciseEntity>.from(exercises);
+      newExercises[exerciseKey] = newExercise;
+      return (this as _WorkoutDay).copyWith(exercises: newExercises);
+    }
+    return this;
+  }
+
+  WorkoutEntity setIsActiveExercise(String exerciseKey, bool value) {
+    if (isWorkoutDay) {
+      final exercises = (this as _WorkoutDay).exercises;
+      final exercise = exercises[exerciseKey];
+      if (exercise == null) return this;
+      final newExercise = exercise.setIsActive(value);
       final newExercises = Map<String, ExerciseEntity>.from(exercises);
       newExercises[exerciseKey] = newExercise;
       return (this as _WorkoutDay).copyWith(exercises: newExercises);

@@ -92,12 +92,12 @@ class _WorkoutExercises extends ConsumerWidget {
                     return Align(
                       alignment: Alignment.center,
                       child: CustomExerciseTile(
-                        exerciseKey: exercise.key,
+                        exerciseKey: exercise!.key,
+                        isExpanded: exercise.isActive,
                         onExpand: () {
                           ref.read(allcyclesControllerProvider.notifier).activateExercise(dayNum - 1, exercise.key);
                         },
-                        isExpanded: exercise.isActive,
-                        width: 400,
+                        width: 380,
                         onCheck: (value) {
                           ref
                               .read(allcyclesControllerProvider.notifier)

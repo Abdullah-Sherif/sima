@@ -30,4 +30,8 @@ extension ExerciseEntityX on ExerciseEntity {
   ExerciseEntity toggleActive() {
     return copyWith(isActive: !isActive);
   }
+
+  ExerciseEntity setIsActive(bool value) {
+    return copyWith(isActive: value);
+  }
 }
