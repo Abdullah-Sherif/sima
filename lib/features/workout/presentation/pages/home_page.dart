@@ -95,7 +95,9 @@ class _WorkoutExercises extends ConsumerWidget {
                         exerciseKey: exercise!.key,
                         isExpanded: exercise.isActive,
                         onExpand: () {
-                          ref.read(allcyclesControllerProvider.notifier).activateExercise(dayNum - 1, exercise.key);
+                          ref
+                              .read(allcyclesControllerProvider.notifier)
+                              .setIsActiveExercise(dayNum - 1, exercise.key, !exercise.isActive);
                         },
                         width: 380,
                         onCheck: (value) {

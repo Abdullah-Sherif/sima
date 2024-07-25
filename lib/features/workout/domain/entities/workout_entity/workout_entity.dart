@@ -28,6 +28,9 @@ extension WorkoutEntityX on WorkoutEntity {
       isWorkoutDay &&
       ((this as _WorkoutDay).forceCompleted || (this as _WorkoutDay).exercises.values.every((element) => element.isCompleted));
 
+  Iterable<ExerciseEntity>? get exercises => isWorkoutDay ? (this as _WorkoutDay).exercises.values : null;
+  Iterable<String>? get exerciseKeys => isWorkoutDay ? (this as _WorkoutDay).exercises.keys : null;
+
   WorkoutEntity setForceComplete(bool value) {
     if (isWorkoutDay) {
       return (this as _WorkoutDay).copyWith(forceCompleted: value);
@@ -79,6 +82,16 @@ extension WorkoutEntityX on WorkoutEntity {
       final newExercise = exercise.setIsActive(value);
       final newExercises = Map<String, ExerciseEntity>.from(exercises);
       newExercises[exerciseKey] = newExercise;
+      return (this as _WorkoutDay).copyWith(exercises: newExercises);
+    }
+    return this;
+  }
+
+  WorkoutEntity updateExercise(ExerciseEntity exercise) {
+    if (isWorkoutDay) {
+      final exercises = (this as _WorkoutDay).exercises;
+      final newExercises = Map<String, ExerciseEntity>.from(exercises);
+      newExercises[exercise.key] = exercise;
       return (this as _WorkoutDay).copyWith(exercises: newExercises);
     }
     return this;

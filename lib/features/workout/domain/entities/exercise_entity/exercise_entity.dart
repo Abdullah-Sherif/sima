@@ -37,4 +37,21 @@ extension ExerciseEntityX on ExerciseEntity {
   ExerciseEntity setIsActive(bool value) {
     return copyWith(isActive: value);
   }
+
+  ExerciseEntity setSetIsComplete(bool value, String setKey) {
+    final set = sets[setKey];
+    if (set != null) {
+      final newSet = set.setCompleted(value);
+      final newSets = Map<String, SetEntity>.from(sets);
+      newSets[setKey] = newSet;
+      if (!value && forceCompleted) {
+        return copyWith(sets: newSets, forceCompleted: false);
+      }
+      if (newSets.values.every((element) => element.isCompleted)) {
+        return copyWith(sets: newSets, forceCompleted: true, isActive: false);
+      }
+      return copyWith(sets: newSets);
+    }
+    return this;
+  }
 }
