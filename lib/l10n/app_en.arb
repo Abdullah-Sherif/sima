@@ -33,6 +33,7 @@
   "emailSendError": "An error occurred while sending the email",
   "resendEmail": "Resend Email",
   "signout": "Sign Out",
+  "homeEmptyMessage": "It seems you haven't setup your workouts yet, you can do so through 'Data' below!",
   "cycle": "Cycle",
   "day": "Day",
   "set": "Set",

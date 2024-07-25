@@ -73,11 +73,20 @@ class _WorkoutExercises extends ConsumerWidget {
     ref.watch(weekControllerProvider).offset;
     final cycle = ref.watch(allcyclesControllerProvider).cycle;
     final dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset();
-    final isRestDay = cycle.workouts.values.elementAt(dayNum - 1).isRestDay;
+    final workoutValues = cycle.workouts.values;
 
     return cycle.isEmpty
-        ? const Placeholder()
-        : isRestDay
+        ? Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Center(
+              child: Text(
+                textAlign: TextAlign.center,
+                context.appTexts.homeEmptyMessage,
+                style: context.textTheme.titleLarge?.copyWith(fontSize: 40, letterSpacing: 2),
+              ),
+            ),
+          )
+        : workoutValues.elementAt(dayNum - 1).isRestDay
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SvgPicture.asset('assets/rest.svg'),

@@ -4,61 +4,61 @@ import 'package:sima/features/workout/barrel.dart';
 import 'all_cycles_state.dart';
 
 final mockCycle = CycleEntity(workouts: {
-  '1': WorkoutEntity.workoutDay(
-    name: 'Chest',
-    key: '1',
-    exercises: {
-      '1': ExerciseEntity(
-          name: 'dumbbelle jrbfruvburvbubvubv',
-          description: 'lift heavily towards yourself more text more text more text more text more text more text more text',
-          key: '1',
-          sets: {
-            '1': SetEntity.weight(
-              key: '1',
-              reps: 10,
-              weight: 10,
-            ),
-            '2': SetEntity.weight(
-              key: '2',
-              reps: 10,
-              weight: 10,
-            ),
-            '3': SetEntity.weight(
-              key: '3',
-              reps: 10,
-              weight: 10,
-            ),
-            '4': SetEntity.weight(
-              key: '4',
-              reps: 10,
-              weight: 10,
-            ),
-          }),
-      '2': ExerciseEntity(
-        name: 'barbell',
-        description: 'lift heavily towards yourself',
-        key: '2',
-        sets: {
-          '1': SetEntity.weight(
-            key: '1',
-            reps: 10,
-            weight: 10,
-          ),
-          '2': SetEntity.weight(
-            key: '2',
-            reps: 10,
-            weight: 10,
-          ),
-        },
-      ),
-    },
-  ),
-  '2': const WorkoutEntity.restDay(key: '2'),
-  '3': WorkoutEntity.workoutDay(name: 'Back', key: '3'),
-  '4': const WorkoutEntity.restDay(key: '4'),
-  '5': const WorkoutEntity.restDay(key: '5'),
-  '6': WorkoutEntity.workoutDay(name: 'Legs', key: '6'),
-  '7': const WorkoutEntity.restDay(key: '7'),
+  // '1': WorkoutEntity.workoutDay(
+  //   name: 'Chest',
+  //   key: '1',
+  //   exercises: {
+  //     '1': ExerciseEntity(
+  //         name: 'dumbbelle jrbfruvburvbubvubv',
+  //         description: 'lift heavily towards yourself more text more text more text more text more text more text more text',
+  //         key: '1',
+  //         sets: {
+  //           '1': SetEntity.weight(
+  //             key: '1',
+  //             reps: 10,
+  //             weight: 10,
+  //           ),
+  //           '2': SetEntity.weight(
+  //             key: '2',
+  //             reps: 10,
+  //             weight: 10,
+  //           ),
+  //           '3': SetEntity.weight(
+  //             key: '3',
+  //             reps: 10,
+  //             weight: 10,
+  //           ),
+  //           '4': SetEntity.weight(
+  //             key: '4',
+  //             reps: 10,
+  //             weight: 10,
+  //           ),
+  //         }),
+  //     '2': ExerciseEntity(
+  //       name: 'barbell',
+  //       description: 'lift heavily towards yourself',
+  //       key: '2',
+  //       sets: {
+  //         '1': SetEntity.weight(
+  //           key: '1',
+  //           reps: 10,
+  //           weight: 10,
+  //         ),
+  //         '2': SetEntity.weight(
+  //           key: '2',
+  //           reps: 10,
+  //           weight: 10,
+  //         ),
+  //       },
+  //     ),
+  //   },
+  // ),
+  // '2': const WorkoutEntity.restDay(key: '2'),
+  // '3': WorkoutEntity.workoutDay(name: 'Back', key: '3'),
+  // '4': const WorkoutEntity.restDay(key: '4'),
+  // '5': const WorkoutEntity.restDay(key: '5'),
+  // '6': WorkoutEntity.workoutDay(name: 'Legs', key: '6'),
+  // '7': const WorkoutEntity.restDay(key: '7'),
 });
 
 final allcyclesControllerProvider = StateNotifierProvider.autoDispose<AllCyclesController, AllCyclesState>((ref) {
