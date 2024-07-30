@@ -11,5 +11,6 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         ...coreRoutes,
         ...authRoutes,
+        ...workoutRoutes,
       ];
 }

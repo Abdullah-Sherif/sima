@@ -39,5 +39,13 @@
   "set": "Set",
   "weight": "Weight",
   "reps": "Reps",
-  "duration": "Duration"
+  "duration": "Duration",
+  "workouts": "Workouts",
+  "exercises": "Exercises",
+  "data": "Data",
+  "workoutCycle": "Workout Cycle",
+  "name": "Name",
+  "desc": "Description",
+  "type": "Type",
+  "sets": "Sets"
 }

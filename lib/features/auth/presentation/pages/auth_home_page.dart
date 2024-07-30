@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sima/core/barrel.dart';
-import 'package:sima/features/auth/barrel.dart';
 
 @RoutePage()
 class AuthHomePage extends StatelessWidget {

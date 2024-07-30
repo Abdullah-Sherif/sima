@@ -7,8 +7,8 @@ final coreRoutes = <AutoRoute>[
     initial: true,
   ),
   AutoRoute(page: HomeWrapperRoute.page, children: [
-    AutoRoute(page: HomeRoute.page, initial: true, path: 'home'),
-    AutoRoute(page: DataRoute.page, path: 'data'),
+    AutoRoute(page: HomeRoute.page, path: 'home'),
+    AutoRoute(page: DataRoute.page, initial: true, path: 'data'),
     AutoRoute(page: SettingRoute.page, path: 'setting'),
   ]),
 ];

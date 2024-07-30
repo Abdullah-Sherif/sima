@@ -11,6 +11,7 @@ class HomeListeners extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(weekControllerProvider);
     ref.watch(allcyclesControllerProvider);
+    ref.watch(allexercisesControllerProvider);
     return child;
   }
 }

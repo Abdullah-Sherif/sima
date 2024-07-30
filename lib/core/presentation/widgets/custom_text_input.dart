@@ -17,6 +17,7 @@ class CustomTextInput extends StatefulWidget {
     this.errorMessage,
     this.onChanged,
     this.onEditingComplete,
+    this.underline = false,
   }) : super(key: key);
 
   final Icon? leadingIcon;
@@ -32,6 +33,7 @@ class CustomTextInput extends StatefulWidget {
   final String? errorMessage;
   final Function(String)? onChanged;
   final Function()? onEditingComplete;
+  final bool underline;
 
   @override
   State<CustomTextInput> createState() => _CustomTextInputState();
@@ -64,7 +66,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
                 onChanged: widget.onChanged,
                 onEditingComplete: widget.onEditingComplete,
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                  contentPadding: EdgeInsets.fromLTRB(10, 20, 10, widget.underline ? 10 : 0),
                   hintText: widget.hintText,
                   hintStyle: TextStyle(
                     color: widget.textColor?.withOpacity(0.5),
@@ -85,18 +87,22 @@ class _CustomTextInputState extends State<CustomTextInput> {
                       : null,
                   fillColor: widget.backgroundColor,
                   filled: widget.backgroundColor != null,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    borderSide: BorderSide(
-                      color: widget.borderColor ?? Colors.black,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    borderSide: BorderSide(
-                      color: widget.borderColor ?? Colors.black,
-                    ),
-                  ),
+                  border: widget.underline
+                      ? const UnderlineInputBorder()
+                      : OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                          borderSide: BorderSide(
+                            color: widget.borderColor ?? Colors.black,
+                          ),
+                        ),
+                  focusedBorder: widget.underline
+                      ? const UnderlineInputBorder()
+                      : OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(widget.borderRadius),
+                          borderSide: BorderSide(
+                            color: widget.borderColor ?? Colors.black,
+                          ),
+                        ),
                 ),
               ),
             ),

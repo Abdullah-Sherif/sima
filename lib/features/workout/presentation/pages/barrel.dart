@@ -1,2 +1,2 @@
-export 'data_page.dart';
+export 'data/barrel.dart';
 export 'home_page.dart';

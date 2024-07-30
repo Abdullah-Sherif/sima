@@ -32,6 +32,7 @@ dependencies:
   hooks_riverpod: ^2.5.1
   flutter_hooks: ^0.20.5
   flutter_keyboard_visibility: ^6.0.0
+  uuid: ^4.4.2
 
 dev_dependencies:
   flutter_test:
