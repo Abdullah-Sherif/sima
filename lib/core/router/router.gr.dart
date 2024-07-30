@@ -28,7 +28,8 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ConfirmEmailRoute.name: (routeData) {
-      final args = routeData.argsAs<ConfirmEmailRouteArgs>(orElse: () => const ConfirmEmailRouteArgs());
+      final args = routeData.argsAs<ConfirmEmailRouteArgs>(
+          orElse: () => const ConfirmEmailRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ConfirmEmailPage(
@@ -41,6 +42,22 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const DataPage(),
+      );
+    },
+    ExerciseDetailRoute.name: (routeData) {
+      final args = routeData.argsAs<ExerciseDetailRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ExerciseDetailPage(
+          key: args.key,
+          exerciseKey: args.exerciseKey,
+        ),
+      );
+    },
+    ExercisesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ExercisesPage(),
       );
     },
     FirebaseOpsRouteLoader.name: (routeData) {
@@ -115,12 +132,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const WorkoutCyclePage(),
       );
     },
-    WorkoutsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ExercisesPage(),
-      );
-    },
   };
 }
 
@@ -170,7 +181,8 @@ class ConfirmEmailRoute extends PageRouteInfo<ConfirmEmailRouteArgs> {
 
   static const String name = 'ConfirmEmailRoute';
 
-  static const PageInfo<ConfirmEmailRouteArgs> page = PageInfo<ConfirmEmailRouteArgs>(name);
+  static const PageInfo<ConfirmEmailRouteArgs> page =
+      PageInfo<ConfirmEmailRouteArgs>(name);
 }
 
 class ConfirmEmailRouteArgs {
@@ -204,6 +216,58 @@ class DataRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ExerciseDetailPage]
+class ExerciseDetailRoute extends PageRouteInfo<ExerciseDetailRouteArgs> {
+  ExerciseDetailRoute({
+    Key? key,
+    required String exerciseKey,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ExerciseDetailRoute.name,
+          args: ExerciseDetailRouteArgs(
+            key: key,
+            exerciseKey: exerciseKey,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ExerciseDetailRoute';
+
+  static const PageInfo<ExerciseDetailRouteArgs> page =
+      PageInfo<ExerciseDetailRouteArgs>(name);
+}
+
+class ExerciseDetailRouteArgs {
+  const ExerciseDetailRouteArgs({
+    this.key,
+    required this.exerciseKey,
+  });
+
+  final Key? key;
+
+  final String exerciseKey;
+
+  @override
+  String toString() {
+    return 'ExerciseDetailRouteArgs{key: $key, exerciseKey: $exerciseKey}';
+  }
+}
+
+/// generated route for
+/// [ExercisesPage]
+class ExercisesRoute extends PageRouteInfo<void> {
+  const ExercisesRoute({List<PageRouteInfo>? children})
+      : super(
+          ExercisesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ExercisesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [FirebaseOpsPageLoader]
 class FirebaseOpsRouteLoader extends PageRouteInfo<FirebaseOpsRouteLoaderArgs> {
   FirebaseOpsRouteLoader({
@@ -230,7 +294,8 @@ class FirebaseOpsRouteLoader extends PageRouteInfo<FirebaseOpsRouteLoaderArgs> {
 
   static const String name = 'FirebaseOpsRouteLoader';
 
-  static const PageInfo<FirebaseOpsRouteLoaderArgs> page = PageInfo<FirebaseOpsRouteLoaderArgs>(name);
+  static const PageInfo<FirebaseOpsRouteLoaderArgs> page =
+      PageInfo<FirebaseOpsRouteLoaderArgs>(name);
 }
 
 class FirebaseOpsRouteLoaderArgs {
@@ -377,20 +442,6 @@ class WorkoutCycleRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'WorkoutCycleRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ExercisesPage]
-class WorkoutsRoute extends PageRouteInfo<void> {
-  const WorkoutsRoute({List<PageRouteInfo>? children})
-      : super(
-          WorkoutsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'WorkoutsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

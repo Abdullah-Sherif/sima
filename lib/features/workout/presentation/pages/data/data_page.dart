@@ -20,7 +20,7 @@ class DataPage extends StatelessWidget {
           CustomTextButton(
             text: context.appTexts.exercises,
             onPressed: () {
-              context.router.push(const WorkoutsRoute());
+              context.router.push(const ExercisesRoute());
             },
             backgroundColor: Colors.transparent,
             textColor: context.theme.colorScheme.secondary,

@@ -6,6 +6,9 @@ final workoutRoutes = <AutoRoute>[
     page: WorkoutCycleRoute.page,
   ),
   AutoRoute(
-    page: WorkoutsRoute.page,
+    page: ExercisesRoute.page,
+  ),
+  AutoRoute(
+    page: ExerciseDetailRoute.page,
   ),
 ];
