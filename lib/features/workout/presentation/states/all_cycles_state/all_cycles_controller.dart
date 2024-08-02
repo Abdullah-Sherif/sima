@@ -12,7 +12,7 @@ final mockCycle = CycleEntity(workouts: {
           name: 'dumbbelle jrbfruvburvbubvubv',
           description: 'lift heavily towards yourself more text more text more text more text more text more text more text',
           key: '1',
-          sets: {
+          currentSets: {
             '1': SetEntity.weight(
               key: '1',
               reps: 10,
@@ -38,7 +38,7 @@ final mockCycle = CycleEntity(workouts: {
         name: 'barbell',
         description: 'lift heavily towards yourself',
         key: '2',
-        sets: {
+        currentSets: {
           '1': SetEntity.weight(
             key: '1',
             reps: 10,
@@ -116,12 +116,12 @@ class AllCyclesController extends StateNotifier<AllCyclesState> {
     final tempWorkout = state.cycle.workouts.values.elementAt(workoutIndex);
     final tempExercise = tempWorkout.getExerciseByKey(exerciseKey);
     if (tempExercise == null) return;
-    final tempSet = tempExercise.sets[setKey];
+    final tempSet = tempExercise.currentSets[setKey];
     if (tempSet == null) return;
     final newSet = tempSet.setReps(reps);
-    final newSets = Map<String, SetEntity>.from(tempExercise.sets);
+    final newSets = Map<String, SetEntity>.from(tempExercise.currentSets);
     newSets[setKey] = newSet;
-    final newExercise = tempExercise.copyWith(sets: newSets);
+    final newExercise = tempExercise.copyWith(currentSets: newSets);
     final newWorkout = tempWorkout.updateExercise(newExercise);
     final newCycle = state.cycle.copyWith(workouts: {
       ...state.cycle.workouts,
@@ -134,12 +134,12 @@ class AllCyclesController extends StateNotifier<AllCyclesState> {
     final tempWorkout = state.cycle.workouts.values.elementAt(workoutIndex);
     final tempExercise = tempWorkout.getExerciseByKey(exerciseKey);
     if (tempExercise == null) return;
-    final tempSet = tempExercise.sets[setKey];
+    final tempSet = tempExercise.currentSets[setKey];
     if (tempSet == null) return;
     final newSet = tempSet.setWeight(weight);
-    final newSets = Map<String, SetEntity>.from(tempExercise.sets);
+    final newSets = Map<String, SetEntity>.from(tempExercise.currentSets);
     newSets[setKey] = newSet;
-    final newExercise = tempExercise.copyWith(sets: newSets);
+    final newExercise = tempExercise.copyWith(currentSets: newSets);
     final newWorkout = tempWorkout.updateExercise(newExercise);
     final newCycle = state.cycle.copyWith(workouts: {
       ...state.cycle.workouts,

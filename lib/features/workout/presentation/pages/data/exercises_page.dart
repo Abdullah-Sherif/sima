@@ -86,7 +86,7 @@ class _CustomExerciseTile extends StatelessWidget {
           style: ButtonStyle(
             fixedSize: MaterialStateProperty.all(
               Size(
-                context.percentOfWidth(0.7),
+                context.percentOfWidth(0.8),
                 75,
               ),
             ),

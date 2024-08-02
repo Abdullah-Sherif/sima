@@ -6,9 +6,78 @@ import 'all_exercises_state.dart';
 
 final allexercisesControllerProvider = StateNotifierProvider.autoDispose<AllExercisesController, AllExercisesState>((ref) {
   return AllExercisesController(
-    AllExercisesState(),
+    AllExercisesState(exercises: mockExercises),
   );
 });
+
+final mockExercises = {
+  '1': ExerciseEntity(
+    key: '1',
+    name: 'Bench Press',
+    description: 'Bench press is a compound exercise that builds upper body strength.',
+    type: ExerciseType.reps,
+    currentSets: {
+      '0': SetEntity.weight(
+        key: '0',
+        reps: 10,
+        weight: 10,
+      ),
+      '1': SetEntity.weight(
+        key: '1',
+        reps: 10,
+        weight: 10,
+      ),
+      '2': SetEntity.weight(
+        key: '2',
+        reps: 10,
+        weight: 10,
+      ),
+    },
+  ).addCurrentStateToLogs(1, 1).addCurrentStateToLogs(2, 1).addCurrentStateToLogs(3, 4).addCurrentStateToLogs(5, 1),
+  '2': ExerciseEntity(
+    key: '2',
+    name: 'Squat',
+    description: 'Squat is a compound exercise that builds lower body strength.',
+    type: ExerciseType.reps,
+    currentSets: {
+      '0': SetEntity.weight(
+        key: '0',
+        reps: 10,
+        weight: 10,
+      ),
+      '1': SetEntity.weight(
+        key: '1',
+        reps: 10,
+        weight: 10,
+      ),
+      '2': SetEntity.weight(
+        key: '2',
+        reps: 10,
+        weight: 10,
+      ),
+    },
+  ),
+  '3': ExerciseEntity(
+    key: '3',
+    name: 'Plank',
+    description: 'Plank is a core exercise that builds core strength.',
+    type: ExerciseType.duration,
+    currentSets: {
+      '0': SetEntity.duration(
+        key: '0',
+        durationInSec: 60,
+      ),
+      '1': SetEntity.duration(
+        key: '1',
+        durationInSec: 60,
+      ),
+      '2': SetEntity.duration(
+        key: '2',
+        durationInSec: 60,
+      ),
+    },
+  ),
+};
 
 class AllExercisesController extends StateNotifier<AllExercisesState> {
   AllExercisesController(
@@ -38,7 +107,7 @@ class AllExercisesController extends StateNotifier<AllExercisesState> {
     state = state.copyWith(
       exercises: {
         ...state.exercises,
-        key: ExerciseEntity(name: name, description: description, key: key, type: type, sets: sets),
+        key: ExerciseEntity(name: name, description: description, key: key, type: type, currentSets: sets),
       },
     );
   }
@@ -47,10 +116,10 @@ class AllExercisesController extends StateNotifier<AllExercisesState> {
     final exercise = state.exercises[key];
     if (exercise != null) {
       Map<String, SetEntity> sets = {};
-      for (int i = exercise.sets.length; i < numberOfSets; i++) {
+      for (int i = exercise.currentSets.length; i < numberOfSets; i++) {
         sets = {
           ...sets,
-          i.toString(): exercise.sets[i.toString()] ??
+          i.toString(): exercise.currentSets[i.toString()] ??
               SetEntity.weight(
                 key: i.toString(),
                 reps: 10,
@@ -61,7 +130,7 @@ class AllExercisesController extends StateNotifier<AllExercisesState> {
       state = state.copyWith(
         exercises: {
           ...state.exercises,
-          key: exercise.copyWith(name: name, description: description, sets: sets),
+          key: exercise.copyWith(name: name, description: description, currentSets: sets),
         },
       );
     }

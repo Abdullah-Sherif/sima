@@ -24,7 +24,7 @@ class CustomCreateExerciseDialog extends HookConsumerWidget {
     final selectedType = useState(initialExercise != null
         ? [initialExercise!.type == ExerciseType.reps, initialExercise!.type == ExerciseType.duration]
         : [true, false]);
-    final numberOfSets = useState(initialExercise?.sets.length ?? 1);
+    final numberOfSets = useState(initialExercise?.currentSets.length ?? 1);
     final nameError = useState<String?>(null);
     final descriptionError = useState<String?>(null);
     const uuid = Uuid();

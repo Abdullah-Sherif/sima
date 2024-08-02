@@ -228,6 +228,100 @@ class _HistoryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30,
+        vertical: 20,
+      ),
+      child: ListView.separated(
+        itemBuilder: (context, index) {
+          final log = exercise.logs[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      '${log.date.day}/${log.date.month}/${log.date.year}',
+                      style: context.textTheme.titleMedium?.copyWith(fontSize: 22),
+                    ),
+                    Text(
+                      '${context.appTexts.cycle} ${log.cycleNum}  |  ${context.appTexts.day} ${log.dayNum}',
+                      style: context.textTheme.titleMedium?.copyWith(fontSize: 22),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                if (log.sets.isNotEmpty)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        context.appTexts.set,
+                        style: context.textTheme.titleMedium,
+                      ),
+                      if (exercise.type == ExerciseType.reps) ...[
+                        Text(
+                          context.appTexts.weight,
+                          style: context.textTheme.titleMedium,
+                        ),
+                        Text(
+                          context.appTexts.reps,
+                          style: context.textTheme.titleMedium,
+                        ),
+                      ] else ...[
+                        Text(
+                          context.appTexts.duration,
+                          style: context.textTheme.titleMedium,
+                        ),
+                      ],
+                    ],
+                  ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final set = log.sets[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            '${index + 1}',
+                            style: context.textTheme.titleMedium,
+                          ),
+                          if (exercise.type == ExerciseType.reps) ...[
+                            Text(
+                              '${set.weight} kg',
+                              style: context.textTheme.titleMedium,
+                            ),
+                            Text(
+                              '${set.reps}',
+                              style: context.textTheme.titleMedium,
+                            ),
+                          ] else ...[
+                            Text(
+                              '${set.durationInSec} sec',
+                              style: context.textTheme.titleMedium,
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  },
+                  itemCount: log.sets.length,
+                ),
+              ],
+            ),
+          );
+        },
+        separatorBuilder: (context, index) => const Divider(),
+        itemCount: exercise.logs.length,
+      ),
+    );
   }
 }

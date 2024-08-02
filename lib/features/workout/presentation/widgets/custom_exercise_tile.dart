@@ -122,14 +122,14 @@ class CustomExerciseTile extends HookConsumerWidget {
                             child: ListView.builder(
                               controller: scrollController,
                               itemBuilder: (context, index) {
-                                final set = exercise.sets.values.elementAt(index);
+                                final set = exercise.currentSets.values.elementAt(index);
                                 return CustomSetTile(
                                   set: set,
                                   setNum: index + 1,
                                   exerciseKey: exerciseKey,
                                 );
                               },
-                              itemCount: exercise.sets.length,
+                              itemCount: exercise.currentSets.length,
                             ),
                           ),
                         ),
