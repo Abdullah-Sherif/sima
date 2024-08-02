@@ -20,6 +20,8 @@ _$ExerciseEntityImpl _$$ExerciseEntityImplFromJson(Map<String, dynamic> json) =>
       key: json['key'] as String,
       forceCompleted: json['forceCompleted'] as bool? ?? false,
       isActive: json['isActive'] as bool? ?? false,
+      max: (json['max'] as num?)?.toInt() ?? 10,
+      videoPath: json['videoPath'] as String? ?? null,
     );
 
 Map<String, dynamic> _$$ExerciseEntityImplToJson(
@@ -32,6 +34,8 @@ Map<String, dynamic> _$$ExerciseEntityImplToJson(
       'key': instance.key,
       'forceCompleted': instance.forceCompleted,
       'isActive': instance.isActive,
+      'max': instance.max,
+      'videoPath': instance.videoPath,
     };
 
 const _$ExerciseTypeEnumMap = {

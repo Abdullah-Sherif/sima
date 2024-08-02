@@ -47,5 +47,19 @@
   "name": "Name",
   "desc": "Description",
   "type": "Type",
-  "sets": "Sets"
+  "sets": "Sets",
+  "updateExercise": "Update Exercise",
+  "createExercise": "Create Exercise",
+  "deleteVideo": "Delete Video",
+  "addVideo": "Add Video",
+  "edit": "Edit",
+  "delete": "Delete",
+  "details": "Details",
+  "history": "History",
+  "maxWeight": "Max Weight",
+  "maxDur": "Max Duration",
+  "video": "Video",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "areYouSure": "Are you sure you want to"
 }

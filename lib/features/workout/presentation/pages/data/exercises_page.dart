@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sima/core/barrel.dart';
 import 'package:sima/features/workout/barrel.dart';
-import 'package:sima/features/workout/presentation/widgets/custom_create_exercise_dialog.dart';
 
 @RoutePage()
-class ExercisesPage extends HookConsumerWidget {
+class ExercisesPage extends ConsumerWidget {
   const ExercisesPage({super.key});
 
   @override

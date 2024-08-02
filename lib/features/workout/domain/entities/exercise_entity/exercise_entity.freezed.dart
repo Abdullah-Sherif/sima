@@ -27,6 +27,8 @@ mixin _$ExerciseEntity {
   String get key => throw _privateConstructorUsedError;
   bool get forceCompleted => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
+  int get max => throw _privateConstructorUsedError;
+  String? get videoPath => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,7 +49,9 @@ abstract class $ExerciseEntityCopyWith<$Res> {
       ExerciseType type,
       String key,
       bool forceCompleted,
-      bool isActive});
+      bool isActive,
+      int max,
+      String? videoPath});
 }
 
 /// @nodoc
@@ -70,6 +74,8 @@ class _$ExerciseEntityCopyWithImpl<$Res, $Val extends ExerciseEntity>
     Object? key = null,
     Object? forceCompleted = null,
     Object? isActive = null,
+    Object? max = null,
+    Object? videoPath = freezed,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -100,6 +106,14 @@ class _$ExerciseEntityCopyWithImpl<$Res, $Val extends ExerciseEntity>
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
+      max: null == max
+          ? _value.max
+          : max // ignore: cast_nullable_to_non_nullable
+              as int,
+      videoPath: freezed == videoPath
+          ? _value.videoPath
+          : videoPath // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -119,7 +133,9 @@ abstract class _$$ExerciseEntityImplCopyWith<$Res>
       ExerciseType type,
       String key,
       bool forceCompleted,
-      bool isActive});
+      bool isActive,
+      int max,
+      String? videoPath});
 }
 
 /// @nodoc
@@ -140,6 +156,8 @@ class __$$ExerciseEntityImplCopyWithImpl<$Res>
     Object? key = null,
     Object? forceCompleted = null,
     Object? isActive = null,
+    Object? max = null,
+    Object? videoPath = freezed,
   }) {
     return _then(_$ExerciseEntityImpl(
       name: null == name
@@ -170,6 +188,14 @@ class __$$ExerciseEntityImplCopyWithImpl<$Res>
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
+      max: null == max
+          ? _value.max
+          : max // ignore: cast_nullable_to_non_nullable
+              as int,
+      videoPath: freezed == videoPath
+          ? _value.videoPath
+          : videoPath // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -184,7 +210,9 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
       this.type = ExerciseType.reps,
       required this.key,
       this.forceCompleted = false,
-      this.isActive = false})
+      this.isActive = false,
+      this.max = 10,
+      this.videoPath = null})
       : _sets = sets;
 
   factory _$ExerciseEntityImpl.fromJson(Map<String, dynamic> json) =>
@@ -214,10 +242,16 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
   @override
   @JsonKey()
   final bool isActive;
+  @override
+  @JsonKey()
+  final int max;
+  @override
+  @JsonKey()
+  final String? videoPath;
 
   @override
   String toString() {
-    return 'ExerciseEntity(name: $name, description: $description, sets: $sets, type: $type, key: $key, forceCompleted: $forceCompleted, isActive: $isActive)';
+    return 'ExerciseEntity(name: $name, description: $description, sets: $sets, type: $type, key: $key, forceCompleted: $forceCompleted, isActive: $isActive, max: $max, videoPath: $videoPath)';
   }
 
   @override
@@ -234,7 +268,10 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
             (identical(other.forceCompleted, forceCompleted) ||
                 other.forceCompleted == forceCompleted) &&
             (identical(other.isActive, isActive) ||
-                other.isActive == isActive));
+                other.isActive == isActive) &&
+            (identical(other.max, max) || other.max == max) &&
+            (identical(other.videoPath, videoPath) ||
+                other.videoPath == videoPath));
   }
 
   @JsonKey(ignore: true)
@@ -247,7 +284,9 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
       type,
       key,
       forceCompleted,
-      isActive);
+      isActive,
+      max,
+      videoPath);
 
   @JsonKey(ignore: true)
   @override
@@ -272,7 +311,9 @@ abstract class _ExerciseEntity implements ExerciseEntity {
       final ExerciseType type,
       required final String key,
       final bool forceCompleted,
-      final bool isActive}) = _$ExerciseEntityImpl;
+      final bool isActive,
+      final int max,
+      final String? videoPath}) = _$ExerciseEntityImpl;
 
   factory _ExerciseEntity.fromJson(Map<String, dynamic> json) =
       _$ExerciseEntityImpl.fromJson;
@@ -291,6 +332,10 @@ abstract class _ExerciseEntity implements ExerciseEntity {
   bool get forceCompleted;
   @override
   bool get isActive;
+  @override
+  int get max;
+  @override
+  String? get videoPath;
   @override
   @JsonKey(ignore: true)
   _$$ExerciseEntityImplCopyWith<_$ExerciseEntityImpl> get copyWith =>

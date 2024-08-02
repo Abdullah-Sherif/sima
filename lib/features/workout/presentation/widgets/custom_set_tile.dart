@@ -71,6 +71,10 @@ class CustomSetTile extends HookConsumerWidget {
                             set.key,
                             dayNum,
                           );
+
+                      ref
+                          .read(allexercisesControllerProvider.notifier)
+                          .checkIsMax(value != '' ? int.parse(value) : 0, exerciseKey);
                     },
                   ),
                 ] else

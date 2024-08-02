@@ -15,6 +15,8 @@ class ExerciseEntity with _$ExerciseEntity {
     required String key,
     @Default(false) bool forceCompleted,
     @Default(false) bool isActive,
+    @Default(10) int max,
+    @Default(null) String? videoPath,
   }) = _ExerciseEntity;
 
   factory ExerciseEntity.fromJson(Map<String, Object?> json) => _$ExerciseEntityFromJson(json);
@@ -36,6 +38,11 @@ extension ExerciseEntityX on ExerciseEntity {
 
   ExerciseEntity setIsActive(bool value) {
     return copyWith(isActive: value);
+  }
+
+  ExerciseEntity setMax(int value) {
+    if (value < max) return this;
+    return copyWith(max: value);
   }
 
   ExerciseEntity setSetIsComplete(bool value, String setKey) {
