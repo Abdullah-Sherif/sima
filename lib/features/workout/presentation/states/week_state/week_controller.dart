@@ -28,26 +28,26 @@ class WeekController extends StateNotifier<WeekState> {
     state = state.copyWith(offset: state.offset + 1);
   }
 
-  void decrementOffset() {
-    if (getCurrentWeekNumberWithOffset() == 1 && getCurrentDayNumberWithOffset() == 1) {
+  void decrementOffset(int limit) {
+    if (getCurrentWeekNumberWithOffset(limit) == 1 && getCurrentDayNumberWithOffset(limit) == 1) {
       return;
     }
     state = state.copyWith(offset: state.offset - 1);
   }
 
-  int getCurrentDayNumberWithOffset() {
+  int getCurrentDayNumberWithOffset(int limit) {
     int currentDayNumber = state.weekEntity.currentDayNumber;
     int currentDayWOffset = currentDayNumber + state.offset;
-    currentDayWOffset = currentDayWOffset % 7;
+    currentDayWOffset = currentDayWOffset % limit;
     if (currentDayWOffset == 0) {
-      currentDayWOffset = 7;
+      currentDayWOffset = limit;
     }
     return currentDayWOffset;
   }
 
-  int getCurrentWeekNumberWithOffset() {
+  int getCurrentWeekNumberWithOffset(int limit) {
     int currentWeekNumber = state.weekEntity.currentWeekNumber;
-    int currentWeekWOffset = currentWeekNumber + (state.offset ~/ 7);
+    int currentWeekWOffset = currentWeekNumber + (state.offset ~/ limit);
     return currentWeekWOffset;
   }
 }

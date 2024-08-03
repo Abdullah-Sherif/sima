@@ -1,16 +1,23 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sima/core/barrel.dart';
 import 'package:sima/features/workout/barrel.dart';
 
 @RoutePage()
-class ExercisesPage extends ConsumerWidget {
-  const ExercisesPage({super.key});
+class ExercisesPage extends HookConsumerWidget {
+  const ExercisesPage({super.key, this.currentExercises, this.workoutIndex});
+
+  final List<ExerciseEntity>? currentExercises;
+  final int? workoutIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isEditing = currentExercises != null;
     final exercises = ref.watch(allexercisesControllerProvider).exercises.values;
+    final selectedExercises =
+        isEditing ? useState(List.generate(currentExercises!.length, (index) => currentExercises![index])) : null;
 
     return SafeArea(
       child: Scaffold(
@@ -20,15 +27,32 @@ class ExercisesPage extends ConsumerWidget {
           child: FloatingActionButton(
             backgroundColor: context.theme.colorScheme.secondary,
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return const CustomCreateExerciseDialog();
-                },
-              );
+              if (isEditing) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return WarningDialog(
+                        action: context.appTexts.add.toLowerCase(),
+                        title: context.appTexts.exercises.toLowerCase(),
+                        onConfirm: () {
+                          ref
+                              .read(allcyclesControllerProvider.notifier)
+                              .setWorkoutExercises(workoutIndex!, selectedExercises!.value);
+                          Navigator.of(context).pop();
+                        });
+                  },
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const CustomCreateExerciseDialog();
+                  },
+                );
+              }
             },
             child: Icon(
-              Icons.add,
+              isEditing ? Icons.check : Icons.add,
               color: context.theme.colorScheme.background,
             ),
           ),
@@ -56,7 +80,7 @@ class ExercisesPage extends ConsumerWidget {
                 return Column(
                   children: [
                     if (index != 0) const SizedBox(height: 10),
-                    _CustomExerciseTile(exercise: exercise),
+                    _CustomExerciseTile(exercise: exercise, isEditing: isEditing, selectedExercises: selectedExercises),
                   ],
                 );
               },
@@ -72,9 +96,13 @@ class ExercisesPage extends ConsumerWidget {
 class _CustomExerciseTile extends StatelessWidget {
   const _CustomExerciseTile({
     required this.exercise,
+    required this.isEditing,
+    this.selectedExercises,
   });
 
   final ExerciseEntity exercise;
+  final bool isEditing;
+  final ValueNotifier<List<ExerciseEntity>>? selectedExercises;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +122,9 @@ class _CustomExerciseTile extends StatelessWidget {
               horizontal: 20,
               vertical: 10,
             )),
-            backgroundColor: MaterialStateProperty.all(Colors.transparent),
+            backgroundColor: MaterialStateProperty.all(
+              isEditing && selectedExercises!.value.contains(exercise) ? context.theme.colorScheme.primary : Colors.transparent,
+            ),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -103,11 +133,20 @@ class _CustomExerciseTile extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            context.router.push(
-              ExerciseDetailRoute(
-                exerciseKey: exercise.key,
-              ),
-            );
+            if (isEditing) {
+              if (!selectedExercises!.value.contains(exercise)) {
+                selectedExercises!.value = [...selectedExercises!.value, exercise];
+              } else {
+                final newExercises = selectedExercises!.value.where((element) => element.key != exercise.key).toList();
+                selectedExercises!.value = newExercises;
+              }
+            } else {
+              context.router.push(
+                ExerciseDetailRoute(
+                  exerciseKey: exercise.key,
+                ),
+              );
+            }
           },
           child: SizedBox(
             width: double.infinity,

@@ -94,7 +94,7 @@ class CustomCreateExerciseDialog extends HookConsumerWidget {
                       context.appTexts.type,
                       style: context.textTheme.titleLarge,
                     ),
-                    _CustomToggleButtons(selectedType: selectedType),
+                    CustomToggleButtons(selectedType: selectedType, types: [context.appTexts.weight, context.appTexts.duration]),
                     const SizedBox(height: 20),
                   ],
                   Text(
@@ -191,55 +191,6 @@ class _CustomNumberPicker extends StatelessWidget {
             },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _CustomToggleButtons extends StatelessWidget {
-  const _CustomToggleButtons({
-    required this.selectedType,
-  });
-
-  final ValueNotifier<List<bool>> selectedType;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 20,
-        horizontal: 10,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(2, (index) {
-          final isSelected = selectedType.value[index];
-          return GestureDetector(
-            onTap: () {
-              selectedType.value = List.generate(
-                selectedType.value.length,
-                (buttonIndex) => buttonIndex == index,
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: isSelected ? context.theme.colorScheme.secondary : context.theme.colorScheme.background,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: isSelected ? Colors.transparent : context.theme.colorScheme.secondary,
-                ),
-              ),
-              child: Text(
-                index == 0 ? context.appTexts.weight : context.appTexts.duration,
-                style: TextStyle(
-                  color: isSelected ? context.theme.colorScheme.background : context.theme.colorScheme.secondary,
-                ),
-              ),
-            ),
-          );
-        }),
       ),
     );
   }

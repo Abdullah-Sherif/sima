@@ -182,4 +182,45 @@ class AllCyclesController extends StateNotifier<AllCyclesState> {
       setIsActiveExercise(workoutIndex, nextExerciseKey, true);
     }
   }
+
+  void deleteExerciseFromWorkout(int workoutIndex, String exerciseKey) {
+    final tempWorkout = state.cycle.workouts.values.elementAt(workoutIndex);
+    final newWorkout = tempWorkout.deleteExercise(exerciseKey);
+    final newCycle = state.cycle.copyWith(workouts: {
+      ...state.cycle.workouts,
+      newWorkout.key: newWorkout,
+    });
+    state = state.copyWith(cycle: newCycle);
+  }
+
+  void deleteWorkout(int workoutIndex) {
+    final tempWorkouts = Map<String, WorkoutEntity>.from(state.cycle.workouts);
+    tempWorkouts.remove(tempWorkouts.values.elementAt(workoutIndex).key);
+    final newCycle = state.cycle.copyWith(workouts: tempWorkouts);
+    state = state.copyWith(cycle: newCycle);
+  }
+
+  void addWorkout(WorkoutEntity workout) {
+    final tempWorkouts = Map<String, WorkoutEntity>.from(state.cycle.workouts);
+    tempWorkouts[workout.key] = workout;
+    final newCycle = state.cycle.copyWith(workouts: tempWorkouts);
+    state = state.copyWith(cycle: newCycle);
+  }
+
+  void updateWorkout(WorkoutEntity workout) {
+    final tempWorkouts = Map<String, WorkoutEntity>.from(state.cycle.workouts);
+    tempWorkouts[workout.key] = workout;
+    final newCycle = state.cycle.copyWith(workouts: tempWorkouts);
+    state = state.copyWith(cycle: newCycle);
+  }
+
+  void setWorkoutExercises(int workoutIndex, List<ExerciseEntity> exercises) {
+    final tempWorkout = state.cycle.workouts.values.elementAt(workoutIndex);
+    final newWorkout = tempWorkout.setExercises({for (var e in exercises) e.key: e});
+    final newCycle = state.cycle.copyWith(workouts: {
+      ...state.cycle.workouts,
+      newWorkout.key: newWorkout,
+    });
+    state = state.copyWith(cycle: newCycle);
+  }
 }

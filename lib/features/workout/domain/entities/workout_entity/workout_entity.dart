@@ -96,4 +96,31 @@ extension WorkoutEntityX on WorkoutEntity {
     }
     return this;
   }
+
+  WorkoutEntity deleteExercise(String exerciseKey) {
+    if (isWorkoutDay) {
+      final exercises = (this as _WorkoutDay).exercises;
+      final newExercises = Map<String, ExerciseEntity>.from(exercises);
+      newExercises.remove(exerciseKey);
+      return (this as _WorkoutDay).copyWith(exercises: newExercises);
+    }
+    return this;
+  }
+
+  WorkoutEntity changeToWorkoutDay() {
+    if (isRestDay) {
+      return WorkoutEntity.workoutDay(
+        name: (this as _RestDay).name,
+        key: (this as _RestDay).key,
+      );
+    }
+    return this;
+  }
+
+  WorkoutEntity setExercises(Map<String, ExerciseEntity> exercises) {
+    if (isWorkoutDay) {
+      return (this as _WorkoutDay).copyWith(exercises: exercises);
+    }
+    return this;
+  }
 }

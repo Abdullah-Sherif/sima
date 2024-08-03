@@ -47,7 +47,7 @@ class CustomExerciseTile extends HookConsumerWidget {
     }
 
     final cycle = ref.watch(allcyclesControllerProvider).cycle;
-    final dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset();
+    final dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset(cycle.workouts.length);
     final exercise = cycle.workouts.values.elementAt(dayNum - 1).getExerciseByKey(exerciseKey);
 
     final scrollController = useScrollController();
@@ -86,17 +86,10 @@ class CustomExerciseTile extends HookConsumerWidget {
                     onPlay: onPlay,
                     onCheck: onCheck,
                   ),
-                  AnimatedRotation(
-                    turns: isExpanded ? -0.25 : 0.25,
-                    duration: const Duration(milliseconds: 300),
-                    child: IconButton(
-                      iconSize: 27,
-                      icon: const Icon(Icons.arrow_back_ios_new_outlined),
-                      onPressed: () {
-                        onExpand();
-                      },
-                    ),
-                  )
+                  CustomExpandorButton(
+                    isExpanded: isExpanded,
+                    onExpand: onExpand,
+                  ),
                 ],
               ),
               if (contentVisibility.value)

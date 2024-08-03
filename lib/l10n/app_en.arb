@@ -61,5 +61,9 @@
   "video": "Video",
   "cancel": "Cancel",
   "confirm": "Confirm",
-  "areYouSure": "Are you sure you want to"
+  "areYouSure": "Are you sure you want to",
+  "workoutDay": "Workout Day",
+  "restDay": "Rest Day",
+  "addExercise": "Add Exercise",
+  "add": "Add"
 }

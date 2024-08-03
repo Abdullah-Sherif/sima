@@ -55,9 +55,15 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ExercisesRoute.name: (routeData) {
+      final args = routeData.argsAs<ExercisesRouteArgs>(
+          orElse: () => const ExercisesRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ExercisesPage(),
+        child: ExercisesPage(
+          key: args.key,
+          currentExercises: args.currentExercises,
+          workoutIndex: args.workoutIndex,
+        ),
       );
     },
     FirebaseOpsRouteLoader.name: (routeData) {
@@ -255,16 +261,45 @@ class ExerciseDetailRouteArgs {
 
 /// generated route for
 /// [ExercisesPage]
-class ExercisesRoute extends PageRouteInfo<void> {
-  const ExercisesRoute({List<PageRouteInfo>? children})
-      : super(
+class ExercisesRoute extends PageRouteInfo<ExercisesRouteArgs> {
+  ExercisesRoute({
+    Key? key,
+    List<ExerciseEntity>? currentExercises,
+    int? workoutIndex,
+    List<PageRouteInfo>? children,
+  }) : super(
           ExercisesRoute.name,
+          args: ExercisesRouteArgs(
+            key: key,
+            currentExercises: currentExercises,
+            workoutIndex: workoutIndex,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ExercisesRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<ExercisesRouteArgs> page =
+      PageInfo<ExercisesRouteArgs>(name);
+}
+
+class ExercisesRouteArgs {
+  const ExercisesRouteArgs({
+    this.key,
+    this.currentExercises,
+    this.workoutIndex,
+  });
+
+  final Key? key;
+
+  final List<ExerciseEntity>? currentExercises;
+
+  final int? workoutIndex;
+
+  @override
+  String toString() {
+    return 'ExercisesRouteArgs{key: $key, currentExercises: $currentExercises, workoutIndex: $workoutIndex}';
+  }
 }
 
 /// generated route for

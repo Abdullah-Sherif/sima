@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sima/core/barrel.dart';
 import 'package:sima/features/workout/barrel.dart';
-import 'package:sima/features/workout/domain/entities/exercise_log_entity/exercise_log_entity.dart';
 
 part 'exercise_entity.freezed.dart';
 part 'exercise_entity.g.dart';

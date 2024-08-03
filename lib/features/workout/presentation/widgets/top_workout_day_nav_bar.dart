@@ -8,6 +8,7 @@ class WorkoutDayNavBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final cycleLength = ref.watch(allcyclesControllerProvider).cycle.workouts.length;
     ref.watch(weekControllerProvider).weekEntity;
     return SizedBox(
       width: double.infinity,
@@ -24,13 +25,13 @@ class WorkoutDayNavBar extends ConsumerWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  ref.read(weekControllerProvider.notifier).decrementOffset();
+                  ref.read(weekControllerProvider.notifier).decrementOffset(cycleLength);
                 },
                 iconSize: 30,
                 icon: const Icon(Icons.arrow_back),
               ),
               Text(
-                '${context.appTexts.cycle} ${ref.read(weekControllerProvider.notifier).getCurrentWeekNumberWithOffset()}',
+                '${context.appTexts.cycle} ${ref.read(weekControllerProvider.notifier).getCurrentWeekNumberWithOffset(cycleLength)}',
                 textAlign: TextAlign.center,
                 style: context.textTheme.titleLarge,
               ),
@@ -40,14 +41,14 @@ class WorkoutDayNavBar extends ConsumerWidget {
                 style: context.textTheme.titleLarge,
               ),
               Text(
-                '${context.appTexts.day} ${ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset()}',
+                '${context.appTexts.day} ${ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset(cycleLength)}',
                 textAlign: TextAlign.center,
                 style: context.textTheme.titleLarge,
               ),
               IconButton(
                 onPressed: () {
                   int offset = ref.read(weekControllerProvider).offset;
-                  int dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset();
+                  int dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset(cycleLength);
 
                   ref.read(weekControllerProvider.notifier).incrementOffset();
                   ref.read(allcyclesControllerProvider.notifier).setFirstExerciseActiveForCurrentDay(offset, dayNum - 1);

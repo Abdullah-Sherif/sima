@@ -34,7 +34,10 @@ class _WorkoutName extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(weekControllerProvider).offset;
-    final dayNum = ref.watch(weekControllerProvider.notifier).getCurrentDayNumberWithOffset();
+
+    final dayNum = ref
+        .watch(weekControllerProvider.notifier)
+        .getCurrentDayNumberWithOffset(ref.watch(allcyclesControllerProvider).cycle.workouts.length);
 
     return Text(
       ref.watch(allcyclesControllerProvider.notifier).getWorkoutName(dayNum),
@@ -72,7 +75,7 @@ class _WorkoutExercises extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(weekControllerProvider).offset;
     final cycle = ref.watch(allcyclesControllerProvider).cycle;
-    final dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset();
+    final dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset(ref.watch(allcyclesControllerProvider).cycle.workouts.length);
     final workoutValues = cycle.workouts.values;
 
     return cycle.isEmpty
