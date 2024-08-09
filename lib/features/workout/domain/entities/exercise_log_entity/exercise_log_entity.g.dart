@@ -12,7 +12,8 @@ _$ExerciseLogEntityImpl _$$ExerciseLogEntityImplFromJson(
       sets: (json['sets'] as List<dynamic>)
           .map((e) => SetEntity.fromJson(e as Map<String, dynamic>))
           .toList(),
-      date: DateTime.parse(json['date'] as String),
+      date: _getDateTimeFromMillisSinceEpoch(
+          (json['millisSinceEpoch'] as num).toInt()),
       cycleNum: (json['cycleNum'] as num).toInt(),
       dayNum: (json['dayNum'] as num).toInt(),
     );
@@ -21,7 +22,7 @@ Map<String, dynamic> _$$ExerciseLogEntityImplToJson(
         _$ExerciseLogEntityImpl instance) =>
     <String, dynamic>{
       'sets': instance.sets.map((e) => e.toJson()).toList(),
-      'date': instance.date.toIso8601String(),
+      'millisSinceEpoch': instance.date.toIso8601String(),
       'cycleNum': instance.cycleNum,
       'dayNum': instance.dayNum,
     };

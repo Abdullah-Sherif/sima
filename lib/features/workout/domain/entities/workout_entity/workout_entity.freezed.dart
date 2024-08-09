@@ -15,44 +15,81 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 WorkoutEntity _$WorkoutEntityFromJson(Map<String, dynamic> json) {
-  switch (json['runtimeType']) {
+  switch (json['type']) {
     case 'workoutDay':
       return _WorkoutDay.fromJson(json);
     case 'restDay':
       return _RestDay.fromJson(json);
 
     default:
-      throw CheckedFromJsonException(json, 'runtimeType', 'WorkoutEntity',
-          'Invalid union type "${json['runtimeType']}"!');
+      throw CheckedFromJsonException(json, 'type', 'WorkoutEntity',
+          'Invalid union type "${json['type']}"!');
   }
 }
 
 /// @nodoc
 mixin _$WorkoutEntity {
   String get name => throw _privateConstructorUsedError;
+  @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
   String get key => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Map<String, ExerciseEntity> exercises,
-            String name, String key, bool forceCompleted)
+    required TResult Function(
+            Map<String, ExerciseEntity> exercises,
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key,
+            @JsonKey(
+                name: 'force_completed',
+                fromJson: _intToBool,
+                toJson: _boolToInt)
+            bool forceCompleted)
         workoutDay,
-    required TResult Function(String name, String key) restDay,
+    required TResult Function(
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key)
+        restDay,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(Map<String, ExerciseEntity> exercises, String name,
-            String key, bool forceCompleted)?
+    TResult? Function(
+            Map<String, ExerciseEntity> exercises,
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key,
+            @JsonKey(
+                name: 'force_completed',
+                fromJson: _intToBool,
+                toJson: _boolToInt)
+            bool forceCompleted)?
         workoutDay,
-    TResult? Function(String name, String key)? restDay,
+    TResult? Function(
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key)?
+        restDay,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Map<String, ExerciseEntity> exercises, String name,
-            String key, bool forceCompleted)?
+    TResult Function(
+            Map<String, ExerciseEntity> exercises,
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key,
+            @JsonKey(
+                name: 'force_completed',
+                fromJson: _intToBool,
+                toJson: _boolToInt)
+            bool forceCompleted)?
         workoutDay,
-    TResult Function(String name, String key)? restDay,
+    TResult Function(
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key)?
+        restDay,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -87,7 +124,10 @@ abstract class $WorkoutEntityCopyWith<$Res> {
           WorkoutEntity value, $Res Function(WorkoutEntity) then) =
       _$WorkoutEntityCopyWithImpl<$Res, WorkoutEntity>;
   @useResult
-  $Res call({String name, String key});
+  $Res call(
+      {String name,
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+      String key});
 }
 
 /// @nodoc
@@ -130,7 +170,10 @@ abstract class _$$WorkoutDayImplCopyWith<$Res>
   $Res call(
       {Map<String, ExerciseEntity> exercises,
       String name,
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
       String key,
+      @JsonKey(
+          name: 'force_completed', fromJson: _intToBool, toJson: _boolToInt)
       bool forceCompleted});
 }
 
@@ -178,7 +221,10 @@ class _$WorkoutDayImpl implements _WorkoutDay {
       {final Map<String, ExerciseEntity> exercises =
           const <String, ExerciseEntity>{},
       required this.name,
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
       required this.key,
+      @JsonKey(
+          name: 'force_completed', fromJson: _intToBool, toJson: _boolToInt)
       this.forceCompleted = false,
       final String? $type})
       : _exercises = exercises,
@@ -199,12 +245,13 @@ class _$WorkoutDayImpl implements _WorkoutDay {
   @override
   final String name;
   @override
+  @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
   final String key;
   @override
-  @JsonKey()
+  @JsonKey(name: 'force_completed', fromJson: _intToBool, toJson: _boolToInt)
   final bool forceCompleted;
 
-  @JsonKey(name: 'runtimeType')
+  @JsonKey(name: 'type')
   final String $type;
 
   @override
@@ -243,10 +290,22 @@ class _$WorkoutDayImpl implements _WorkoutDay {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Map<String, ExerciseEntity> exercises,
-            String name, String key, bool forceCompleted)
+    required TResult Function(
+            Map<String, ExerciseEntity> exercises,
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key,
+            @JsonKey(
+                name: 'force_completed',
+                fromJson: _intToBool,
+                toJson: _boolToInt)
+            bool forceCompleted)
         workoutDay,
-    required TResult Function(String name, String key) restDay,
+    required TResult Function(
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key)
+        restDay,
   }) {
     return workoutDay(exercises, name, key, forceCompleted);
   }
@@ -254,10 +313,22 @@ class _$WorkoutDayImpl implements _WorkoutDay {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(Map<String, ExerciseEntity> exercises, String name,
-            String key, bool forceCompleted)?
+    TResult? Function(
+            Map<String, ExerciseEntity> exercises,
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key,
+            @JsonKey(
+                name: 'force_completed',
+                fromJson: _intToBool,
+                toJson: _boolToInt)
+            bool forceCompleted)?
         workoutDay,
-    TResult? Function(String name, String key)? restDay,
+    TResult? Function(
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key)?
+        restDay,
   }) {
     return workoutDay?.call(exercises, name, key, forceCompleted);
   }
@@ -265,10 +336,22 @@ class _$WorkoutDayImpl implements _WorkoutDay {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Map<String, ExerciseEntity> exercises, String name,
-            String key, bool forceCompleted)?
+    TResult Function(
+            Map<String, ExerciseEntity> exercises,
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key,
+            @JsonKey(
+                name: 'force_completed',
+                fromJson: _intToBool,
+                toJson: _boolToInt)
+            bool forceCompleted)?
         workoutDay,
-    TResult Function(String name, String key)? restDay,
+    TResult Function(
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key)?
+        restDay,
     required TResult orElse(),
   }) {
     if (workoutDay != null) {
@@ -320,7 +403,10 @@ abstract class _WorkoutDay implements WorkoutEntity {
   factory _WorkoutDay(
       {final Map<String, ExerciseEntity> exercises,
       required final String name,
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
       required final String key,
+      @JsonKey(
+          name: 'force_completed', fromJson: _intToBool, toJson: _boolToInt)
       final bool forceCompleted}) = _$WorkoutDayImpl;
 
   factory _WorkoutDay.fromJson(Map<String, dynamic> json) =
@@ -330,7 +416,9 @@ abstract class _WorkoutDay implements WorkoutEntity {
   @override
   String get name;
   @override
+  @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
   String get key;
+  @JsonKey(name: 'force_completed', fromJson: _intToBool, toJson: _boolToInt)
   bool get forceCompleted;
   @override
   @JsonKey(ignore: true)
@@ -346,7 +434,10 @@ abstract class _$$RestDayImplCopyWith<$Res>
       __$$RestDayImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, String key});
+  $Res call(
+      {String name,
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+      String key});
 }
 
 /// @nodoc
@@ -380,7 +471,10 @@ class __$$RestDayImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$RestDayImpl implements _RestDay {
   const _$RestDayImpl(
-      {this.name = 'Rest', required this.key, final String? $type})
+      {this.name = 'Rest',
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+      required this.key,
+      final String? $type})
       : $type = $type ?? 'restDay';
 
   factory _$RestDayImpl.fromJson(Map<String, dynamic> json) =>
@@ -390,9 +484,10 @@ class _$RestDayImpl implements _RestDay {
   @JsonKey()
   final String name;
   @override
+  @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
   final String key;
 
-  @JsonKey(name: 'runtimeType')
+  @JsonKey(name: 'type')
   final String $type;
 
   @override
@@ -422,10 +517,22 @@ class _$RestDayImpl implements _RestDay {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Map<String, ExerciseEntity> exercises,
-            String name, String key, bool forceCompleted)
+    required TResult Function(
+            Map<String, ExerciseEntity> exercises,
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key,
+            @JsonKey(
+                name: 'force_completed',
+                fromJson: _intToBool,
+                toJson: _boolToInt)
+            bool forceCompleted)
         workoutDay,
-    required TResult Function(String name, String key) restDay,
+    required TResult Function(
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key)
+        restDay,
   }) {
     return restDay(name, key);
   }
@@ -433,10 +540,22 @@ class _$RestDayImpl implements _RestDay {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(Map<String, ExerciseEntity> exercises, String name,
-            String key, bool forceCompleted)?
+    TResult? Function(
+            Map<String, ExerciseEntity> exercises,
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key,
+            @JsonKey(
+                name: 'force_completed',
+                fromJson: _intToBool,
+                toJson: _boolToInt)
+            bool forceCompleted)?
         workoutDay,
-    TResult? Function(String name, String key)? restDay,
+    TResult? Function(
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key)?
+        restDay,
   }) {
     return restDay?.call(name, key);
   }
@@ -444,10 +563,22 @@ class _$RestDayImpl implements _RestDay {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Map<String, ExerciseEntity> exercises, String name,
-            String key, bool forceCompleted)?
+    TResult Function(
+            Map<String, ExerciseEntity> exercises,
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key,
+            @JsonKey(
+                name: 'force_completed',
+                fromJson: _intToBool,
+                toJson: _boolToInt)
+            bool forceCompleted)?
         workoutDay,
-    TResult Function(String name, String key)? restDay,
+    TResult Function(
+            String name,
+            @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+            String key)?
+        restDay,
     required TResult orElse(),
   }) {
     if (restDay != null) {
@@ -496,14 +627,17 @@ class _$RestDayImpl implements _RestDay {
 }
 
 abstract class _RestDay implements WorkoutEntity {
-  const factory _RestDay({final String name, required final String key}) =
-      _$RestDayImpl;
+  const factory _RestDay(
+      {final String name,
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
+      required final String key}) = _$RestDayImpl;
 
   factory _RestDay.fromJson(Map<String, dynamic> json) = _$RestDayImpl.fromJson;
 
   @override
   String get name;
   @override
+  @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
   String get key;
   @override
   @JsonKey(ignore: true)

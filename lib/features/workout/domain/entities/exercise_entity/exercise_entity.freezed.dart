@@ -22,13 +22,18 @@ ExerciseEntity _$ExerciseEntityFromJson(Map<String, dynamic> json) {
 mixin _$ExerciseEntity {
   String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
   String get key => throw _privateConstructorUsedError;
+  @JsonKey(name: 'sets', fromJson: _setsFromJson, toJson: _setsToJson)
   Map<String, SetEntity> get currentSets => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _intToType, toJson: _typeToInt)
   ExerciseType get type => throw _privateConstructorUsedError;
+  @JsonKey(name: 'force_complete', fromJson: _intToBool, toJson: _boolToInt)
   bool get forceCompleted => throw _privateConstructorUsedError;
-  bool get isActive => throw _privateConstructorUsedError;
   int get max => throw _privateConstructorUsedError;
+  @JsonKey(name: 'video_path')
   String? get videoPath => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: _logsFromJson, toJson: _logsToJson)
   List<ExerciseLogEntity> get logs => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,13 +51,16 @@ abstract class $ExerciseEntityCopyWith<$Res> {
   $Res call(
       {String name,
       String description,
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
       String key,
+      @JsonKey(name: 'sets', fromJson: _setsFromJson, toJson: _setsToJson)
       Map<String, SetEntity> currentSets,
-      ExerciseType type,
+      @JsonKey(fromJson: _intToType, toJson: _typeToInt) ExerciseType type,
+      @JsonKey(name: 'force_complete', fromJson: _intToBool, toJson: _boolToInt)
       bool forceCompleted,
-      bool isActive,
       int max,
-      String? videoPath,
+      @JsonKey(name: 'video_path') String? videoPath,
+      @JsonKey(fromJson: _logsFromJson, toJson: _logsToJson)
       List<ExerciseLogEntity> logs});
 }
 
@@ -75,7 +83,6 @@ class _$ExerciseEntityCopyWithImpl<$Res, $Val extends ExerciseEntity>
     Object? currentSets = null,
     Object? type = null,
     Object? forceCompleted = null,
-    Object? isActive = null,
     Object? max = null,
     Object? videoPath = freezed,
     Object? logs = null,
@@ -105,10 +112,6 @@ class _$ExerciseEntityCopyWithImpl<$Res, $Val extends ExerciseEntity>
           ? _value.forceCompleted
           : forceCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      isActive: null == isActive
-          ? _value.isActive
-          : isActive // ignore: cast_nullable_to_non_nullable
-              as bool,
       max: null == max
           ? _value.max
           : max // ignore: cast_nullable_to_non_nullable
@@ -136,13 +139,16 @@ abstract class _$$ExerciseEntityImplCopyWith<$Res>
   $Res call(
       {String name,
       String description,
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
       String key,
+      @JsonKey(name: 'sets', fromJson: _setsFromJson, toJson: _setsToJson)
       Map<String, SetEntity> currentSets,
-      ExerciseType type,
+      @JsonKey(fromJson: _intToType, toJson: _typeToInt) ExerciseType type,
+      @JsonKey(name: 'force_complete', fromJson: _intToBool, toJson: _boolToInt)
       bool forceCompleted,
-      bool isActive,
       int max,
-      String? videoPath,
+      @JsonKey(name: 'video_path') String? videoPath,
+      @JsonKey(fromJson: _logsFromJson, toJson: _logsToJson)
       List<ExerciseLogEntity> logs});
 }
 
@@ -163,7 +169,6 @@ class __$$ExerciseEntityImplCopyWithImpl<$Res>
     Object? currentSets = null,
     Object? type = null,
     Object? forceCompleted = null,
-    Object? isActive = null,
     Object? max = null,
     Object? videoPath = freezed,
     Object? logs = null,
@@ -193,10 +198,6 @@ class __$$ExerciseEntityImplCopyWithImpl<$Res>
           ? _value.forceCompleted
           : forceCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      isActive: null == isActive
-          ? _value.isActive
-          : isActive // ignore: cast_nullable_to_non_nullable
-              as bool,
       max: null == max
           ? _value.max
           : max // ignore: cast_nullable_to_non_nullable
@@ -219,13 +220,17 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
   const _$ExerciseEntityImpl(
       {required this.name,
       required this.description,
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
       required this.key,
+      @JsonKey(name: 'sets', fromJson: _setsFromJson, toJson: _setsToJson)
       final Map<String, SetEntity> currentSets = const <String, SetEntity>{},
+      @JsonKey(fromJson: _intToType, toJson: _typeToInt)
       this.type = ExerciseType.reps,
+      @JsonKey(name: 'force_complete', fromJson: _intToBool, toJson: _boolToInt)
       this.forceCompleted = false,
-      this.isActive = false,
       this.max = 10,
-      this.videoPath = null,
+      @JsonKey(name: 'video_path') this.videoPath = null,
+      @JsonKey(fromJson: _logsFromJson, toJson: _logsToJson)
       final List<ExerciseLogEntity> logs = const <ExerciseLogEntity>[]})
       : _currentSets = currentSets,
         _logs = logs;
@@ -238,10 +243,11 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
   @override
   final String description;
   @override
+  @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
   final String key;
   final Map<String, SetEntity> _currentSets;
   @override
-  @JsonKey()
+  @JsonKey(name: 'sets', fromJson: _setsFromJson, toJson: _setsToJson)
   Map<String, SetEntity> get currentSets {
     if (_currentSets is EqualUnmodifiableMapView) return _currentSets;
     // ignore: implicit_dynamic_type
@@ -249,23 +255,20 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
   }
 
   @override
-  @JsonKey()
+  @JsonKey(fromJson: _intToType, toJson: _typeToInt)
   final ExerciseType type;
   @override
-  @JsonKey()
+  @JsonKey(name: 'force_complete', fromJson: _intToBool, toJson: _boolToInt)
   final bool forceCompleted;
-  @override
-  @JsonKey()
-  final bool isActive;
   @override
   @JsonKey()
   final int max;
   @override
-  @JsonKey()
+  @JsonKey(name: 'video_path')
   final String? videoPath;
   final List<ExerciseLogEntity> _logs;
   @override
-  @JsonKey()
+  @JsonKey(fromJson: _logsFromJson, toJson: _logsToJson)
   List<ExerciseLogEntity> get logs {
     if (_logs is EqualUnmodifiableListView) return _logs;
     // ignore: implicit_dynamic_type
@@ -274,7 +277,7 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
 
   @override
   String toString() {
-    return 'ExerciseEntity(name: $name, description: $description, key: $key, currentSets: $currentSets, type: $type, forceCompleted: $forceCompleted, isActive: $isActive, max: $max, videoPath: $videoPath, logs: $logs)';
+    return 'ExerciseEntity(name: $name, description: $description, key: $key, currentSets: $currentSets, type: $type, forceCompleted: $forceCompleted, max: $max, videoPath: $videoPath, logs: $logs)';
   }
 
   @override
@@ -291,8 +294,6 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
             (identical(other.type, type) || other.type == type) &&
             (identical(other.forceCompleted, forceCompleted) ||
                 other.forceCompleted == forceCompleted) &&
-            (identical(other.isActive, isActive) ||
-                other.isActive == isActive) &&
             (identical(other.max, max) || other.max == max) &&
             (identical(other.videoPath, videoPath) ||
                 other.videoPath == videoPath) &&
@@ -309,7 +310,6 @@ class _$ExerciseEntityImpl implements _ExerciseEntity {
       const DeepCollectionEquality().hash(_currentSets),
       type,
       forceCompleted,
-      isActive,
       max,
       videoPath,
       const DeepCollectionEquality().hash(_logs));
@@ -333,13 +333,17 @@ abstract class _ExerciseEntity implements ExerciseEntity {
   const factory _ExerciseEntity(
       {required final String name,
       required final String description,
+      @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
       required final String key,
+      @JsonKey(name: 'sets', fromJson: _setsFromJson, toJson: _setsToJson)
       final Map<String, SetEntity> currentSets,
+      @JsonKey(fromJson: _intToType, toJson: _typeToInt)
       final ExerciseType type,
+      @JsonKey(name: 'force_complete', fromJson: _intToBool, toJson: _boolToInt)
       final bool forceCompleted,
-      final bool isActive,
       final int max,
-      final String? videoPath,
+      @JsonKey(name: 'video_path') final String? videoPath,
+      @JsonKey(fromJson: _logsFromJson, toJson: _logsToJson)
       final List<ExerciseLogEntity> logs}) = _$ExerciseEntityImpl;
 
   factory _ExerciseEntity.fromJson(Map<String, dynamic> json) =
@@ -350,20 +354,24 @@ abstract class _ExerciseEntity implements ExerciseEntity {
   @override
   String get description;
   @override
+  @JsonKey(name: 'id', fromJson: _toString, includeToJson: false)
   String get key;
   @override
+  @JsonKey(name: 'sets', fromJson: _setsFromJson, toJson: _setsToJson)
   Map<String, SetEntity> get currentSets;
   @override
+  @JsonKey(fromJson: _intToType, toJson: _typeToInt)
   ExerciseType get type;
   @override
+  @JsonKey(name: 'force_complete', fromJson: _intToBool, toJson: _boolToInt)
   bool get forceCompleted;
-  @override
-  bool get isActive;
   @override
   int get max;
   @override
+  @JsonKey(name: 'video_path')
   String? get videoPath;
   @override
+  @JsonKey(fromJson: _logsFromJson, toJson: _logsToJson)
   List<ExerciseLogEntity> get logs;
   @override
   @JsonKey(ignore: true)

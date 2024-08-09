@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sima/core/barrel.dart';
 import 'package:sima/features/workout/barrel.dart';
 
-class CustomExerciseTile extends HookConsumerWidget {
+class CustomExerciseTile extends HookWidget {
   const CustomExerciseTile({
     super.key,
-    required this.exerciseKey,
+    required this.exercise,
+    required this.isEditable,
     required this.onExpand,
     required this.onPlay,
     required this.onCheck,
@@ -17,7 +17,8 @@ class CustomExerciseTile extends HookConsumerWidget {
     this.horizontalMargin = 10,
   });
 
-  final String exerciseKey;
+  final ExerciseEntity exercise;
+  final bool isEditable;
   final bool isExpanded;
   final double width;
   final double verticalMargin;
@@ -27,7 +28,7 @@ class CustomExerciseTile extends HookConsumerWidget {
   final Function(bool?)? onCheck;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     var contentVisibility = useState(isExpanded);
     var descriptionVisibility = useState(false);
 
@@ -36,6 +37,7 @@ class CustomExerciseTile extends HookConsumerWidget {
         contentVisibility.value = true;
       } else {
         Future.delayed(const Duration(milliseconds: 300), () {
+          if (!context.mounted) return;
           contentVisibility.value = false;
         });
       }
@@ -45,10 +47,6 @@ class CustomExerciseTile extends HookConsumerWidget {
     void toggleDescriptionVisibility() {
       descriptionVisibility.value = !descriptionVisibility.value;
     }
-
-    final cycle = ref.watch(allcyclesControllerProvider).cycle;
-    final dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset(cycle.workouts.length);
-    final exercise = cycle.workouts.values.elementAt(dayNum - 1).getExerciseByKey(exerciseKey);
 
     final scrollController = useScrollController();
 
@@ -73,7 +71,7 @@ class CustomExerciseTile extends HookConsumerWidget {
                   SizedBox(
                     width: width * 0.4,
                     child: Text(
-                      exercise!.name,
+                      exercise.name,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: context.textTheme.titleMedium?.copyWith(fontSize: 23),
@@ -86,10 +84,11 @@ class CustomExerciseTile extends HookConsumerWidget {
                     onPlay: onPlay,
                     onCheck: onCheck,
                   ),
-                  CustomExpandorButton(
-                    isExpanded: isExpanded,
-                    onExpand: onExpand,
-                  ),
+                  if (isEditable)
+                    CustomExpandorButton(
+                      isExpanded: isExpanded,
+                      onExpand: onExpand,
+                    ),
                 ],
               ),
               if (contentVisibility.value)
@@ -119,7 +118,6 @@ class CustomExerciseTile extends HookConsumerWidget {
                                 return CustomSetTile(
                                   set: set,
                                   setNum: index + 1,
-                                  exerciseKey: exerciseKey,
                                 );
                               },
                               itemCount: exercise.currentSets.length,

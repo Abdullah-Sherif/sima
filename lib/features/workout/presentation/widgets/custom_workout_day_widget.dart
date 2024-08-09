@@ -28,6 +28,7 @@ class CustomWorkoutDayWidget extends HookConsumerWidget {
         showExpanded.value = true;
       } else {
         Future.delayed(const Duration(milliseconds: 300), () {
+          if (!context.mounted) return;
           showExpanded.value = false;
         });
       }
@@ -81,7 +82,7 @@ class CustomWorkoutDayWidget extends HookConsumerWidget {
                             action: context.appTexts.delete,
                             title: workout.name,
                             onConfirm: () {
-                              ref.read(allcyclesControllerProvider.notifier).deleteWorkout(dayNum - 1);
+                              ref.read(editWorkoutsControllerProvider.notifier).deleteWorkout(workout.key);
                             },
                           );
                         },
@@ -127,8 +128,8 @@ class CustomWorkoutDayWidget extends HookConsumerWidget {
                                         title: exercise.name,
                                         onConfirm: () {
                                           ref
-                                              .read(allcyclesControllerProvider.notifier)
-                                              .deleteExerciseFromWorkout(dayNum - 1, exercise.key);
+                                              .read(editWorkoutsControllerProvider.notifier)
+                                              .deleteExerciseFromWorkout(workout.key, exercise.key);
                                         },
                                       );
                                     },
@@ -146,7 +147,7 @@ class CustomWorkoutDayWidget extends HookConsumerWidget {
                             text: context.appTexts.addExercise,
                             onPressed: () {
                               context.router
-                                  .push(ExercisesRoute(workoutIndex: dayNum - 1, currentExercises: workout.exercises!.toList()));
+                                  .push(ExercisesRoute(workoutKey: workout.key, currentExercises: workout.exercises!.toList()));
                             },
                             width: context.percentOfWidth(0.7),
                           ),

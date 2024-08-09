@@ -9,19 +9,18 @@ class CustomSetTile extends HookConsumerWidget {
     super.key,
     required this.set,
     required this.setNum,
-    required this.exerciseKey,
   });
 
   final SetEntity set;
   final int setNum;
-  final String exerciseKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     late final TextEditingController? repsController;
     late final TextEditingController? weightController;
-    final dayNum = ref.watch(weekControllerProvider).weekEntity.currentDayIndex;
-    ref.watch(allcyclesControllerProvider).cycle;
+
+    final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
+    final workoutKey = ref.watch(fetchCyclesControllerProvider.notifier).getWorkout(currentDate)!.key;
 
     if (set.isWeightSet) {
       repsController = useTextEditingController(text: set.reps.toString());
@@ -54,27 +53,21 @@ class CustomSetTile extends HookConsumerWidget {
                   _CustomSetInputField(
                     controller: repsController!,
                     onChanged: (value) {
-                      ref.read(allcyclesControllerProvider.notifier).setSetReps(
+                      ref.read(editWorkoutExerciseControllerProvider.notifier).updateSetReps(
+                            set,
+                            workoutKey,
                             value != '' ? int.parse(value) : 0,
-                            exerciseKey,
-                            set.key,
-                            dayNum,
                           );
                     },
                   ),
                   _CustomSetInputField(
                     controller: weightController!,
                     onChanged: (value) {
-                      ref.read(allcyclesControllerProvider.notifier).setSetWeight(
+                      ref.read(editWorkoutExerciseControllerProvider.notifier).updateSetWeight(
+                            set,
+                            workoutKey,
                             value != '' ? int.parse(value) : 0,
-                            exerciseKey,
-                            set.key,
-                            dayNum,
                           );
-
-                      ref
-                          .read(allexercisesControllerProvider.notifier)
-                          .checkIsMax(value != '' ? int.parse(value) : 0, exerciseKey);
                     },
                   ),
                 ] else
@@ -82,11 +75,10 @@ class CustomSetTile extends HookConsumerWidget {
                 Checkbox(
                   value: set.isCompleted,
                   onChanged: (value) {
-                    ref.read(allcyclesControllerProvider.notifier).setSetIsComplete(
-                          dayNum,
-                          exerciseKey,
-                          set.key,
-                          value ?? set.isCompleted,
+                    ref.read(editWorkoutExerciseControllerProvider.notifier).completeSet(
+                          set,
+                          workoutKey,
+                          value,
                         );
                   },
                 ),

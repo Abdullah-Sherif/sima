@@ -4,11 +4,15 @@ import 'package:sima/features/workout/barrel.dart';
 part 'exercise_log_entity.freezed.dart';
 part 'exercise_log_entity.g.dart';
 
+DateTime _getDateTimeFromMillisSinceEpoch(int millis) {
+  return DateTime.fromMillisecondsSinceEpoch(millis);
+}
+
 @freezed
 abstract class ExerciseLogEntity implements _$ExerciseLogEntity {
   factory ExerciseLogEntity({
     required List<SetEntity> sets,
-    required DateTime date,
+    @JsonKey(name: 'millisSinceEpoch', fromJson: _getDateTimeFromMillisSinceEpoch) required DateTime date,
     required int cycleNum,
     required int dayNum,
   }) = _ExerciseLogEntity;

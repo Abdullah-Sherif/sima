@@ -8,14 +8,16 @@ part of 'cycle_entity.dart';
 
 _$CycleEntityImpl _$$CycleEntityImplFromJson(Map<String, dynamic> json) =>
     _$CycleEntityImpl(
-      workouts: (json['workouts'] as Map<String, dynamic>?)?.map(
-            (k, e) =>
-                MapEntry(k, WorkoutEntity.fromJson(e as Map<String, dynamic>)),
-          ) ??
-          const <String, WorkoutEntity>{},
+      key: _toString(json['id']),
+      startDate: _getDateTimeFromMillisSinceEpoch(
+          (json['start_date_mse'] as num).toInt()),
+      workouts: json['workouts'] == null
+          ? const <String, WorkoutEntity>{}
+          : _workoutsFromJson(json['workouts'] as String),
     );
 
 Map<String, dynamic> _$$CycleEntityImplToJson(_$CycleEntityImpl instance) =>
     <String, dynamic>{
-      'workouts': instance.workouts.map((k, e) => MapEntry(k, e.toJson())),
+      'start_date_mse': _getMillisSinceEpochFromDateTime(instance.startDate),
+      'workouts': _workoutsToJson(instance.workouts),
     };

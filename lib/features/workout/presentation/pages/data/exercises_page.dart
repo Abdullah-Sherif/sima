@@ -7,17 +7,17 @@ import 'package:sima/features/workout/barrel.dart';
 
 @RoutePage()
 class ExercisesPage extends HookConsumerWidget {
-  const ExercisesPage({super.key, this.currentExercises, this.workoutIndex});
+  const ExercisesPage({super.key, this.currentExercises, this.workoutKey});
 
   final List<ExerciseEntity>? currentExercises;
-  final int? workoutIndex;
+  final String? workoutKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditing = currentExercises != null;
-    final exercises = ref.watch(allexercisesControllerProvider).exercises.values;
+    final exercises = ref.watch(fetchAllExercisesControllerProvider).exercises;
     final selectedExercises =
-        isEditing ? useState(List.generate(currentExercises!.length, (index) => currentExercises![index])) : null;
+        isEditing ? useState(List.generate(currentExercises!.length, (index) => currentExercises![index].key)) : null;
 
     return SafeArea(
       child: Scaffold(
@@ -36,8 +36,8 @@ class ExercisesPage extends HookConsumerWidget {
                         title: context.appTexts.exercises.toLowerCase(),
                         onConfirm: () {
                           ref
-                              .read(allcyclesControllerProvider.notifier)
-                              .setWorkoutExercises(workoutIndex!, selectedExercises!.value);
+                              .read(editWorkoutsControllerProvider.notifier)
+                              .setExercisesToWorkout(workoutKey!, selectedExercises!.value);
                           Navigator.of(context).pop();
                         });
                   },
@@ -80,7 +80,12 @@ class ExercisesPage extends HookConsumerWidget {
                 return Column(
                   children: [
                     if (index != 0) const SizedBox(height: 10),
-                    _CustomExerciseTile(exercise: exercise, isEditing: isEditing, selectedExercises: selectedExercises),
+                    _CustomExerciseTile(
+                      exercise: exercise,
+                      isEditing: isEditing,
+                      selectedExercises: selectedExercises,
+                      exerciseIndex: index,
+                    ),
                   ],
                 );
               },
@@ -98,11 +103,13 @@ class _CustomExerciseTile extends StatelessWidget {
     required this.exercise,
     required this.isEditing,
     this.selectedExercises,
+    required this.exerciseIndex,
   });
 
   final ExerciseEntity exercise;
   final bool isEditing;
-  final ValueNotifier<List<ExerciseEntity>>? selectedExercises;
+  final ValueNotifier<List<String>>? selectedExercises;
+  final int exerciseIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -134,16 +141,16 @@ class _CustomExerciseTile extends StatelessWidget {
           ),
           onPressed: () {
             if (isEditing) {
-              if (!selectedExercises!.value.contains(exercise)) {
-                selectedExercises!.value = [...selectedExercises!.value, exercise];
+              if (!selectedExercises!.value.contains(exercise.key)) {
+                selectedExercises!.value = [...selectedExercises!.value, exercise.key];
               } else {
-                final newExercises = selectedExercises!.value.where((element) => element.key != exercise.key).toList();
+                final newExercises = selectedExercises!.value.where((element) => element != exercise.key).toList();
                 selectedExercises!.value = newExercises;
               }
             } else {
               context.router.push(
                 ExerciseDetailRoute(
-                  exerciseKey: exercise.key,
+                  exerciseIndex: exerciseIndex,
                 ),
               );
             }

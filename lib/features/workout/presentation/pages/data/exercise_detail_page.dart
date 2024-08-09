@@ -13,69 +13,66 @@ import 'package:sima/features/workout/barrel.dart';
 class ExerciseDetailPage extends HookConsumerWidget {
   const ExerciseDetailPage({
     super.key,
-    required this.exerciseKey,
+    required this.exerciseIndex,
   });
 
-  final String exerciseKey;
+  final int exerciseIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final exercise = ref.watch(fetchAllExercisesControllerProvider).exercises[exerciseIndex];
     final TabController tabController = useTabController(initialLength: 2);
-    final exercise = ref.watch(allexercisesControllerProvider).exercises[exerciseKey];
 
     return SafeArea(
-      child: exercise != null
-          ? Scaffold(
-              appBar: AppBar(
-                leading: BackButton(
-                  style: ButtonStyle(iconSize: MaterialStateProperty.all(30)),
-                ),
-                title: Text(
-                  exercise.name,
-                  style: context.textTheme.titleLarge?.copyWith(fontSize: 35),
-                ),
-                bottom: TabBar(
-                  tabs: [
-                    Tab(text: context.appTexts.details),
-                    Tab(text: context.appTexts.history),
-                  ],
-                  labelStyle: context.textTheme.titleMedium,
-                  controller: tabController,
-                  unselectedLabelColor: context.theme.colorScheme.primary,
-                  labelColor: context.theme.colorScheme.secondary,
-                  indicatorColor: context.theme.colorScheme.secondary,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                ),
-              ),
-              body: TabBarView(
-                controller: tabController,
-                children: [
-                  _InfoTab(exerciseKey: exercise.key),
-                  _HistoryTab(exercise: exercise),
-                ],
-              ),
-            )
-          : const Center(child: CircularProgressIndicator()),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: BackButton(
+            style: ButtonStyle(iconSize: MaterialStateProperty.all(30)),
+          ),
+          title: Text(
+            exercise.name,
+            style: context.textTheme.titleLarge?.copyWith(fontSize: 35),
+          ),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: context.appTexts.details),
+              Tab(text: context.appTexts.history),
+            ],
+            labelStyle: context.textTheme.titleMedium,
+            controller: tabController,
+            unselectedLabelColor: context.theme.colorScheme.primary,
+            labelColor: context.theme.colorScheme.secondary,
+            indicatorColor: context.theme.colorScheme.secondary,
+            indicatorSize: TabBarIndicatorSize.tab,
+            overlayColor: MaterialStateProperty.all(Colors.transparent),
+          ),
+        ),
+        body: TabBarView(
+          controller: tabController,
+          children: [
+            _InfoTab(exercise: exercise),
+            _HistoryTab(exercise: exercise),
+          ],
+        ),
+      ),
     );
   }
 }
 
 class _InfoTab extends HookConsumerWidget {
   const _InfoTab({
-    required this.exerciseKey,
+    required this.exercise,
   });
 
-  final String exerciseKey;
+  final ExerciseEntity exercise;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final exercise = ref.watch(allexercisesControllerProvider).exercises[exerciseKey];
     final customVideoPlayerController = useState<CustomVideoPlayerController?>(null);
 
     useEffect(() {
-      if (exercise?.videoPath != null) {
-        final videoController = CachedVideoPlayerController.file(File(exercise!.videoPath!));
+      if (exercise.videoPath != null) {
+        final videoController = CachedVideoPlayerController.file(File(exercise.videoPath!));
         final newController = CustomVideoPlayerController(
           context: context,
           videoPlayerController: videoController,
@@ -94,7 +91,7 @@ class _InfoTab extends HookConsumerWidget {
         customVideoPlayerController.value = null;
       }
       return customVideoPlayerController.value?.dispose;
-    }, [exercise?.videoPath]);
+    }, [exercise.videoPath]);
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -112,7 +109,7 @@ class _InfoTab extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Text(
-              exercise!.description,
+              exercise.description,
               style: context.textTheme.titleMedium,
             ),
           ),
@@ -159,14 +156,16 @@ class _InfoTab extends HookConsumerWidget {
               height: 40,
               onPressed: exercise.videoPath != null
                   ? () {
-                      ref.read(allexercisesControllerProvider.notifier).setVideoPath(null, exercise.key);
+                      ref.read(editExercisesControllerProvider.notifier).updateExercise(exercise.copyWith(videoPath: null));
                     }
                   : () async {
                       final picker = ImagePicker();
                       final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
 
                       if (pickedFile != null) {
-                        ref.read(allexercisesControllerProvider.notifier).setVideoPath(pickedFile.path, exercise.key);
+                        ref
+                            .read(editExercisesControllerProvider.notifier)
+                            .updateExercise(exercise.copyWith(videoPath: pickedFile.path));
                       }
                     },
               text: exercise.videoPath != null ? context.appTexts.deleteVideo : context.appTexts.addVideo,
@@ -203,7 +202,7 @@ class _InfoTab extends HookConsumerWidget {
                         title: exercise.name,
                         onConfirm: () {
                           Navigator.of(context).pop();
-                          ref.read(allexercisesControllerProvider.notifier).removeExercise(exercise.key);
+                          ref.read(editExercisesControllerProvider.notifier).deleteExercise(exercise.key);
                         },
                       );
                     },

@@ -4,18 +4,26 @@ import 'package:sima/features/workout/barrel.dart';
 part 'workout_entity.freezed.dart';
 part 'workout_entity.g.dart';
 
-@freezed
-abstract class WorkoutEntity implements _$WorkoutEntity {
+String _toString(dynamic value) => value.toString();
+bool _intToBool(int value) => value == 1;
+int _boolToInt(bool value) => value ? 1 : 0;
+
+@Freezed(unionKey: 'type')
+abstract class WorkoutEntity with _$WorkoutEntity {
+  @FreezedUnionValue('workoutDay')
   factory WorkoutEntity.workoutDay({
     @Default(<String, ExerciseEntity>{}) Map<String, ExerciseEntity> exercises,
     required String name,
-    required String key,
-    @Default(false) bool forceCompleted,
+    @JsonKey(name: 'id', fromJson: _toString, includeToJson: false) required String key,
+    @JsonKey(name: 'force_completed', fromJson: _intToBool, toJson: _boolToInt) @Default(false) bool forceCompleted,
   }) = _WorkoutDay;
+
+  @FreezedUnionValue('restDay')
   const factory WorkoutEntity.restDay({
     @Default('Rest') String name,
-    required String key,
+    @JsonKey(name: 'id', fromJson: _toString, includeToJson: false) required String key,
   }) = _RestDay;
+
   factory WorkoutEntity.fromJson(Map<String, dynamic> json) => _$WorkoutEntityFromJson(json);
 }
 
@@ -59,32 +67,6 @@ extension WorkoutEntityX on WorkoutEntity {
   ExerciseEntity? getExerciseByIndex(int index) {
     if (index >= exerciseLength) return null;
     return (this as _WorkoutDay).exercises.values.elementAt(index);
-  }
-
-  WorkoutEntity toggleActiveExercise(String exerciseKey) {
-    if (isWorkoutDay) {
-      final exercises = (this as _WorkoutDay).exercises;
-      final exercise = exercises[exerciseKey];
-      if (exercise == null) return this;
-      final newExercise = exercise.toggleActive();
-      final newExercises = Map<String, ExerciseEntity>.from(exercises);
-      newExercises[exerciseKey] = newExercise;
-      return (this as _WorkoutDay).copyWith(exercises: newExercises);
-    }
-    return this;
-  }
-
-  WorkoutEntity setIsActiveExercise(String exerciseKey, bool value) {
-    if (isWorkoutDay) {
-      final exercises = (this as _WorkoutDay).exercises;
-      final exercise = exercises[exerciseKey];
-      if (exercise == null) return this;
-      final newExercise = exercise.setIsActive(value);
-      final newExercises = Map<String, ExerciseEntity>.from(exercises);
-      newExercises[exerciseKey] = newExercise;
-      return (this as _WorkoutDay).copyWith(exercises: newExercises);
-    }
-    return this;
   }
 
   WorkoutEntity updateExercise(ExerciseEntity exercise) {

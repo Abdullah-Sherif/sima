@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sima/core/barrel.dart';
 import 'package:sima/features/workout/barrel.dart';
@@ -5,19 +7,36 @@ import 'package:sima/features/workout/barrel.dart';
 part 'exercise_entity.freezed.dart';
 part 'exercise_entity.g.dart';
 
+String _toString(dynamic value) => value.toString();
+ExerciseType _intToType(int value) => value == 0 ? ExerciseType.reps : ExerciseType.duration;
+int _typeToInt(ExerciseType type) => type == ExerciseType.reps ? 0 : 1;
+bool _intToBool(int value) => value == 1;
+int _boolToInt(bool value) => value ? 1 : 0;
+String _setsToJson(Map<String, SetEntity> sets) => jsonEncode(sets);
+Map<String, SetEntity> _setsFromJson(String json) {
+  final Map<String, dynamic> map = jsonDecode(json);
+  return map.map((key, value) => MapEntry(key, SetEntity.fromJson(value)));
+}
+String _logsToJson(List<ExerciseLogEntity> logs) => jsonEncode(logs);
+List<ExerciseLogEntity> _logsFromJson(String json) {
+  final List<dynamic> list = jsonDecode(json);
+  return list.map((e) => ExerciseLogEntity.fromJson(e)).toList();
+}
+
 @freezed
 class ExerciseEntity with _$ExerciseEntity {
   const factory ExerciseEntity({
     required String name,
     required String description,
-    required String key,
-    @Default(<String, SetEntity>{}) Map<String, SetEntity> currentSets,
-    @Default(ExerciseType.reps) ExerciseType type,
-    @Default(false) bool forceCompleted,
-    @Default(false) bool isActive,
+    @JsonKey(name: 'id', fromJson: _toString, includeToJson: false) required String key,
+    @JsonKey(name: 'sets', fromJson: _setsFromJson, toJson: _setsToJson)
+    @Default(<String, SetEntity>{})
+    Map<String, SetEntity> currentSets,
+    @JsonKey(fromJson: _intToType, toJson: _typeToInt) @Default(ExerciseType.reps) ExerciseType type,
+    @JsonKey(name: 'force_complete', fromJson: _intToBool, toJson: _boolToInt) @Default(false) bool forceCompleted,
     @Default(10) int max,
-    @Default(null) String? videoPath,
-    @Default(<ExerciseLogEntity>[]) List<ExerciseLogEntity> logs,
+    @JsonKey(name: 'video_path') @Default(null) String? videoPath,
+    @JsonKey(fromJson: _logsFromJson, toJson: _logsToJson) @Default(<ExerciseLogEntity>[]) List<ExerciseLogEntity> logs,
   }) = _ExerciseEntity;
 
   factory ExerciseEntity.fromJson(Map<String, Object?> json) => _$ExerciseEntityFromJson(json);
@@ -31,14 +50,6 @@ extension ExerciseEntityX on ExerciseEntity {
 
   ExerciseEntity setForceComplete(bool value) {
     return copyWith(forceCompleted: value);
-  }
-
-  ExerciseEntity toggleActive() {
-    return copyWith(isActive: !isActive);
-  }
-
-  ExerciseEntity setIsActive(bool value) {
-    return copyWith(isActive: value);
   }
 
   ExerciseEntity setMax(int value) {
@@ -56,7 +67,7 @@ extension ExerciseEntityX on ExerciseEntity {
         return copyWith(currentSets: newSets, forceCompleted: false);
       }
       if (newSets.values.every((element) => element.isCompleted)) {
-        return copyWith(currentSets: newSets, forceCompleted: true, isActive: false);
+        return copyWith(currentSets: newSets, forceCompleted: true);
       }
       return copyWith(currentSets: newSets);
     }

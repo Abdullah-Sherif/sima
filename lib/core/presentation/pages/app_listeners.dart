@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sima/core/barrel.dart';
+import 'package:sima/features/auth/presentation/states/auth_state/auth_state.dart';
 import 'package:sima/features/barrel.dart';
 
 class AppListeners extends ConsumerWidget {
@@ -38,20 +39,33 @@ class AppListeners extends ConsumerWidget {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(placeInAppControllerProvider.notifier).setPlaceInApp(placeInApp);
+      _handlePostFrameCallback(ref, context, authState, newRoute, placeInApp);
     });
 
+    return child;
+  }
+
+  Future<void> _handlePostFrameCallback(
+    WidgetRef ref,
+    BuildContext context,
+    AuthState authState,
+    PageRouteInfo newRoute,
+    PlaceInApp placeInApp,
+  ) async {
+    ref.read(placeInAppControllerProvider.notifier).setPlaceInApp(placeInApp);
+
     if (authState.isLoggedIn) {
-      ref.read(databaseServiceProvider).init();
+      await ref.read(databaseServiceProvider).init();
     }
 
     if (newRoute is AuthWrapperRoute) {
       const ImageProvider backgroundImage = AssetImage('assets/auth_home_background.jpg');
-      precacheImage(backgroundImage, context).then((_) => router.replace(newRoute));
+      if(context.mounted){
+        await precacheImage(backgroundImage, context);
+      }
+      router.replace(newRoute);
     } else {
       router.replace(newRoute);
     }
-
-    return child;
   }
 }

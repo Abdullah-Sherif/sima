@@ -50,7 +50,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: ExerciseDetailPage(
           key: args.key,
-          exerciseKey: args.exerciseKey,
+          exerciseIndex: args.exerciseIndex,
         ),
       );
     },
@@ -62,7 +62,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: ExercisesPage(
           key: args.key,
           currentExercises: args.currentExercises,
-          workoutIndex: args.workoutIndex,
+          workoutKey: args.workoutKey,
         ),
       );
     },
@@ -226,13 +226,13 @@ class DataRoute extends PageRouteInfo<void> {
 class ExerciseDetailRoute extends PageRouteInfo<ExerciseDetailRouteArgs> {
   ExerciseDetailRoute({
     Key? key,
-    required String exerciseKey,
+    required int exerciseIndex,
     List<PageRouteInfo>? children,
   }) : super(
           ExerciseDetailRoute.name,
           args: ExerciseDetailRouteArgs(
             key: key,
-            exerciseKey: exerciseKey,
+            exerciseIndex: exerciseIndex,
           ),
           initialChildren: children,
         );
@@ -246,16 +246,16 @@ class ExerciseDetailRoute extends PageRouteInfo<ExerciseDetailRouteArgs> {
 class ExerciseDetailRouteArgs {
   const ExerciseDetailRouteArgs({
     this.key,
-    required this.exerciseKey,
+    required this.exerciseIndex,
   });
 
   final Key? key;
 
-  final String exerciseKey;
+  final int exerciseIndex;
 
   @override
   String toString() {
-    return 'ExerciseDetailRouteArgs{key: $key, exerciseKey: $exerciseKey}';
+    return 'ExerciseDetailRouteArgs{key: $key, exerciseIndex: $exerciseIndex}';
   }
 }
 
@@ -265,14 +265,14 @@ class ExercisesRoute extends PageRouteInfo<ExercisesRouteArgs> {
   ExercisesRoute({
     Key? key,
     List<ExerciseEntity>? currentExercises,
-    int? workoutIndex,
+    String? workoutKey,
     List<PageRouteInfo>? children,
   }) : super(
           ExercisesRoute.name,
           args: ExercisesRouteArgs(
             key: key,
             currentExercises: currentExercises,
-            workoutIndex: workoutIndex,
+            workoutKey: workoutKey,
           ),
           initialChildren: children,
         );
@@ -287,18 +287,18 @@ class ExercisesRouteArgs {
   const ExercisesRouteArgs({
     this.key,
     this.currentExercises,
-    this.workoutIndex,
+    this.workoutKey,
   });
 
   final Key? key;
 
   final List<ExerciseEntity>? currentExercises;
 
-  final int? workoutIndex;
+  final String? workoutKey;
 
   @override
   String toString() {
-    return 'ExercisesRouteArgs{key: $key, currentExercises: $currentExercises, workoutIndex: $workoutIndex}';
+    return 'ExercisesRouteArgs{key: $key, currentExercises: $currentExercises, workoutKey: $workoutKey}';
   }
 }
 

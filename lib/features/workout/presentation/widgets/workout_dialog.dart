@@ -94,22 +94,16 @@ class WorkoutDialog extends HookConsumerWidget {
                         return;
                       }
                       if (currentWorkout != null) {
-                        ref
-                            .read(allcyclesControllerProvider.notifier)
-                            .updateWorkout(currentWorkout!.copyWith(name: nameController.text).changeToWorkoutDay());
+                        ref.read(editWorkoutsControllerProvider.notifier).updateWorkout(currentWorkout!.copyWith(name: nameController.text).changeToWorkoutDay());
                       } else {
-                        ref
-                            .read(allcyclesControllerProvider.notifier)
-                            .addWorkout(WorkoutEntity.workoutDay(name: nameController.text, key: uuid.v4()));
+                        ref.read(editWorkoutsControllerProvider.notifier).addWorkout(WorkoutEntity.workoutDay(name: nameController.text, key: uuid.v4()));
                       }
                       Navigator.of(context).pop();
                     } else {
                       if (currentWorkout != null) {
-                        ref
-                            .read(allcyclesControllerProvider.notifier)
-                            .updateWorkout(WorkoutEntity.restDay(key: currentWorkout!.key));
+                        ref.read(editWorkoutsControllerProvider.notifier).updateWorkout(WorkoutEntity.restDay(key: currentWorkout!.key));
                       } else {
-                        ref.read(allcyclesControllerProvider.notifier).addWorkout(WorkoutEntity.restDay(key: uuid.v4()));
+                        ref.read(editWorkoutsControllerProvider.notifier).addWorkout(WorkoutEntity.restDay(key: uuid.v4()));
                       }
                       Navigator.of(context).pop();
                     }

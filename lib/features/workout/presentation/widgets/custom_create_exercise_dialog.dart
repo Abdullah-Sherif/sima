@@ -112,12 +112,23 @@ class CustomCreateExerciseDialog extends HookConsumerWidget {
                               descriptionError.value = _getErrorMessage(descriptionController.text, context);
                               return;
                             }
-                            ref.read(allexercisesControllerProvider.notifier).updateExercise(
-                                  initialExercise!.key,
-                                  nameController.text,
-                                  descriptionController.text,
-                                  numberOfSets.value,
-                                );
+                            Map<String, SetEntity> sets = {};
+                            for (int i = initialExercise!.currentSets.length; i < numberOfSets.value; i++) {
+                              sets = {
+                                ...sets,
+                                i.toString(): initialExercise!.currentSets[i.toString()] ??
+                                    SetEntity.weight(
+                                      key: i.toString(),
+                                      reps: 10,
+                                      weight: 10,
+                                    ),
+                              };
+                            }
+                            ref.read(editExercisesControllerProvider.notifier).updateExercise(initialExercise!.copyWith(
+                                  name: nameController.text,
+                                  description: descriptionController.text,
+                                  currentSets: sets,
+                                ));
                             Navigator.of(context).pop();
                           }
                         : () {
@@ -127,13 +138,21 @@ class CustomCreateExerciseDialog extends HookConsumerWidget {
                               return;
                             }
                             final uniqueKey = uuid.v4();
-                            ref.read(allexercisesControllerProvider.notifier).addWorkout(
-                                  uniqueKey,
-                                  nameController.text,
-                                  descriptionController.text,
-                                  selectedType.value[0] ? ExerciseType.reps : ExerciseType.duration,
-                                  numberOfSets.value,
-                                );
+                            final sets = List.generate(numberOfSets.value, (index) {
+                              return SetEntity.weight(
+                                key: index.toString(),
+                                reps: 10,
+                                weight: 10,
+                              );
+                            });
+                            final newExercise = ExerciseEntity(
+                              key: uniqueKey,
+                              name: nameController.text,
+                              description: descriptionController.text,
+                              type: selectedType.value[0] ? ExerciseType.reps : ExerciseType.duration,
+                              currentSets: {for (var e in sets) e.key: e},
+                            );
+                            ref.read(editExercisesControllerProvider.notifier).addExercise(newExercise);
                             Navigator.of(context).pop();
                           },
                   )

@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sima/core/barrel.dart';
 import 'package:sima/features/barrel.dart';
 
@@ -11,16 +11,25 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Padding(
-      padding: EdgeInsets.all(8.0),
+    final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
+
+    final workout = ref.watch(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
+
+    bool isActiveWorkout = false;
+    if (currentDate.isAtSameMomentAs(DateTime.now())) {
+      isActiveWorkout = true;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          WorkoutDayNavBar(),
-          SizedBox(height: 15),
-          _WorkoutName(),
-          SizedBox(height: 15),
+          const WorkoutDayNavBar(),
+          const SizedBox(height: 15),
+          _WorkoutName(workout: workout),
+          const SizedBox(height: 15),
           _CustomContainer(
-            child: _WorkoutExercises(),
+            child: _WorkoutExercises(workout, isActiveWorkout),
           ),
         ],
       ),
@@ -28,19 +37,15 @@ class HomePage extends ConsumerWidget {
   }
 }
 
-class _WorkoutName extends ConsumerWidget {
-  const _WorkoutName();
+class _WorkoutName extends StatelessWidget {
+  const _WorkoutName({required this.workout});
+
+  final WorkoutEntity? workout;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(weekControllerProvider).offset;
-
-    final dayNum = ref
-        .watch(weekControllerProvider.notifier)
-        .getCurrentDayNumberWithOffset(ref.watch(allcyclesControllerProvider).cycle.workouts.length);
-
+  Widget build(BuildContext context) {
     return Text(
-      ref.watch(allcyclesControllerProvider.notifier).getWorkoutName(dayNum),
+      workout?.name ?? 'Empty',
       style: context.textTheme.titleLarge?.copyWith(fontSize: 50),
     );
   }
@@ -68,17 +73,20 @@ class _CustomContainer extends StatelessWidget {
   }
 }
 
-class _WorkoutExercises extends ConsumerWidget {
-  const _WorkoutExercises();
+class _WorkoutExercises extends HookConsumerWidget {
+  const _WorkoutExercises(this.workout, this.isActiveWorkout);
+
+  final WorkoutEntity? workout;
+  final bool isActiveWorkout;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(weekControllerProvider).offset;
-    final cycle = ref.watch(allcyclesControllerProvider).cycle;
-    final dayNum = ref.read(weekControllerProvider.notifier).getCurrentDayNumberWithOffset(ref.watch(allcyclesControllerProvider).cycle.workouts.length);
-    final workoutValues = cycle.workouts.values;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(isActiveWorkout ? workout?.exercises?.first : null);
+    });
+    final activeExerciseKey = ref.watch(editWorkoutExerciseControllerProvider).activeExercise?.key;
 
-    return cycle.isEmpty
+    return workout == null
         ? Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Center(
@@ -89,7 +97,7 @@ class _WorkoutExercises extends ConsumerWidget {
               ),
             ),
           )
-        : workoutValues.elementAt(dayNum - 1).isRestDay
+        : workout!.isRestDay
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SvgPicture.asset('assets/rest.svg'),
@@ -99,29 +107,26 @@ class _WorkoutExercises extends ConsumerWidget {
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    final exercise = cycle.workouts.values.elementAt(dayNum - 1).getExerciseByIndex(index);
+                    final exercise = workout!.getExerciseByIndex(index);
 
                     return Align(
                       alignment: Alignment.center,
                       child: CustomExerciseTile(
-                        exerciseKey: exercise!.key,
-                        isExpanded: exercise.isActive,
+                        exercise: exercise!,
+                        isEditable: isActiveWorkout,
+                        isExpanded: exercise.key == activeExerciseKey,
                         onExpand: () {
-                          ref
-                              .read(allcyclesControllerProvider.notifier)
-                              .setIsActiveExercise(dayNum - 1, exercise.key, !exercise.isActive);
+                          ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(exercise);
                         },
                         width: 380,
                         onCheck: (value) {
-                          ref
-                              .read(allcyclesControllerProvider.notifier)
-                              .setForceCompleteExercise(dayNum - 1, exercise.key, value);
+                          ref.read(editWorkoutExerciseControllerProvider.notifier).forceCompleteExercise(value, workout!.key);
                         },
                         onPlay: () {},
                       ),
                     );
                   },
-                  itemCount: cycle.workouts.values.elementAt(dayNum - 1).exerciseLength,
+                  itemCount: workout!.exerciseLength,
                 ),
               );
   }
