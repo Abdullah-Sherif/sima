@@ -95,7 +95,7 @@ class FetchCyclesController extends StateNotifier<FetchCyclesState> {
   WorkoutEntity? getWorkout(DateTime currentDate) {
     int workoutIndex = currentDate.difference(state.currentActiveCycle.startDate).inDays;
     if (workoutIndex < 0) {
-      workoutIndex = 0;
+      return null;
     }
     final workouts = state.currentActiveCycle.workouts;
     if (workouts.length > workoutIndex) {
@@ -112,6 +112,45 @@ class FetchCyclesController extends StateNotifier<FetchCyclesState> {
     final diff = currentDateOnly.difference(dateNowOnly).inDays;
 
     return diff == 0;
+  }
+
+  void addNewCycle() {
+    state = state.copyWith(pastCyclesStatus: FetchStatus.loading, currentCycleStatus: FetchStatus.loading);
+
+    final newCycle = CycleEntity(
+      key: (int.parse(state.currentCycle.key) + 1).toString(),
+      startDate: state.currentCycle.startDate.add(Duration(days: state.currentCycle.workouts.length)),
+    );
+
+    final workouts = state.currentCycle.workouts;
+
+    final resetWorkouts = workouts.map((key, value) {
+      WorkoutEntity newWorkout = value.setForceComplete(false);
+
+      if (newWorkout.exercises != null) {
+        final newExercises = {for (var exercise in value.exercises!) exercise.key: exercise.resetAllSets()};
+
+        newWorkout = newWorkout.setExercises(newExercises);
+      }
+
+      return MapEntry(newWorkout.key, newWorkout);
+    });
+    final newCycleWithWorkouts = newCycle.copyWith(workouts: resetWorkouts);
+
+    _repository.addCycle(newCycleWithWorkouts).then((result) {
+      result.fold(
+        (failure) {
+          state = state.copyWith(pastCyclesStatus: FetchStatus.failure, currentCycleStatus: FetchStatus.failure);
+        },
+        (success) {
+          state = state.copyWith(pastCyclesStatus: FetchStatus.success, currentCycleStatus: FetchStatus.success);
+        },
+      );
+    });
+
+    if(state.pastCyclesStatus == FetchStatus.success){
+      _fetchPastCycles();
+    }
   }
 
   @override

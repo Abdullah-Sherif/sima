@@ -73,4 +73,71 @@ class EditWorkoutsController extends StateNotifier<EditWorkoutsState> {
       );
     });
   }
+
+  void addWorkoutToPastCurrentCycle(WorkoutEntity workout) {
+    state = state.copyWith(status: FetchStatus.loading);
+
+    _workoutRepository.addWorkoutToPastCurrentCycle(workout).then((result) {
+      result.fold(
+        (failure) => state = state.copyWith(status: FetchStatus.failure),
+        (workouts) => state = state.copyWith(status: FetchStatus.success),
+      );
+    });
+  }
+
+  void addLogsToWorkoutExercises(WorkoutEntity workout, int cycleNum, int dayNum) {
+    state = state.copyWith(status: FetchStatus.loading);
+
+    Map<String, ExerciseEntity> newExercises = {};
+
+    if (workout.exercises != null) {
+      for (final exercise in workout.exercises!) {
+        if (exercise.isCompleted) {
+          final newLog = ExerciseLogEntity(
+            sets: exercise.currentSets.values.toList(),
+            date: DateTime.now(),
+            cycleNum: cycleNum,
+            dayNum: dayNum,
+          );
+
+          final newExercise = exercise.copyWith(
+            logs: [...exercise.logs, newLog],
+          );
+
+          newExercises[exercise.key] = newExercise;
+
+          _workoutRepository.updateExerciseInWorkout(workout.key, exercise.key, newExercise).then((result) {
+            result.fold(
+              (failure) => state = state.copyWith(status: FetchStatus.failure),
+              (success) => state = state.copyWith(status: FetchStatus.success),
+            );
+          });
+        }
+      }
+    }
+  }
+
+  void completeWorkout(WorkoutEntity workout, int cycleNum, int dayNum) {
+    state = state.copyWith(status: FetchStatus.loading);
+
+    final completeWorkout = workout.setForceComplete(true);
+
+    addLogsToWorkoutExercises(workout, cycleNum, dayNum);
+
+    if (state.status == FetchStatus.success) {
+      state = state.copyWith(status: FetchStatus.loading);
+    } else if (state.status == FetchStatus.failure) {
+      return;
+    }
+
+    updateWorkout(completeWorkout);
+
+    if (state.status == FetchStatus.success) {
+      state = state.copyWith(status: FetchStatus.loading);
+    } else if (state.status == FetchStatus.failure) {
+      return;
+    }
+
+    addWorkoutToPastCurrentCycle(completeWorkout);
+  }
 }

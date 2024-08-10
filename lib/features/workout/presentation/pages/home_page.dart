@@ -16,18 +16,21 @@ class HomePage extends ConsumerWidget {
 
     final workout = ref.watch(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          const WorkoutDayNavBar(),
-          const SizedBox(height: 15),
-          _WorkoutName(workout: workout),
-          const SizedBox(height: 15),
-          const _CustomContainer(
-            child: _WorkoutExercises(),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            const WorkoutDayNavBar(),
+            const SizedBox(height: 15),
+            _WorkoutName(workout: workout),
+            const SizedBox(height: 15),
+            const _CustomContainer(
+              child: _WorkoutExercises(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -74,12 +77,16 @@ class _WorkoutExercises extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activeExercise = ref.watch(editWorkoutExerciseControllerProvider).activeExercise;
-    final activeExerciseKey = activeExercise?.key;
+    final activeExerciseKey = ref.watch(editWorkoutExerciseControllerProvider).activeExercise?.key;
     final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
-    ref.watch(fetchCyclesControllerProvider).currentActiveCycle;
+    final currentActiveCycle = ref.watch(fetchCyclesControllerProvider).currentActiveCycle;
     final workout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
     final isActiveWorkout = ref.watch(fetchCyclesControllerProvider.notifier).isActiveWorkout(currentDate);
+    final cycleNum = currentActiveCycle.key;
+    final dayNum = DateTime(currentDate.year, currentDate.month, currentDate.day)
+        .difference(
+            DateTime(currentActiveCycle.startDate.year, currentActiveCycle.startDate.month, currentActiveCycle.startDate.day))
+        .inDays;
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -130,7 +137,7 @@ class _WorkoutExercises extends HookConsumerWidget {
                       alignment: Alignment.center,
                       child: CustomExerciseTile(
                         exercise: exercise!,
-                        isEditable: isActiveWorkout,
+                        isEditable: isActiveWorkout && !workout.isCompleted,
                         isExpanded: exercise.key == activeExerciseKey && isActiveWorkout,
                         onExpand: () {
                           if (ref.watch(editWorkoutExerciseControllerProvider).activeExercise?.key != exercise.key) {
@@ -141,7 +148,25 @@ class _WorkoutExercises extends HookConsumerWidget {
                         },
                         width: 380,
                         onCheck: (value) {
-                          ref.read(editWorkoutExerciseControllerProvider.notifier).forceCompleteExercise(value, workout);
+                          if (value == true &&
+                              workout.setForceCompleteExercise(exercise.key, value ?? exercise.isCompleted).isCompleted) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => WarningDialog(
+                                action: 'complete',
+                                title: 'workout',
+                                additionalWarning: 'This action is irreversible',
+                                onConfirm: () {
+                                  ref.read(editWorkoutExerciseControllerProvider.notifier).forceCompleteExercise(true, workout);
+                                  ref
+                                      .read(editWorkoutsControllerProvider.notifier)
+                                      .completeWorkout(workout, int.parse(cycleNum), dayNum);
+                                },
+                              ),
+                            );
+                          } else {
+                            ref.read(editWorkoutExerciseControllerProvider.notifier).forceCompleteExercise(value, workout);
+                          }
                         },
                         onPlay: () {},
                       ),

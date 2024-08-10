@@ -22,7 +22,7 @@ Map<String, dynamic> _$$ExerciseLogEntityImplToJson(
         _$ExerciseLogEntityImpl instance) =>
     <String, dynamic>{
       'sets': instance.sets.map((e) => e.toJson()).toList(),
-      'millisSinceEpoch': instance.date.toIso8601String(),
+      'millisSinceEpoch': _getMillisSinceEpochFromDateTime(instance.date),
       'cycleNum': instance.cycleNum,
       'dayNum': instance.dayNum,
     };

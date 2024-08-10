@@ -10,6 +10,7 @@ class HomeListeners extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     ref.watch(fetchCyclesControllerProvider);
     ref.watch(fetchAllExercisesControllerProvider);
     ref.watch(dateControllerProvider);
@@ -25,12 +26,36 @@ class HomeListeners extends HookConsumerWidget {
         ref.read(fetchAllExercisesControllerProvider.notifier).init();
         ref.read(workoutRepositoryProvider).initCycles();
 
-        final workout = ref.watch(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
-        final isActiveWorkout = ref.watch(fetchCyclesControllerProvider.notifier).isActiveWorkout(currentDate);
+        final workout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
+        final isActiveWorkout = ref.read(fetchCyclesControllerProvider.notifier).isActiveWorkout(currentDate);
         ref.read(editWorkoutExerciseControllerProvider.notifier).init(isActiveWorkout, workout);
       });
       return null;
     }, const []);
+
+    final currentDate = ref.watch(dateControllerProvider).currentDate;
+    final currentCycle = ref.watch(fetchCyclesControllerProvider).currentCycle;
+
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final currentTrimmedDate = DateTime(currentDate.year, currentDate.month, currentDate.day);
+        final previousDate = currentTrimmedDate.subtract(const Duration(days: 1));
+        final currentCycleDate = DateTime(currentCycle.startDate.year, currentCycle.startDate.month, currentCycle.startDate.day);
+
+        final previousWorkout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(previousDate);
+        final cycleNum = ref.watch(fetchCyclesControllerProvider).currentCycle.key;
+        final dayNum = previousDate.difference(currentCycleDate).inDays;
+        if (previousWorkout != null && !previousWorkout.isCompleted) {
+          ref.read(editWorkoutsControllerProvider.notifier).completeWorkout(previousWorkout, int.parse(cycleNum), dayNum);
+
+          if (currentTrimmedDate.difference(currentCycleDate).inDays > currentCycle.workouts.length) {
+            ref.read(fetchCyclesControllerProvider.notifier).addNewCycle();
+          }
+        }
+      });
+
+      return null;
+    }, [currentDate]);
     return child;
   }
 }

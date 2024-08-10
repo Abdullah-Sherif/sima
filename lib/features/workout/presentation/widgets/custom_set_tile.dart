@@ -52,23 +52,30 @@ class CustomSetTile extends HookConsumerWidget {
                 if (set.isWeightSet) ...[
                   _CustomSetInputField(
                     controller: repsController!,
-                    onChanged: (value) {
-                      ref.read(editWorkoutExerciseControllerProvider.notifier).updateSetReps(
-                            set,
-                            workout!.key,
-                            value != '' ? int.parse(value) : 0,
-                          );
+                    onEditingComplete: (value) {
+                      if (value != set.reps.toString()) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          ref.read(editWorkoutExerciseControllerProvider.notifier).updateSetReps(
+                                set,
+                                workout!.key,
+                                value != '' ? int.parse(value) : 0,
+                              );
+                        });
+                      }
                     },
                   ),
                   _CustomSetInputField(
                     controller: weightController!,
-                    onChanged: (value) {
-                      //TODO: make onEditingComplete
-                      ref.read(editWorkoutExerciseControllerProvider.notifier).updateSetWeight(
-                            set,
-                            workout!.key,
-                            value != '' ? int.parse(value) : 0,
-                          );
+                    onEditingComplete: (value) {
+                      if (value != set.weight.toString()) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          ref.read(editWorkoutExerciseControllerProvider.notifier).updateSetWeight(
+                                set,
+                                workout!.key,
+                                value != '' ? int.parse(value) : 0,
+                              );
+                        });
+                      }
                     },
                   ),
                 ] else
@@ -76,13 +83,52 @@ class CustomSetTile extends HookConsumerWidget {
                 Checkbox(
                   value: set.isCompleted,
                   onChanged: (value) {
-                    ref.read(editWorkoutExerciseControllerProvider.notifier).completeSet(
-                          set,
-                          workout!,
-                          value,
-                        );
-
-                    if (ref.watch(editWorkoutExerciseControllerProvider).activeExercise?.isCompleted == true) {}
+                    if (value != null) {
+                      final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
+                      final completeExercise =
+                          ref.watch(editWorkoutExerciseControllerProvider).activeExercise?.setSetIsComplete(value, set.key);
+                      if (completeExercise != null) {
+                        final completeWorkout = ref
+                            .read(fetchCyclesControllerProvider.notifier)
+                            .getWorkout(currentDate)
+                            ?.setForceCompleteExercise(completeExercise.key, true);
+                        if (completeExercise.isCompleted && completeWorkout != null && completeWorkout.isCompleted) {
+                          final currentActiveCycle = ref.watch(fetchCyclesControllerProvider).currentActiveCycle;
+                          final cycleNum = currentActiveCycle.key;
+                          final dayNum = DateTime(currentDate.year, currentDate.month, currentDate.day)
+                              .difference(DateTime(currentActiveCycle.startDate.year, currentActiveCycle.startDate.month,
+                                  currentActiveCycle.startDate.day))
+                              .inDays;
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return WarningDialog(
+                                action: 'complete',
+                                title: 'workout',
+                                additionalWarning: 'This action is irreversible',
+                                onConfirm: () {
+                                  ref.read(editWorkoutExerciseControllerProvider.notifier).completeSet(
+                                        set,
+                                        workout!,
+                                        value,
+                                      );
+                                  ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(null);
+                                  ref
+                                      .read(editWorkoutsControllerProvider.notifier)
+                                      .completeWorkout(completeWorkout, int.parse(cycleNum), dayNum);
+                                },
+                              );
+                            },
+                          );
+                        } else {
+                          ref.read(editWorkoutExerciseControllerProvider.notifier).completeSet(
+                                set,
+                                workout!,
+                                value,
+                              );
+                        }
+                      }
+                    }
                   },
                 ),
               ],
@@ -94,17 +140,25 @@ class CustomSetTile extends HookConsumerWidget {
   }
 }
 
-class _CustomSetInputField extends StatelessWidget {
+class _CustomSetInputField extends HookWidget {
   const _CustomSetInputField({
-    required this.onChanged,
+    required this.onEditingComplete,
     required this.controller,
   });
 
-  final Function(String) onChanged;
+  final Function(String) onEditingComplete;
   final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
+    final focusNode = useFocusNode();
+
+    focusNode.addListener(() {
+      if (!focusNode.hasFocus) {
+        onEditingComplete(controller.text);
+      }
+    });
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
       child: SizedBox(
@@ -113,7 +167,8 @@ class _CustomSetInputField extends StatelessWidget {
           offset: const Offset(0, -7),
           child: TextField(
             controller: controller,
-            onChanged: onChanged,
+            focusNode: focusNode,
+            onEditingComplete: onEditingComplete(controller.text),
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
             decoration: const InputDecoration(

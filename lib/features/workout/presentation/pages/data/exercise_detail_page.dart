@@ -20,7 +20,10 @@ class ExerciseDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final exercise = ref.watch(fetchAllExercisesControllerProvider).exercises[exerciseIndex];
+    final exercises = ref.watch(fetchAllExercisesControllerProvider).exercises;
+    final exercise = exercises.length > exerciseIndex
+        ? ref.watch(fetchAllExercisesControllerProvider).exercises[exerciseIndex]
+        : const ExerciseEntity(name: '', description: '', key: 'key');
     final TabController tabController = useTabController(initialLength: 2);
 
     return SafeArea(

@@ -7,11 +7,15 @@ class WarningDialog extends StatelessWidget {
     required this.action,
     required this.title,
     required this.onConfirm,
+    this.onCancel,
+    this.additionalWarning,
   });
 
   final String action;
   final String title;
   final Function() onConfirm;
+  final Function()? onCancel;
+  final String? additionalWarning;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,7 @@ class WarningDialog extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '${context.appTexts.areYouSure} $action $title?',
+                  '${context.appTexts.areYouSure} $action $title? ${additionalWarning ?? ''}',
                   style: context.textTheme.titleLarge?.copyWith(fontSize: 30),
                   textAlign: TextAlign.center,
                 ),
@@ -40,7 +44,12 @@ class WarningDialog extends StatelessWidget {
                   children: [
                     CustomTextButton(
                       text: context.appTexts.cancel,
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () {
+                        if (onCancel != null) {
+                          onCancel!();
+                        }
+                        Navigator.of(context).pop();
+                      },
                       width: context.percentOfWidth(0.3),
                       height: 50,
                     ),

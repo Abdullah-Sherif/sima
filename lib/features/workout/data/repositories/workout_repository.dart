@@ -34,7 +34,7 @@ class WorkoutRepository {
   void initCycles() async {
     final List<Map<String, dynamic>> rawCycles = await db.query('past_cycles', orderBy: 'id ASC');
     if (rawCycles.isEmpty) {
-      final cycle = CycleEntity(key: '1', startDate: DateTime.now());
+      final cycle = CycleEntity(key: '1', startDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
       final cycleJson = cycle.toJson();
       await db.insert('past_cycles', cycleJson);
     }
@@ -42,7 +42,8 @@ class WorkoutRepository {
 
   Future<Either<Failure, List<CycleEntity>>> fetchPastCycles() async {
     try {
-      final List<Map<String, dynamic>> rawCycles = await db.query('past_cycles', orderBy: 'id ASC');
+      final List<Map<String, dynamic>> rawCycles = await db.query('past_cycles', orderBy: 'id ASC')
+        ..removeLast();
 
       final List<CycleEntity> pastCycles = List.generate(rawCycles.length, (i) {
         final Map<String, dynamic> rawCycle = rawCycles[i];
@@ -78,12 +79,59 @@ class WorkoutRepository {
 
       final Map<String, dynamic> rawCurrentCycle = rawCycles.last;
       final emptyCurrentCycle = CycleEntity.fromJson(rawCurrentCycle);
-      final updatedCycle = emptyCurrentCycle.copyWith(workouts: workouts);
+      final Map<String, WorkoutEntity> existingWorkouts = emptyCurrentCycle.workouts;
+
+      final Map<String, WorkoutEntity> mergedWorkouts = {...workouts, ...existingWorkouts};
+      final updatedCycle = emptyCurrentCycle.copyWith(workouts: mergedWorkouts);
       _currentCycleController.add(updatedCycle);
     }
   }
 
-  // Future<Either<Failure, Success>> addNewCycle()
+  Future<Either<Failure, Success>> addCycle(CycleEntity cycle) async {
+    try {
+      final workouts = cycle.workouts;
+      final cycleJson = cycle.toJson()..remove('workouts');
+      await db.insert(
+        'past_cycles',
+        cycleJson,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      for (final workout in workouts.values) {
+        if (workout.exercises != null) {
+          for (final exercise in workout.exercises!.toList()) {
+            updateExerciseInWorkout(workout.key, exercise.key, exercise);
+          }
+        }
+
+        updateWorkout(workout.key, workout.toJson());
+      }
+      return const Right(Success());
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Success>> addWorkoutToPastCurrentCycle(WorkoutEntity newWorkout) async {
+    try {
+      final List<Map<String, dynamic>> rawCycles = await db.query('past_cycles', orderBy: 'id ASC');
+      final Map<String, dynamic> rawCurrentCycle = rawCycles.last;
+      final pastCurrentCycle = CycleEntity.fromJson(rawCurrentCycle);
+
+      final updatedWorkouts = Map<String, WorkoutEntity>.from(pastCurrentCycle.workouts);
+      if (!updatedWorkouts.containsKey(newWorkout.key)) {
+        updatedWorkouts[newWorkout.key] = newWorkout;
+      }
+
+      final updatedCycle = pastCurrentCycle.copyWith(workouts: updatedWorkouts);
+
+      await db.update('past_cycles', updatedCycle.toJson(), where: 'id = ?', whereArgs: [pastCurrentCycle.key]);
+      _fetchCurrentCycle();
+      return const Right(Success());
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
 
   Future<Either<Failure, Success>> addExerciseToWorkout(String workoutId, String exerciseId) async {
     try {
@@ -254,8 +302,19 @@ class WorkoutRepository {
 
   Future<Either<Failure, Success>> deleteExercise(String exerciseId) async {
     try {
+      bool flag = false;
+      final List<Map<String, dynamic>> rawExercisesInWorkout =
+          await db.query('exercises_in_workout', where: 'exercise_id = ?', whereArgs: [exerciseId]);
+      if (rawExercisesInWorkout.isNotEmpty) {
+        flag = true;
+      }
       await db.delete('exercises', where: 'id = ?', whereArgs: [exerciseId]);
       _fetchAllExercises();
+
+      if (flag) {
+        _fetchCurrentCycle();
+      }
+
       return const Right(Success());
     } catch (e) {
       return Left(Failure(e.toString()));

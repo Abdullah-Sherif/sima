@@ -59,7 +59,7 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
       );
 
       updateExerciseInWorkout(updatedExercise, workout.key);
-      if(updatedExercise.isCompleted){
+      if (updatedExercise.isCompleted) {
         completeCurrentAndExpandNext(workout, exercise.key);
       }
     }
@@ -80,7 +80,7 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
       );
 
       updateExerciseInWorkout(updatedExercise, workout.key);
-      if(updatedExercise.isCompleted){
+      if (updatedExercise.isCompleted) {
         completeCurrentAndExpandNext(workout, exercise.key);
       }
     }
@@ -123,10 +123,15 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
     }
   }
 
-  void completeCurrentAndExpandNext(WorkoutEntity workout, String currentExerciseKey){
+  void completeCurrentAndExpandNext(WorkoutEntity workout, String currentExerciseKey) {
     setExercise(null);
     if (workout.exerciseKeys!.toList().indexOf(currentExerciseKey) < workout.exerciseKeys!.length - 1) {
-      setExercise(workout.exercises!.elementAt(workout.exerciseKeys!.toList().indexOf(currentExerciseKey) + 1));
+      final nextExercise = workout.exercises!.elementAt(workout.exerciseKeys!.toList().indexOf(currentExerciseKey) + 1);
+      if (nextExercise.isCompleted) {
+        completeCurrentAndExpandNext(workout, nextExercise.key);
+      } else {
+        setExercise(nextExercise);
+      }
     }
   }
 }

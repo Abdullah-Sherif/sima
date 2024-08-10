@@ -21,7 +21,10 @@ ExerciseLogEntity _$ExerciseLogEntityFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ExerciseLogEntity {
   List<SetEntity> get sets => throw _privateConstructorUsedError;
-  @JsonKey(name: 'millisSinceEpoch', fromJson: _getDateTimeFromMillisSinceEpoch)
+  @JsonKey(
+      name: 'millisSinceEpoch',
+      fromJson: _getDateTimeFromMillisSinceEpoch,
+      toJson: _getMillisSinceEpochFromDateTime)
   DateTime get date => throw _privateConstructorUsedError;
   int get cycleNum => throw _privateConstructorUsedError;
   int get dayNum => throw _privateConstructorUsedError;
@@ -41,7 +44,9 @@ abstract class $ExerciseLogEntityCopyWith<$Res> {
   $Res call(
       {List<SetEntity> sets,
       @JsonKey(
-          name: 'millisSinceEpoch', fromJson: _getDateTimeFromMillisSinceEpoch)
+          name: 'millisSinceEpoch',
+          fromJson: _getDateTimeFromMillisSinceEpoch,
+          toJson: _getMillisSinceEpochFromDateTime)
       DateTime date,
       int cycleNum,
       int dayNum});
@@ -97,7 +102,9 @@ abstract class _$$ExerciseLogEntityImplCopyWith<$Res>
   $Res call(
       {List<SetEntity> sets,
       @JsonKey(
-          name: 'millisSinceEpoch', fromJson: _getDateTimeFromMillisSinceEpoch)
+          name: 'millisSinceEpoch',
+          fromJson: _getDateTimeFromMillisSinceEpoch,
+          toJson: _getMillisSinceEpochFromDateTime)
       DateTime date,
       int cycleNum,
       int dayNum});
@@ -146,7 +153,9 @@ class _$ExerciseLogEntityImpl implements _ExerciseLogEntity {
   _$ExerciseLogEntityImpl(
       {required final List<SetEntity> sets,
       @JsonKey(
-          name: 'millisSinceEpoch', fromJson: _getDateTimeFromMillisSinceEpoch)
+          name: 'millisSinceEpoch',
+          fromJson: _getDateTimeFromMillisSinceEpoch,
+          toJson: _getMillisSinceEpochFromDateTime)
       required this.date,
       required this.cycleNum,
       required this.dayNum})
@@ -164,7 +173,10 @@ class _$ExerciseLogEntityImpl implements _ExerciseLogEntity {
   }
 
   @override
-  @JsonKey(name: 'millisSinceEpoch', fromJson: _getDateTimeFromMillisSinceEpoch)
+  @JsonKey(
+      name: 'millisSinceEpoch',
+      fromJson: _getDateTimeFromMillisSinceEpoch,
+      toJson: _getMillisSinceEpochFromDateTime)
   final DateTime date;
   @override
   final int cycleNum;
@@ -212,7 +224,9 @@ abstract class _ExerciseLogEntity implements ExerciseLogEntity {
   factory _ExerciseLogEntity(
       {required final List<SetEntity> sets,
       @JsonKey(
-          name: 'millisSinceEpoch', fromJson: _getDateTimeFromMillisSinceEpoch)
+          name: 'millisSinceEpoch',
+          fromJson: _getDateTimeFromMillisSinceEpoch,
+          toJson: _getMillisSinceEpochFromDateTime)
       required final DateTime date,
       required final int cycleNum,
       required final int dayNum}) = _$ExerciseLogEntityImpl;
@@ -223,7 +237,10 @@ abstract class _ExerciseLogEntity implements ExerciseLogEntity {
   @override
   List<SetEntity> get sets;
   @override
-  @JsonKey(name: 'millisSinceEpoch', fromJson: _getDateTimeFromMillisSinceEpoch)
+  @JsonKey(
+      name: 'millisSinceEpoch',
+      fromJson: _getDateTimeFromMillisSinceEpoch,
+      toJson: _getMillisSinceEpochFromDateTime)
   DateTime get date;
   @override
   int get cycleNum;
