@@ -130,7 +130,9 @@ class _CustomExerciseTile extends StatelessWidget {
               vertical: 10,
             )),
             backgroundColor: MaterialStateProperty.all(
-              isEditing && selectedExercises!.value.contains(exercise) ? context.theme.colorScheme.primary : Colors.transparent,
+              isEditing && selectedExercises!.value.contains(exercise.key)
+                  ? context.theme.colorScheme.primary
+                  : Colors.transparent,
             ),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(

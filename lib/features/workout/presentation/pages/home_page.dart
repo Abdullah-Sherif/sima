@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sima/core/barrel.dart';
@@ -15,11 +16,6 @@ class HomePage extends ConsumerWidget {
 
     final workout = ref.watch(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
 
-    bool isActiveWorkout = false;
-    if (currentDate.isAtSameMomentAs(DateTime.now())) {
-      isActiveWorkout = true;
-    }
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -28,8 +24,8 @@ class HomePage extends ConsumerWidget {
           const SizedBox(height: 15),
           _WorkoutName(workout: workout),
           const SizedBox(height: 15),
-          _CustomContainer(
-            child: _WorkoutExercises(workout, isActiveWorkout),
+          const _CustomContainer(
+            child: _WorkoutExercises(),
           ),
         ],
       ),
@@ -74,17 +70,38 @@ class _CustomContainer extends StatelessWidget {
 }
 
 class _WorkoutExercises extends HookConsumerWidget {
-  const _WorkoutExercises(this.workout, this.isActiveWorkout);
-
-  final WorkoutEntity? workout;
-  final bool isActiveWorkout;
+  const _WorkoutExercises();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(isActiveWorkout ? workout?.exercises?.first : null);
-    });
-    final activeExerciseKey = ref.watch(editWorkoutExerciseControllerProvider).activeExercise?.key;
+    final activeExercise = ref.watch(editWorkoutExerciseControllerProvider).activeExercise;
+    final activeExerciseKey = activeExercise?.key;
+    final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
+    ref.watch(fetchCyclesControllerProvider).currentActiveCycle;
+    final workout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
+    final isActiveWorkout = ref.watch(fetchCyclesControllerProvider.notifier).isActiveWorkout(currentDate);
+
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (isActiveWorkout && activeExerciseKey != null && activeExerciseKey != workout?.exercises?.first.key) {
+          ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(workout?.exercises?.first);
+        }
+      });
+      return null;
+    }, [isActiveWorkout]);
+
+    useEffect(() {
+      if (workout != null && workout.exerciseKeys != null) {
+        for (int i = 0; i < workout.exerciseKeys!.length; i++) {
+          if (workout.exerciseKeys?.elementAt(i) == activeExerciseKey) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(workout.exercises?.elementAt(i));
+            });
+          }
+        }
+      }
+      return null;
+    }, [workout]);
 
     return workout == null
         ? Padding(
@@ -97,7 +114,7 @@ class _WorkoutExercises extends HookConsumerWidget {
               ),
             ),
           )
-        : workout!.isRestDay
+        : workout.isRestDay
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SvgPicture.asset('assets/rest.svg'),
@@ -107,26 +124,30 @@ class _WorkoutExercises extends HookConsumerWidget {
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    final exercise = workout!.getExerciseByIndex(index);
+                    final exercise = workout.getExerciseByIndex(index);
 
                     return Align(
                       alignment: Alignment.center,
                       child: CustomExerciseTile(
                         exercise: exercise!,
                         isEditable: isActiveWorkout,
-                        isExpanded: exercise.key == activeExerciseKey,
+                        isExpanded: exercise.key == activeExerciseKey && isActiveWorkout,
                         onExpand: () {
-                          ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(exercise);
+                          if (ref.watch(editWorkoutExerciseControllerProvider).activeExercise?.key != exercise.key) {
+                            ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(exercise);
+                          } else {
+                            ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(null);
+                          }
                         },
                         width: 380,
                         onCheck: (value) {
-                          ref.read(editWorkoutExerciseControllerProvider.notifier).forceCompleteExercise(value, workout!.key);
+                          ref.read(editWorkoutExerciseControllerProvider.notifier).forceCompleteExercise(value, workout);
                         },
                         onPlay: () {},
                       ),
                     );
                   },
-                  itemCount: workout!.exerciseLength,
+                  itemCount: workout.exerciseLength,
                 ),
               );
   }

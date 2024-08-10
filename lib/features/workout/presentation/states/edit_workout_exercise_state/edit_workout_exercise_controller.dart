@@ -20,6 +20,10 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
 
   final WorkoutRepository _workoutRepository;
 
+  void init(bool isActiveWorkout, WorkoutEntity? workout) {
+    setExercise(isActiveWorkout ? workout?.exercises?.first : null);
+  }
+
   void setExercise(ExerciseEntity? exercise) {
     state = state.copyWith(
       activeExercise: exercise,
@@ -47,18 +51,21 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
     });
   }
 
-  void forceCompleteExercise(bool? value, String workoutKey) {
+  void forceCompleteExercise(bool? value, WorkoutEntity workout) {
     final exercise = state.activeExercise;
     if (exercise != null && value != null) {
       final updatedExercise = exercise.copyWith(
         forceCompleted: value,
       );
 
-      updateExerciseInWorkout(updatedExercise, workoutKey);
+      updateExerciseInWorkout(updatedExercise, workout.key);
+      if(updatedExercise.isCompleted){
+        completeCurrentAndExpandNext(workout, exercise.key);
+      }
     }
   }
 
-  void completeSet(SetEntity set, String workoutKey, bool? isCompleted) {
+  void completeSet(SetEntity set, WorkoutEntity workout, bool? isCompleted) {
     final exercise = state.activeExercise;
     if (exercise != null && isCompleted != null) {
       final updatedSets = exercise.currentSets.map((key, s) {
@@ -72,7 +79,10 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
         currentSets: updatedSets,
       );
 
-      updateExerciseInWorkout(updatedExercise, workoutKey);
+      updateExerciseInWorkout(updatedExercise, workout.key);
+      if(updatedExercise.isCompleted){
+        completeCurrentAndExpandNext(workout, exercise.key);
+      }
     }
   }
 
@@ -110,6 +120,13 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
       );
 
       updateExerciseInWorkout(updatedExercise, workoutKey);
+    }
+  }
+
+  void completeCurrentAndExpandNext(WorkoutEntity workout, String currentExerciseKey){
+    setExercise(null);
+    if (workout.exerciseKeys!.toList().indexOf(currentExerciseKey) < workout.exerciseKeys!.length - 1) {
+      setExercise(workout.exercises!.elementAt(workout.exerciseKeys!.toList().indexOf(currentExerciseKey) + 1));
     }
   }
 }

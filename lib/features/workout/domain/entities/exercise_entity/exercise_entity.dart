@@ -86,4 +86,9 @@ extension ExerciseEntityX on ExerciseEntity {
     );
     return copyWith(logs: newLogs);
   }
+
+  ExerciseEntity resetAllSets() {
+    final newSets = currentSets.map((key, value) => MapEntry(key, value.setCompleted(false)));
+    return copyWith(currentSets: newSets);
+  }
 }

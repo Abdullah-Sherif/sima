@@ -1,26 +1,13 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sima/core/barrel.dart';
 import 'package:sima/features/workout/barrel.dart';
 
-class EditWorkoutExerciseState extends Equatable {
-  const EditWorkoutExerciseState({
-    this.status = FetchStatus.initial,
-    this.activeExercise,
-  });
+part 'edit_workout_exercise_state.freezed.dart';
 
-  final FetchStatus status;
-  final ExerciseEntity? activeExercise;
-
-  EditWorkoutExerciseState copyWith({
-    FetchStatus? status,
+@freezed
+class EditWorkoutExerciseState with _$EditWorkoutExerciseState {
+  const factory EditWorkoutExerciseState({
+    @Default(FetchStatus.initial) FetchStatus status,
     ExerciseEntity? activeExercise,
-  }) {
-    return EditWorkoutExerciseState(
-      status: status ?? this.status,
-      activeExercise: activeExercise ?? this.activeExercise,
-    );
-  }
-
-  @override
-  List<dynamic> get props => [status, activeExercise];
+  }) = _EditWorkoutExerciseState;
 }

@@ -20,7 +20,7 @@ class CustomSetTile extends HookConsumerWidget {
     late final TextEditingController? weightController;
 
     final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
-    final workoutKey = ref.watch(fetchCyclesControllerProvider.notifier).getWorkout(currentDate)!.key;
+    final workout = ref.watch(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
 
     if (set.isWeightSet) {
       repsController = useTextEditingController(text: set.reps.toString());
@@ -55,7 +55,7 @@ class CustomSetTile extends HookConsumerWidget {
                     onChanged: (value) {
                       ref.read(editWorkoutExerciseControllerProvider.notifier).updateSetReps(
                             set,
-                            workoutKey,
+                            workout!.key,
                             value != '' ? int.parse(value) : 0,
                           );
                     },
@@ -63,9 +63,10 @@ class CustomSetTile extends HookConsumerWidget {
                   _CustomSetInputField(
                     controller: weightController!,
                     onChanged: (value) {
+                      //TODO: make onEditingComplete
                       ref.read(editWorkoutExerciseControllerProvider.notifier).updateSetWeight(
                             set,
-                            workoutKey,
+                            workout!.key,
                             value != '' ? int.parse(value) : 0,
                           );
                     },
@@ -77,9 +78,11 @@ class CustomSetTile extends HookConsumerWidget {
                   onChanged: (value) {
                     ref.read(editWorkoutExerciseControllerProvider.notifier).completeSet(
                           set,
-                          workoutKey,
+                          workout!,
                           value,
                         );
+
+                    if (ref.watch(editWorkoutExerciseControllerProvider).activeExercise?.isCompleted == true) {}
                   },
                 ),
               ],

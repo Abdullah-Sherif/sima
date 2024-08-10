@@ -65,11 +65,13 @@ class WorkoutRepository {
       for (int i = 0; i < workouts.length; i++) {
         final workout = workouts.values.elementAt(i);
         final List<Map<String, dynamic>> rawExercisesInWorkout = await db.rawQuery(
-          'SELECT e.id AS id, eiw.force_completed AS forceCompleted, e.name AS name, e.description AS description, e.type AS type, e.max AS max, e.video_path AS videoPath, e.sets AS sets FROM exercises_in_workout AS eiw JOIN exercises AS e ON eiw.exercise_id = e.id WHERE eiw.workout_id = ?',
+          'SELECT e.id AS id, eiw.force_completed AS force_complete, e.name AS name, e.description AS description, e.type AS type, e.max AS max, e.video_path AS videoPath, e.sets AS sets FROM exercises_in_workout AS eiw JOIN exercises AS e ON eiw.exercise_id = e.id WHERE eiw.workout_id = ?',
           [workout.key],
         );
 
-        final Map<String, ExerciseEntity> exercises = {for (var e in rawExercisesInWorkout) e['id']: ExerciseEntity.fromJson(e)};
+        final Map<String, ExerciseEntity> exercises = {
+          for (var e in rawExercisesInWorkout) e['id'].toString(): ExerciseEntity.fromJson(e)
+        };
 
         workouts[workout.key] = workout.setExercises(exercises);
       }
@@ -80,6 +82,8 @@ class WorkoutRepository {
       _currentCycleController.add(updatedCycle);
     }
   }
+
+  // Future<Either<Failure, Success>> addNewCycle()
 
   Future<Either<Failure, Success>> addExerciseToWorkout(String workoutId, String exerciseId) async {
     try {
@@ -107,7 +111,7 @@ class WorkoutRepository {
 
     await db.update(
       'exercises_in_workout',
-      {'force_complete': forceComplete},
+      {'force_completed': forceComplete},
       where: 'workout_id = ? AND exercise_id = ?',
       whereArgs: [workoutId, exerciseId],
     );
@@ -120,26 +124,12 @@ class WorkoutRepository {
     );
 
     final List<Map<String, dynamic>> rawUpdatedExercise = await db.rawQuery(
-      'SELECT e.id AS id, eiw.force_complete AS force_complete, e.name AS name, e.description AS description, e.type AS type, e.max AS max, e.video_path AS videoPath, e.sets AS sets FROM exercises_in_workout AS eiw JOIN exercises AS e ON eiw.exercise_id = e.id WHERE eiw.workout_id = ? AND e.id = ?',
+      'SELECT e.id AS id, eiw.force_completed AS force_complete, e.name AS name, e.description AS description, e.type AS type, e.max AS max, e.video_path AS videoPath, e.sets AS sets FROM exercises_in_workout AS eiw JOIN exercises AS e ON eiw.exercise_id = e.id WHERE eiw.workout_id = ? AND e.id = ?',
       [workoutId, exerciseId],
     );
 
     if (rawUpdatedExercise.isNotEmpty) {
-      final updatedExercise = ExerciseEntity.fromJson(rawUpdatedExercise.first);
-
-      final currentCycle = await _currentCycleController.stream.first;
-
-      final updatedWorkouts = Map<String, WorkoutEntity>.from(currentCycle.workouts);
-      final updatedWorkout = updatedWorkouts[workoutId]?.updateExercise(updatedExercise);
-
-      if (updatedWorkout != null) {
-        updatedWorkouts[workoutId] = updatedWorkout;
-
-        final updatedCycle = currentCycle.copyWith(workouts: updatedWorkouts);
-
-        _currentCycleController.add(updatedCycle);
-      }
-
+      _fetchCurrentCycle();
       _fetchAllExercises();
       return const Right(Success());
     } else {
@@ -249,6 +239,13 @@ class WorkoutRepository {
       await db.update('exercises', updates, where: 'id = ?', whereArgs: [exerciseId]);
 
       _fetchAllExercises();
+
+      final List<Map<String, dynamic>> rawExercisesInWorkout =
+          await db.query('exercises_in_workout', where: 'exercise_id = ?', whereArgs: [exerciseId]);
+      if (rawExercisesInWorkout.isNotEmpty) {
+        _fetchCurrentCycle();
+      }
+
       return const Right(Success());
     } catch (e) {
       return Left(Failure(e.toString()));

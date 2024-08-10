@@ -105,4 +105,12 @@ extension WorkoutEntityX on WorkoutEntity {
     }
     return this;
   }
+
+  WorkoutEntity resetWorkout() {
+    if (isWorkoutDay) {
+      final exercises = (this as _WorkoutDay).exercises.map((key, value) => MapEntry(key, value.resetAllSets()));
+      return (this as _WorkoutDay).copyWith(exercises: exercises, forceCompleted: false);
+    }
+    return this;
+  }
 }

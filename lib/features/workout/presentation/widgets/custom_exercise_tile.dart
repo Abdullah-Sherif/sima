@@ -29,10 +29,16 @@ class CustomExerciseTile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var contentVisibility = useState(isExpanded);
+        var contentVisibility = useState(isExpanded);
     var descriptionVisibility = useState(false);
-
+    var isFirstBuild = useRef(true);
+    
     useEffect(() {
+      if (isFirstBuild.value) {
+        isFirstBuild.value = false;
+        return;
+      }
+    
       if (isExpanded) {
         contentVisibility.value = true;
       } else {

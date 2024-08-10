@@ -113,7 +113,7 @@ class CustomCreateExerciseDialog extends HookConsumerWidget {
                               return;
                             }
                             Map<String, SetEntity> sets = {};
-                            for (int i = initialExercise!.currentSets.length; i < numberOfSets.value; i++) {
+                            for (int i = 0; i < numberOfSets.value; i++) {
                               sets = {
                                 ...sets,
                                 i.toString(): initialExercise!.currentSets[i.toString()] ??

@@ -63,19 +63,20 @@ class FetchCyclesController extends StateNotifier<FetchCyclesState> {
       final currentCycleLength = state.currentCycle.workouts.length;
       final diff = currentDate.difference(state.currentActiveCycle.startDate).inDays;
       if (diff >= currentCycleLength) {
-        currentActiveCycle = state.currentActiveCycle.copyWith(
+        currentActiveCycle = state.currentCycle.copyWith(
           key: (int.parse(state.currentActiveCycle.key) + 1).toString(),
           startDate: state.currentActiveCycle.startDate.add(Duration(days: currentCycleLength)),
         );
       } else if (diff < 0) {
-        currentActiveCycle = state.currentActiveCycle.copyWith(
+        currentActiveCycle = state.currentCycle.copyWith(
           key: (int.parse(state.currentActiveCycle.key) - 1).toString(),
           startDate: state.currentActiveCycle.startDate.subtract(Duration(days: currentCycleLength)),
         );
       } else if (int.parse(state.currentActiveCycle.key) < int.parse(state.currentCycle.key)) {
         currentActiveCycle = state.currentCycle;
       } else {
-        currentActiveCycle = state.currentActiveCycle;
+        currentActiveCycle =
+            state.currentCycle.copyWith(key: state.currentActiveCycle.key, startDate: state.currentActiveCycle.startDate);
       }
     } else {
       currentActiveCycle = state.pastCycles.lastWhere(
@@ -102,6 +103,15 @@ class FetchCyclesController extends StateNotifier<FetchCyclesState> {
     } else {
       return null;
     }
+  }
+
+  bool isActiveWorkout(DateTime currentDate) {
+    final dateNow = DateTime.now();
+    final currentDateOnly = DateTime(currentDate.year, currentDate.month, currentDate.day);
+    final dateNowOnly = DateTime(dateNow.year, dateNow.month, dateNow.day);
+    final diff = currentDateOnly.difference(dateNowOnly).inDays;
+
+    return diff == 0;
   }
 
   @override
