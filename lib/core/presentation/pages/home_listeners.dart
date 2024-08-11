@@ -13,6 +13,7 @@ class HomeListeners extends HookConsumerWidget {
 
     ref.watch(fetchCyclesControllerProvider);
     ref.watch(fetchAllExercisesControllerProvider);
+    ref.watch(fetchWorkoutsControllerProvider);
     ref.watch(dateControllerProvider);
     ref.watch(workoutRepositoryProvider);
     ref.watch(editWorkoutExerciseControllerProvider);
@@ -25,6 +26,7 @@ class HomeListeners extends HookConsumerWidget {
         ref.read(fetchCyclesControllerProvider.notifier).init(currentDate);
         ref.read(fetchAllExercisesControllerProvider.notifier).init();
         ref.read(workoutRepositoryProvider).initCycles();
+        ref.read(fetchWorkoutsControllerProvider.notifier).init();
 
         final workout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
         final isActiveWorkout = ref.read(fetchCyclesControllerProvider.notifier).isActiveWorkout(currentDate);

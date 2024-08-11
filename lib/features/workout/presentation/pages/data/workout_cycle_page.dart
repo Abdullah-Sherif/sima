@@ -11,15 +11,15 @@ class WorkoutCyclePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cycle = ref.watch(fetchCyclesControllerProvider).currentCycle;
-    final expandedCycle = useState(List.generate(cycle.workouts.length, (index) => false));
+    final workouts = ref.watch(fetchWorkoutsControllerProvider).workouts;
+    final expandedCycle = useState(List.generate(workouts.length, (index) => false));
 
     useEffect(() {
-      if (cycle.workouts.isNotEmpty) {
-        expandedCycle.value = List.generate(cycle.workouts.length, (index) => false);
+      if (workouts.isNotEmpty) {
+        expandedCycle.value = List.generate(workouts.length, (index) => false);
       }
       return null;
-    }, [cycle.workouts.length]);
+    }, [workouts.length]);
 
     return SafeArea(
       child: Scaffold(
@@ -56,7 +56,7 @@ class WorkoutCyclePage extends HookConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 30, 20, 50),
           child: ListView.builder(
             itemBuilder: (context, index) {
-              final workout = cycle.workouts.values.elementAt(index);
+              final workout = workouts.values.elementAt(index);
               return Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 10,
@@ -65,7 +65,7 @@ class WorkoutCyclePage extends HookConsumerWidget {
                     dayNum: index + 1,
                     isExpanded: expandedCycle.value[index],
                     onExpand: () {
-                      expandedCycle.value = List.generate(cycle.workouts.length, (listIndex) {
+                      expandedCycle.value = List.generate(workouts.length, (listIndex) {
                         if (listIndex == index) {
                           return !expandedCycle.value[index];
                         }
@@ -75,12 +75,10 @@ class WorkoutCyclePage extends HookConsumerWidget {
                     workout: workout,
                   ));
             },
-            itemCount: cycle.workouts.length,
+            itemCount: workouts.length,
           ),
         ),
       ),
     );
   }
 }
-
-

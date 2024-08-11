@@ -5,8 +5,8 @@ import 'date_state.dart';
 final dateControllerProvider = StateNotifierProvider.autoDispose<DateController, DateState>((ref) {
   return DateController(
     DateState(
-      currentDate: DateTime.now(),
-      dateWithOffset: DateTime.now(),
+      currentDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+      dateWithOffset: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
     ),
   );
 });

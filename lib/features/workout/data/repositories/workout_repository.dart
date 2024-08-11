@@ -22,14 +22,20 @@ class WorkoutRepository {
     _allExercisesController = StreamController<List<ExerciseEntity>>.broadcast(
       onListen: _fetchAllExercises,
     );
+
+    _workoutsSubscription = StreamController<Map<String, WorkoutEntity>>.broadcast(
+      onListen: _fetchCurrentCycle,
+    );
   }
 
   final Database db;
   late final StreamController<CycleEntity> _currentCycleController;
   late final StreamController<List<ExerciseEntity>> _allExercisesController;
+  late final StreamController<Map<String, WorkoutEntity>> _workoutsSubscription;
 
   Stream<CycleEntity> get currentCycleStream => _currentCycleController.stream;
   Stream<List<ExerciseEntity>> get allExercisesStream => _allExercisesController.stream;
+  Stream<Map<String, WorkoutEntity>> get workoutsStream => _workoutsSubscription.stream;
 
   void initCycles() async {
     final List<Map<String, dynamic>> rawCycles = await db.query('past_cycles', orderBy: 'id ASC');
@@ -80,10 +86,20 @@ class WorkoutRepository {
       final Map<String, dynamic> rawCurrentCycle = rawCycles.last;
       final emptyCurrentCycle = CycleEntity.fromJson(rawCurrentCycle);
       final Map<String, WorkoutEntity> existingWorkouts = emptyCurrentCycle.workouts;
+      final Map<String, WorkoutEntity> mergedWorkouts = {};
+      
+      existingWorkouts.forEach((key, value) {
+        mergedWorkouts[key] = value;
+      });
+      workouts.forEach((key, value) {
+        if (!mergedWorkouts.containsKey(key)) {
+          mergedWorkouts[key] = value;
+        }
+      });
 
-      final Map<String, WorkoutEntity> mergedWorkouts = {...workouts, ...existingWorkouts};
       final updatedCycle = emptyCurrentCycle.copyWith(workouts: mergedWorkouts);
       _currentCycleController.add(updatedCycle);
+      _workoutsSubscription.add(workouts);
     }
   }
 
@@ -324,5 +340,6 @@ class WorkoutRepository {
   void dispose() {
     _currentCycleController.close();
     _allExercisesController.close();
+    _workoutsSubscription.close();
   }
 }
