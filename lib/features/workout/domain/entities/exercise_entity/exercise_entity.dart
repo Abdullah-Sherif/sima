@@ -17,6 +17,7 @@ Map<String, SetEntity> _setsFromJson(String json) {
   final Map<String, dynamic> map = jsonDecode(json);
   return map.map((key, value) => MapEntry(key, SetEntity.fromJson(value)));
 }
+
 String _logsToJson(List<ExerciseLogEntity> logs) => jsonEncode(logs);
 List<ExerciseLogEntity> _logsFromJson(String json) {
   final List<dynamic> list = jsonDecode(json);
@@ -55,6 +56,24 @@ extension ExerciseEntityX on ExerciseEntity {
   ExerciseEntity setMax(int value) {
     if (value < max) return this;
     return copyWith(max: value);
+  }
+
+  ExerciseEntity updateMax() {
+    int newMax = max;
+    if (isReps) {
+      for (var element in currentSets.values) {
+        if (element.weight! > newMax) {
+          newMax = element.weight!;
+        }
+      }
+    } else {
+      for (var element in currentSets.values) {
+        if (element.durationInSec! > newMax) {
+          newMax = element.durationInSec!;
+        }
+      }
+    }
+    return setMax(newMax);
   }
 
   ExerciseEntity setSetIsComplete(bool value, String setKey) {

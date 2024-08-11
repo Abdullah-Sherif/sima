@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -74,12 +71,11 @@ class _InfoTab extends HookConsumerWidget {
     final editExercisesStatus = ref.watch(editExercisesControllerProvider).status;
 
     useEffect(() {
-      if(editExercisesStatus == FetchStatus.failure){
+      if (editExercisesStatus == FetchStatus.failure) {
         showSnackbar(context: context, text: context.appTexts.errorOccured);
       }
       return null;
     }, [editExercisesStatus]);
-
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -122,7 +118,7 @@ class _InfoTab extends HookConsumerWidget {
                         style: context.textTheme.titleMedium,
                       )
                     : Text(
-                        '${exercise.max} sec',
+                        context.convertSecondsToTime(exercise.max),
                         style: context.textTheme.titleMedium,
                       ),
               ],
@@ -258,9 +254,12 @@ class _HistoryTab extends StatelessWidget {
                           style: context.textTheme.titleMedium,
                         ),
                       ] else ...[
-                        Text(
-                          context.appTexts.duration,
-                          style: context.textTheme.titleMedium,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: Text(
+                            context.appTexts.duration,
+                            style: context.textTheme.titleMedium,
+                          ),
                         ),
                       ],
                     ],
@@ -280,18 +279,24 @@ class _HistoryTab extends StatelessWidget {
                             style: context.textTheme.titleMedium,
                           ),
                           if (exercise.type == ExerciseType.reps) ...[
-                            Text(
-                              '${set.weight} kg',
-                              style: context.textTheme.titleMedium,
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                              child: Text(
+                                '${set.weight} kg',
+                                style: context.textTheme.titleMedium,
+                              ),
                             ),
                             Text(
                               '${set.reps}',
                               style: context.textTheme.titleMedium,
                             ),
                           ] else ...[
-                            Text(
-                              '${set.durationInSec} sec',
-                              style: context.textTheme.titleMedium,
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: Text(
+                                context.convertSecondsToTime(set.durationInSec!),
+                                style: context.textTheme.titleMedium,
+                              ),
                             ),
                           ],
                         ],

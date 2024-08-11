@@ -4,20 +4,24 @@ import 'package:sima/core/barrel.dart';
 import 'package:sima/features/workout/barrel.dart';
 
 class WorkoutDayNavBar extends ConsumerWidget {
-  const WorkoutDayNavBar({super.key});
+  const WorkoutDayNavBar({super.key, required this.borderColor});
+
+  final Color borderColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cycle = ref.watch(fetchCyclesControllerProvider).currentActiveCycle;
     final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
     int dayNum = currentDate.difference(cycle.startDate).inDays + 1;
+    
+
     return cycle.workouts.isNotEmpty
         ? SizedBox(
             width: double.infinity,
             height: 60,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2),
+                border: Border.all(color: borderColor, width: 2),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Padding(

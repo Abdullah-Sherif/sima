@@ -15,6 +15,15 @@ extension BuildContextData on BuildContext {
   double percentOfSafeHeight(double percent) => safeHeight * percent;
   double percentOfWidth(double percent) => width * percent;
 
+  String convertSecondsToTime(int seconds) {
+    int remainingSeconds = seconds;
+    final int hours = remainingSeconds ~/ 3600;
+    remainingSeconds -= hours * 3600;
+    final int minutes = remainingSeconds ~/ 60;
+    remainingSeconds -= minutes * 60;
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
   pushAndPopUntilFirst(PageRouteInfo route) {
     router.pushAndPopUntil(
       route,

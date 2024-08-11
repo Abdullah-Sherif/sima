@@ -123,6 +123,24 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
     }
   }
 
+  void updateSetDuration(SetEntity set, String workoutKey, int duration) {
+    final exercise = state.activeExercise;
+    if (exercise != null) {
+      final updatedSets = exercise.currentSets.map((key, s) {
+        if (key == set.key) {
+          return MapEntry(key, set.setDuration(duration));
+        }
+        return MapEntry(key, s);
+      });
+
+      final updatedExercise = exercise.copyWith(
+        currentSets: updatedSets,
+      );
+
+      updateExerciseInWorkout(updatedExercise, workoutKey);
+    }
+  }
+
   void completeCurrentAndExpandNext(WorkoutEntity workout, String currentExerciseKey) {
     setExercise(null);
     if (workout.exerciseKeys!.toList().indexOf(currentExerciseKey) < workout.exerciseKeys!.length - 1) {

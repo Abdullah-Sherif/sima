@@ -14,7 +14,22 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
 
-    final workout = ref.watch(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
+    final workout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
+
+    final isActiveWorkout = ref.read(fetchCyclesControllerProvider.notifier).isActiveWorkout(currentDate);
+    final workoutIsCompleted = workout?.exercisesIsCompleted;
+    ref.watch(fetchCyclesControllerProvider).currentCycle;
+    late final Color borderColor;
+
+    if (workoutIsCompleted == null) {
+      borderColor = context.theme.colorScheme.primary;
+    } else if (isActiveWorkout == 0) {
+      borderColor = workoutIsCompleted ? CustomColors.green : CustomColors.black;
+    } else if (isActiveWorkout == 1) {
+      borderColor = context.theme.colorScheme.primary;
+    } else {
+      borderColor = workoutIsCompleted ? CustomColors.green : CustomColors.red;
+    }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -22,12 +37,13 @@ class HomePage extends ConsumerWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            const WorkoutDayNavBar(),
+            WorkoutDayNavBar(borderColor: borderColor),
             const SizedBox(height: 15),
             _WorkoutName(workout: workout),
             const SizedBox(height: 15),
-            const _CustomContainer(
-              child: _WorkoutExercises(),
+            _CustomContainer(
+              borderColor: borderColor,
+              child: const _WorkoutExercises(),
             ),
           ],
         ),
@@ -51,9 +67,10 @@ class _WorkoutName extends StatelessWidget {
 }
 
 class _CustomContainer extends StatelessWidget {
-  const _CustomContainer({required this.child});
+  const _CustomContainer({required this.child, required this.borderColor});
 
   final Widget child;
+  final Color borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +79,7 @@ class _CustomContainer extends StatelessWidget {
         width: double.infinity,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 2),
+            border: Border.all(color: borderColor, width: 2),
             borderRadius: BorderRadius.circular(10),
           ),
           child: child,
@@ -93,7 +110,9 @@ class _WorkoutExercises extends HookConsumerWidget {
     final editExercisesInWorkoutStatus = ref.watch(editWorkoutExerciseControllerProvider).status;
 
     useEffect(() {
-      if (editStatus == FetchStatus.failure || editWorkoutsStatus == FetchStatus.failure || editExercisesInWorkoutStatus == FetchStatus.failure) {
+      if (editStatus == FetchStatus.failure ||
+          editWorkoutsStatus == FetchStatus.failure ||
+          editExercisesInWorkoutStatus == FetchStatus.failure) {
         showSnackbar(context: context, text: context.appTexts.errorOccured);
       }
       return null;
@@ -101,7 +120,7 @@ class _WorkoutExercises extends HookConsumerWidget {
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (isActiveWorkout && activeExerciseKey != null && activeExerciseKey != workout?.exercises?.first.key) {
+        if (isActiveWorkout == 0 && activeExerciseKey != null && activeExerciseKey != workout?.exercises?.first.key) {
           ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(workout?.exercises?.first);
         }
       });
@@ -148,8 +167,9 @@ class _WorkoutExercises extends HookConsumerWidget {
                       alignment: Alignment.center,
                       child: CustomExerciseTile(
                         exercise: exercise!,
-                        isEditable: isActiveWorkout && !workout.isCompleted,
-                        isExpanded: exercise.key == activeExerciseKey && isActiveWorkout,
+                        isActiveWorkout: isActiveWorkout,
+                        isEditable: isActiveWorkout == 0 && !workout.isCompleted,
+                        isExpanded: exercise.key == activeExerciseKey && isActiveWorkout == 0,
                         onExpand: () {
                           if (ref.watch(editWorkoutExerciseControllerProvider).activeExercise?.key != exercise.key) {
                             ref.read(editWorkoutExerciseControllerProvider.notifier).setExercise(exercise);

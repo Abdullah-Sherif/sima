@@ -78,8 +78,37 @@ class CustomSetTile extends HookConsumerWidget {
                       }
                     },
                   ),
-                ] else
-                  ...[],
+                ] else ...[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: TextButton(
+                      onPressed: () async {
+                        int? selectedTimeInSeconds = await showModalBottomSheet<int>(
+                          context: context,
+                          builder: (context) => _HMSPicker(initialTimeInSeconds: set.durationInSec!),
+                        );
+
+                        if (selectedTimeInSeconds != null) {
+                          ref.read(editWorkoutExerciseControllerProvider.notifier).updateSetDuration(
+                                set,
+                                workout!.key,
+                                selectedTimeInSeconds,
+                              );
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                        padding: MaterialStateProperty.all(EdgeInsets.zero),
+                      ),
+                      child: Text(
+                        context.convertSecondsToTime(set.durationInSec!),
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600, backgroundColor: Colors.transparent),
+                      ),
+                    ),
+                  ),
+                ],
                 Checkbox(
                   value: set.isCompleted,
                   onChanged: (value) {
@@ -103,9 +132,9 @@ class CustomSetTile extends HookConsumerWidget {
                             context: context,
                             builder: (context) {
                               return WarningDialog(
-                                action: 'complete',
-                                title: 'workout',
-                                additionalWarning: 'This action is irreversible',
+                                action: context.appTexts.complete.toLowerCase(),
+                                title: context.appTexts.workout.toLowerCase(),
+                                additionalWarning: context.appTexts.actionIrreversible,
                                 onConfirm: () {
                                   ref.read(editWorkoutExerciseControllerProvider.notifier).completeSet(
                                         set,
@@ -177,6 +206,109 @@ class _CustomSetInputField extends HookWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _HMSPicker extends StatefulWidget {
+  final int initialTimeInSeconds;
+
+  const _HMSPicker({Key? key, required this.initialTimeInSeconds}) : super(key: key);
+
+  @override
+  _HMSPickerState createState() => _HMSPickerState();
+}
+
+class _HMSPickerState extends State<_HMSPicker> {
+  late int hours;
+  late int minutes;
+  late int seconds;
+
+  late FixedExtentScrollController hoursController;
+  late FixedExtentScrollController minutesController;
+  late FixedExtentScrollController secondsController;
+
+  @override
+  void initState() {
+    super.initState();
+    int remainingSeconds = widget.initialTimeInSeconds;
+    hours = remainingSeconds ~/ 3600;
+    remainingSeconds %= 3600;
+    minutes = remainingSeconds ~/ 60;
+    remainingSeconds %= 60;
+    seconds = remainingSeconds;
+
+    hoursController = FixedExtentScrollController(initialItem: hours);
+    minutesController = FixedExtentScrollController(initialItem: minutes);
+    secondsController = FixedExtentScrollController(initialItem: seconds);
+  }
+
+  @override
+  void dispose() {
+    hoursController.dispose();
+    minutesController.dispose();
+    secondsController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildPicker('Hours', hours, 23, hoursController, (value) => setState(() => hours = value)),
+              _buildPicker('Minutes', minutes, 59, minutesController, (value) => setState(() => minutes = value)),
+              _buildPicker('Seconds', seconds, 59, secondsController, (value) => setState(() => seconds = value)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          CustomTextButton(
+            text: context.appTexts.confirm,
+            width: 150,
+            height: 45,
+            onPressed: () => Navigator.of(context).pop(hours * 3600 + minutes * 60 + seconds),
+          ),
+          const SizedBox(height: 15),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPicker(
+      String label, int initialValue, int maxValue, FixedExtentScrollController controller, ValueChanged<int> onChanged) {
+    return Column(
+      children: [
+        Text(label, style: context.textTheme.titleMedium),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: SizedBox(
+            height: 150,
+            width: 60,
+            child: ListWheelScrollView.useDelegate(
+              controller: controller,
+              itemExtent: 40,
+              onSelectedItemChanged: onChanged,
+              overAndUnderCenterOpacity: 0.6,
+              physics: const FixedExtentScrollPhysics(),
+              childDelegate: ListWheelChildBuilderDelegate(
+                builder: (context, index) => Center(
+                    child: Text(
+                  index.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                )),
+                childCount: maxValue + 1,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

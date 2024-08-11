@@ -102,7 +102,7 @@ class EditWorkoutsController extends StateNotifier<EditWorkoutsState> {
 
           final newExercise = exercise.copyWith(
             logs: [...exercise.logs, newLog],
-          );
+          ).updateMax();
 
           newExercises[exercise.key] = newExercise;
 

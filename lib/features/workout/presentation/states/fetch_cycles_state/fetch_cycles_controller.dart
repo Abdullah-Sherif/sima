@@ -105,13 +105,19 @@ class FetchCyclesController extends StateNotifier<FetchCyclesState> {
     }
   }
 
-  bool isActiveWorkout(DateTime currentDate) {
+    int isActiveWorkout(DateTime currentDate) {
     final dateNow = DateTime.now();
     final currentDateOnly = DateTime(currentDate.year, currentDate.month, currentDate.day);
     final dateNowOnly = DateTime(dateNow.year, dateNow.month, dateNow.day);
     final diff = currentDateOnly.difference(dateNowOnly).inDays;
-
-    return diff == 0;
+  
+    if (diff == 0) {
+      return 0;
+    } else if (diff > 0) {
+      return 1;
+    } else {
+      return -1;
+    }
   }
 
   void addNewCycle() {

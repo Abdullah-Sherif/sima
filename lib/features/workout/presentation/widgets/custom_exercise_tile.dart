@@ -15,6 +15,7 @@ class CustomExerciseTile extends HookWidget {
     this.width = double.infinity,
     this.verticalMargin = 8,
     this.horizontalMargin = 10,
+    required this.isActiveWorkout,
   });
 
   final ExerciseEntity exercise;
@@ -23,22 +24,23 @@ class CustomExerciseTile extends HookWidget {
   final double width;
   final double verticalMargin;
   final double horizontalMargin;
+  final int isActiveWorkout;
   final Function() onExpand;
   final Function() onPlay;
   final Function(bool?)? onCheck;
 
   @override
   Widget build(BuildContext context) {
-        var contentVisibility = useState(isExpanded);
+    var contentVisibility = useState(isExpanded);
     var descriptionVisibility = useState(false);
     var isFirstBuild = useRef(true);
-    
+
     useEffect(() {
       if (isFirstBuild.value) {
         isFirstBuild.value = false;
         return;
       }
-    
+
       if (isExpanded) {
         contentVisibility.value = true;
       } else {
@@ -56,6 +58,18 @@ class CustomExerciseTile extends HookWidget {
 
     final scrollController = useScrollController();
 
+    late final Color borderColor;
+
+    if (exercise.isCompleted) {
+      borderColor = CustomColors.green;
+    } else if (isExpanded) {
+      borderColor = CustomColors.black;
+    } else if (isActiveWorkout != -1) {
+      borderColor = context.theme.colorScheme.primary;
+    } else {
+      borderColor = CustomColors.red;
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: verticalMargin, horizontal: horizontalMargin),
       child: AnimatedContainer(
@@ -64,7 +78,7 @@ class CustomExerciseTile extends HookWidget {
         width: isExpanded ? width : width * 0.8,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black, width: 2),
+          border: Border.all(color: borderColor, width: 2),
           borderRadius: BorderRadius.circular(10),
         ),
         child: SingleChildScrollView(

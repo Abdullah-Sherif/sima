@@ -32,9 +32,8 @@ extension WorkoutEntityX on WorkoutEntity {
   bool get isRestDay => this is _RestDay;
 
   int get exerciseLength => (this as _WorkoutDay).exercises.length;
-  bool get isCompleted =>
-      isWorkoutDay &&
-      ((this as _WorkoutDay).forceCompleted || (this as _WorkoutDay).exercises.values.every((element) => element.isCompleted));
+  bool get exercisesIsCompleted => isWorkoutDay && (this as _WorkoutDay).exercises.values.every((element) => element.isCompleted);
+  bool get isCompleted => isWorkoutDay && ((this as _WorkoutDay).forceCompleted || exercisesIsCompleted);
 
   Iterable<ExerciseEntity>? get exercises => isWorkoutDay ? (this as _WorkoutDay).exercises.values : null;
   Iterable<String>? get exerciseKeys => isWorkoutDay ? (this as _WorkoutDay).exercises.keys : null;

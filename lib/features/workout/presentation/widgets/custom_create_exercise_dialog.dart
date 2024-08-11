@@ -126,11 +126,16 @@ class CustomCreateExerciseDialog extends HookConsumerWidget {
                               sets = {
                                 ...sets,
                                 i.toString(): initialExercise!.currentSets[i.toString()] ??
-                                    SetEntity.weight(
-                                      key: i.toString(),
-                                      reps: 10,
-                                      weight: 10,
-                                    ),
+                                    (selectedType.value[0]
+                                        ? SetEntity.weight(
+                                            key: i.toString(),
+                                            reps: 10,
+                                            weight: 10,
+                                          )
+                                        : SetEntity.duration(
+                                            key: i.toString(),
+                                            durationInSec: 30,
+                                          )),
                               };
                             }
                             ref.read(editExercisesControllerProvider.notifier).updateExercise(initialExercise!.copyWith(
@@ -148,11 +153,16 @@ class CustomCreateExerciseDialog extends HookConsumerWidget {
                             }
                             final uniqueKey = uuid.v4();
                             final sets = List.generate(numberOfSets.value, (index) {
-                              return SetEntity.weight(
-                                key: index.toString(),
-                                reps: 10,
-                                weight: 10,
-                              );
+                              return selectedType.value[0]
+                                  ? SetEntity.weight(
+                                      key: index.toString(),
+                                      reps: 10,
+                                      weight: 10,
+                                    )
+                                  : SetEntity.duration(
+                                      key: index.toString(),
+                                      durationInSec: 30,
+                                    );
                             });
                             final newExercise = ExerciseEntity(
                               key: uniqueKey,
