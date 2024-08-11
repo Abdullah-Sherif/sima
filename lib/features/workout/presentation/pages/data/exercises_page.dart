@@ -19,6 +19,16 @@ class ExercisesPage extends HookConsumerWidget {
     final selectedExercises =
         isEditing ? useState(List.generate(currentExercises!.length, (index) => currentExercises![index].key)) : null;
 
+    final editExercisesStatus = ref.watch(editExercisesControllerProvider).status;
+    final editWorkoutsStatus = ref.watch(editWorkoutsControllerProvider).status;
+
+    useEffect(() {
+      if (editExercisesStatus == FetchStatus.failure || editWorkoutsStatus == FetchStatus.failure) {
+        showSnackbar(context: context, text: context.appTexts.errorOccured);
+      }
+      return null;
+    }, [editExercisesStatus]);
+
     return SafeArea(
       child: Scaffold(
         floatingActionButton: SizedBox(
@@ -68,30 +78,32 @@ class ExercisesPage extends HookConsumerWidget {
           ),
         ),
         body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 20,
-            ),
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                final exercise = exercises.elementAt(index);
+          child: editExercisesStatus != FetchStatus.loading
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 20,
+                  ),
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      final exercise = exercises.elementAt(index);
 
-                return Column(
-                  children: [
-                    if (index != 0) const SizedBox(height: 10),
-                    _CustomExerciseTile(
-                      exercise: exercise,
-                      isEditing: isEditing,
-                      selectedExercises: selectedExercises,
-                      exerciseIndex: index,
-                    ),
-                  ],
-                );
-              },
-              itemCount: exercises.length,
-            ),
-          ),
+                      return Column(
+                        children: [
+                          if (index != 0) const SizedBox(height: 10),
+                          _CustomExerciseTile(
+                            exercise: exercise,
+                            isEditing: isEditing,
+                            selectedExercises: selectedExercises,
+                            exerciseIndex: index,
+                          ),
+                        ],
+                      );
+                    },
+                    itemCount: exercises.length,
+                  ),
+                )
+              : const CircularProgressIndicator(),
         ),
       ),
     );

@@ -72,7 +72,7 @@ class WorkoutRepository {
       for (int i = 0; i < workouts.length; i++) {
         final workout = workouts.values.elementAt(i);
         final List<Map<String, dynamic>> rawExercisesInWorkout = await db.rawQuery(
-          'SELECT e.id AS id, eiw.force_completed AS force_complete, e.name AS name, e.description AS description, e.type AS type, e.max AS max, e.video_path AS videoPath, e.sets AS sets FROM exercises_in_workout AS eiw JOIN exercises AS e ON eiw.exercise_id = e.id WHERE eiw.workout_id = ?',
+          'SELECT e.id AS id, eiw.force_completed AS force_complete, e.name AS name, e.description AS description, e.type AS type, e.max AS max, e.video_path AS video_path, e.sets AS sets FROM exercises_in_workout AS eiw JOIN exercises AS e ON eiw.exercise_id = e.id WHERE eiw.workout_id = ?',
           [workout.key],
         );
 

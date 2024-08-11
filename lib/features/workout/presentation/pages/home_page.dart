@@ -88,6 +88,17 @@ class _WorkoutExercises extends HookConsumerWidget {
             DateTime(currentActiveCycle.startDate.year, currentActiveCycle.startDate.month, currentActiveCycle.startDate.day))
         .inDays;
 
+    final editStatus = ref.watch(editWorkoutExerciseControllerProvider).status;
+    final editWorkoutsStatus = ref.watch(editWorkoutsControllerProvider).status;
+    final editExercisesInWorkoutStatus = ref.watch(editWorkoutExerciseControllerProvider).status;
+
+    useEffect(() {
+      if (editStatus == FetchStatus.failure || editWorkoutsStatus == FetchStatus.failure || editExercisesInWorkoutStatus == FetchStatus.failure) {
+        showSnackbar(context: context, text: context.appTexts.errorOccured);
+      }
+      return null;
+    }, [editStatus]);
+
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (isActiveWorkout && activeExerciseKey != null && activeExerciseKey != workout?.exercises?.first.key) {
@@ -153,9 +164,9 @@ class _WorkoutExercises extends HookConsumerWidget {
                             showDialog(
                               context: context,
                               builder: (context) => WarningDialog(
-                                action: 'complete',
-                                title: 'workout',
-                                additionalWarning: 'This action is irreversible',
+                                action: context.appTexts.complete.toLowerCase(),
+                                title: context.appTexts.workout.toLowerCase(),
+                                additionalWarning: context.appTexts.actionIrreversible,
                                 onConfirm: () {
                                   ref.read(editWorkoutExerciseControllerProvider.notifier).forceCompleteExercise(true, workout);
                                   ref
@@ -168,7 +179,18 @@ class _WorkoutExercises extends HookConsumerWidget {
                             ref.read(editWorkoutExerciseControllerProvider.notifier).forceCompleteExercise(value, workout);
                           }
                         },
-                        onPlay: () {},
+                        onPlay: () {
+                          if (exercise.videoPath != null) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => Dialog(
+                                child: PersonalizedVideoPlayer(videoPath: exercise.videoPath!),
+                              ),
+                            );
+                          } else {
+                            showSnackbar(context: context, text: context.appTexts.noVideoExercise);
+                          }
+                        },
                       ),
                     );
                   },

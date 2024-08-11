@@ -13,9 +13,9 @@ void showSnackbar({
     backgroundColor: context.theme.colorScheme.background,
     shapeBorder: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(7),
-      side: BorderSide(
-        color: context.theme.colorScheme.secondary,
-        width: 1.5,
+      side: const BorderSide(
+        color: Colors.black,
+        width: 2,
       ),
     ),
     animation: StyledToastAnimation.slideFromTop,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sima/core/barrel.dart';
 import 'package:sima/features/barrel.dart';
 
 class HomeListeners extends HookConsumerWidget {
@@ -58,6 +59,7 @@ class HomeListeners extends HookConsumerWidget {
 
       return null;
     }, [currentDate]);
+    
     return child;
   }
 }

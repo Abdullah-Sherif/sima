@@ -47,6 +47,15 @@ class CustomCreateExerciseDialog extends HookConsumerWidget {
       };
     }, [nameController, descriptionController]);
 
+    final editExercisesStatus = ref.watch(editExercisesControllerProvider).status;
+
+    useEffect(() {
+      if (editExercisesStatus == FetchStatus.failure) {
+        showSnackbar(context: context, text: context.appTexts.errorOccured);
+      }
+      return null;
+    }, [editExercisesStatus]);
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),

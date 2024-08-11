@@ -65,5 +65,9 @@
   "workoutDay": "Workout Day",
   "restDay": "Rest Day",
   "addExercise": "Add Exercise",
-  "add": "Add"
+  "add": "Add",
+  "complete": "Complete",
+  "actionIrreversible": "This action is irreversible",
+  "noVideoExercise": "No video available for this exercise",
+  "workout": "Workout"
 }

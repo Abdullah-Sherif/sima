@@ -71,30 +71,15 @@ class _InfoTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final customVideoPlayerController = useState<CustomVideoPlayerController?>(null);
+    final editExercisesStatus = ref.watch(editExercisesControllerProvider).status;
 
     useEffect(() {
-      if (exercise.videoPath != null) {
-        final videoController = CachedVideoPlayerController.file(File(exercise.videoPath!));
-        final newController = CustomVideoPlayerController(
-          context: context,
-          videoPlayerController: videoController,
-          customVideoPlayerSettings: const CustomVideoPlayerSettings(
-            playButton: Icon(Icons.play_arrow, color: Colors.white),
-            pauseButton: Icon(Icons.pause, color: Colors.white),
-            showFullscreenButton: false,
-            settingsButtonAvailable: false,
-            showMuteButton: false,
-          ),
-        );
-        videoController.initialize().then((_) {
-          customVideoPlayerController.value = newController;
-        });
-      } else {
-        customVideoPlayerController.value = null;
+      if(editExercisesStatus == FetchStatus.failure){
+        showSnackbar(context: context, text: context.appTexts.errorOccured);
       }
-      return customVideoPlayerController.value?.dispose;
-    }, [exercise.videoPath]);
+      return null;
+    }, [editExercisesStatus]);
+
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -146,12 +131,10 @@ class _InfoTab extends HookConsumerWidget {
           const SizedBox(height: 40),
           Text('${context.appTexts.video}:', style: context.textTheme.titleLarge),
           const SizedBox(height: 20),
-          if (customVideoPlayerController.value != null)
-            CustomVideoPlayer(
-              customVideoPlayerController: customVideoPlayerController.value!,
-            )
-          else if (customVideoPlayerController.value != null)
-            const Center(child: CircularProgressIndicator()),
+          if (exercise.videoPath != null)
+            PersonalizedVideoPlayer(
+              videoPath: exercise.videoPath!,
+            ),
           const SizedBox(height: 20),
           Center(
             child: CustomTextButton(

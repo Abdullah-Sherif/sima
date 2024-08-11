@@ -22,6 +22,7 @@ class CustomWorkoutDayWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final editWorkoutsStatus = ref.watch(editWorkoutsControllerProvider).status;
     final showExpanded = useState(isExpanded);
     useEffect(() {
       if (isExpanded) {
@@ -34,6 +35,13 @@ class CustomWorkoutDayWidget extends HookConsumerWidget {
       }
       return null;
     }, [isExpanded]);
+
+    useEffect(() {
+      if (editWorkoutsStatus == FetchStatus.failure) {
+        showSnackbar(context: context, text: context.appTexts.errorOccured);
+      }
+      return null;
+    }, [editWorkoutsStatus]);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
@@ -112,35 +120,37 @@ class CustomWorkoutDayWidget extends HookConsumerWidget {
                         const SizedBox(height: 15),
                         Text(context.appTexts.exercises, style: context.textTheme.titleMedium?.copyWith(fontSize: 22)),
                         const SizedBox(height: 15),
-                        Expanded(
-                          child: ListView.separated(
-                            itemBuilder: (context, index) {
-                              final exercise = workout.exercises!.elementAt(index);
+                        editWorkoutsStatus != FetchStatus.loading
+                            ? Expanded(
+                                child: ListView.separated(
+                                  itemBuilder: (context, index) {
+                                    final exercise = workout.exercises!.elementAt(index);
 
-                              return _CustomExerciseTile(
-                                exercise: exercise,
-                                onDelete: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return WarningDialog(
-                                        action: context.appTexts.delete,
-                                        title: exercise.name,
-                                        onConfirm: () {
-                                          ref
-                                              .read(editWorkoutsControllerProvider.notifier)
-                                              .deleteExerciseFromWorkout(workout.key, exercise.key);
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                            separatorBuilder: (context, index) => const SizedBox(height: 10),
-                            itemCount: workout.exercises!.length,
-                          ),
-                        ),
+                                    return _CustomExerciseTile(
+                                      exercise: exercise,
+                                      onDelete: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return WarningDialog(
+                                              action: context.appTexts.delete,
+                                              title: exercise.name,
+                                              onConfirm: () {
+                                                ref
+                                                    .read(editWorkoutsControllerProvider.notifier)
+                                                    .deleteExerciseFromWorkout(workout.key, exercise.key);
+                                              },
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) => const SizedBox(height: 10),
+                                  itemCount: workout.exercises!.length,
+                                ),
+                              )
+                            : const Center(child: CircularProgressIndicator()),
                         const SizedBox(height: 30),
                         Center(
                           child: CustomTextButton(
