@@ -27,6 +27,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AuthWrapperPage(),
       );
     },
+    ChangePasswordRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ChangePasswordPage(),
+      );
+    },
     ConfirmEmailRoute.name: (routeData) {
       final args = routeData.argsAs<ConfirmEmailRouteArgs>(
           orElse: () => const ConfirmEmailRouteArgs());
@@ -165,6 +171,20 @@ class AuthWrapperRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AuthWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ChangePasswordPage]
+class ChangePasswordRoute extends PageRouteInfo<void> {
+  const ChangePasswordRoute({List<PageRouteInfo>? children})
+      : super(
+          ChangePasswordRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ChangePasswordRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

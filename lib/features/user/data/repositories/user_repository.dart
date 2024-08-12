@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sima/core/barrel.dart';
 
@@ -37,6 +38,19 @@ class UserRepository {
   }) async {
     try {
       await firebaseFirestore.collection(FirebaseCollections.users).doc(user.uid).update(user.toJson());
+      return const Right(Success());
+    } catch (e) {
+      return const Left(Failure());
+    }
+  }
+
+  Future<Either<Failure, Success>> deleteUser({
+    required String uid,
+  }) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      await FirebaseAuth.instance.currentUser!.delete();
+      await firebaseFirestore.collection(FirebaseCollections.users).doc(uid).delete();
       return const Right(Success());
     } catch (e) {
       return const Left(Failure());

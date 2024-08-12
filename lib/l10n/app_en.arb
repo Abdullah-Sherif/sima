@@ -69,5 +69,19 @@
   "complete": "Complete",
   "actionIrreversible": "This action is irreversible",
   "noVideoExercise": "No video available for this exercise",
-  "workout": "Workout"
+  "workout": "Workout",
+  "account": "Account",
+  "settings": "Settings",
+  "accountSettings": "Account Settings",
+  "appSettings": "App Settings",
+  "clearAllData": "Clear All Data",
+  "dataCleared": "All data cleared successfully",
+  "changePass": "Change Password",
+  "deleteAccount": "Delete Account",
+  "helpNContact": "Help & Contact",
+  "signoutMessage": "This will delete all of your data!",
+  "passChanged": "Password changed successfully",
+  "currentPass": "Current Password",
+  "newPass": "New Password",
+  "changePasswordPageMessage": "Please enter your current and new password below"
 }

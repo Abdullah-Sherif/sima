@@ -10,7 +10,6 @@ class HomeListeners extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     ref.watch(fetchCyclesControllerProvider);
     ref.watch(fetchAllExercisesControllerProvider);
     ref.watch(fetchWorkoutsControllerProvider);
@@ -22,6 +21,8 @@ class HomeListeners extends HookConsumerWidget {
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.invalidate(workoutRepositoryProvider);
+
         final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
         ref.read(fetchCyclesControllerProvider.notifier).init(currentDate);
         ref.read(fetchAllExercisesControllerProvider.notifier).init();
@@ -58,7 +59,7 @@ class HomeListeners extends HookConsumerWidget {
 
       return null;
     }, [currentDate]);
-    
+
     return child;
   }
 }

@@ -21,7 +21,8 @@ class DatabaseService {
       onCreate: (Database db, int version) async {
         var batch = db.batch();
 
-        batch.execute("CREATE TABLE past_cycles(id INTEGER PRIMARY KEY AUTOINCREMENT, workouts TEXT NOT NULL, start_date_mse INTEGER NOT NULL)");
+        batch.execute(
+            "CREATE TABLE past_cycles(id INTEGER PRIMARY KEY AUTOINCREMENT, workouts TEXT NOT NULL, start_date_mse INTEGER NOT NULL)");
         batch.execute(
             "CREATE TABLE workouts(id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL, name TEXT NOT NULL, force_completed INTEGER DEFAULT 0)");
         batch.execute(
@@ -31,5 +32,11 @@ class DatabaseService {
         await batch.commit();
       },
     );
+  }
+
+  Future<void> deleteSimaDatabase() async {
+    final dbPath = path.join(await getDatabasesPath(), 'sima.db');
+    await deleteDatabase(dbPath);
+    _database = null;
   }
 }

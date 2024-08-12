@@ -29,55 +29,55 @@ class ExercisesPage extends HookConsumerWidget {
       return null;
     }, [editExercisesStatus]);
 
-    return SafeArea(
-      child: Scaffold(
-        floatingActionButton: SizedBox(
-          width: 70,
-          height: 70,
-          child: FloatingActionButton(
-            backgroundColor: context.theme.colorScheme.secondary,
-            onPressed: () {
-              if (isEditing) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return WarningDialog(
-                        action: context.appTexts.add.toLowerCase(),
-                        title: context.appTexts.exercises.toLowerCase(),
-                        onConfirm: () {
-                          ref
-                              .read(editWorkoutsControllerProvider.notifier)
-                              .setExercisesToWorkout(workoutKey!, selectedExercises!.value);
-                          Navigator.of(context).pop();
-                        });
-                  },
-                );
-              } else {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const CustomCreateExerciseDialog();
-                  },
-                );
-              }
-            },
-            child: Icon(
-              isEditing ? Icons.check : Icons.add,
-              color: context.theme.colorScheme.background,
-            ),
+    return Scaffold(
+      floatingActionButton: SizedBox(
+        width: 70,
+        height: 70,
+        child: FloatingActionButton(
+          backgroundColor: context.theme.colorScheme.secondary,
+          onPressed: () {
+            if (isEditing) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return WarningDialog(
+                      action: context.appTexts.add.toLowerCase(),
+                      title: context.appTexts.exercises.toLowerCase(),
+                      onConfirm: () {
+                        ref
+                            .read(editWorkoutsControllerProvider.notifier)
+                            .setExercisesToWorkout(workoutKey!, selectedExercises!.value);
+                        Navigator.of(context).pop();
+                      });
+                },
+              );
+            } else {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const CustomCreateExerciseDialog();
+                },
+              );
+            }
+          },
+          child: Icon(
+            isEditing ? Icons.check : Icons.add,
+            color: context.theme.colorScheme.background,
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        appBar: AppBar(
-          leading: BackButton(
-            style: ButtonStyle(iconSize: MaterialStateProperty.all(30)),
-          ),
-          title: Text(
-            context.appTexts.exercises,
-            style: context.textTheme.titleLarge?.copyWith(fontSize: 35),
-          ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      appBar: AppBar(
+        leading: BackButton(
+          style: ButtonStyle(iconSize: MaterialStateProperty.all(30)),
         ),
-        body: Center(
+        title: Text(
+          context.appTexts.exercises,
+          style: context.textTheme.titleLarge?.copyWith(fontSize: 35),
+        ),
+      ),
+      body: SafeArea(
+        child: Center(
           child: editExercisesStatus != FetchStatus.loading
               ? Padding(
                   padding: const EdgeInsets.symmetric(
@@ -87,7 +87,7 @@ class ExercisesPage extends HookConsumerWidget {
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       final exercise = exercises.elementAt(index);
-
+            
                       return Column(
                         children: [
                           if (index != 0) const SizedBox(height: 10),

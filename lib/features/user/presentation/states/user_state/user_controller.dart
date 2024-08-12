@@ -29,6 +29,15 @@ class UserConroller extends StateNotifier<UserState> {
     state = UserState(user: user);
   }
 
+  void deleteUser() async {
+    final result = await _userRepository.deleteUser(uid: state.user!.uid);
+
+    result.fold(
+      (success) => state = const UserState(),
+      (failure) => state = state,
+    );
+  }
+
   void unauthenticated() {
     _userRepository.onUnauthenticated();
     state = const UserState();

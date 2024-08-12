@@ -60,12 +60,12 @@ class AppListeners extends ConsumerWidget {
 
     if (newRoute is AuthWrapperRoute) {
       const ImageProvider backgroundImage = AssetImage('assets/auth_home_background.jpg');
-      if(context.mounted){
+      if (context.mounted) {
         await precacheImage(backgroundImage, context);
       }
-      router.replace(newRoute);
+      router.replaceAllWithOne(newRoute);
     } else {
-      router.replace(newRoute);
+      router.replaceAllWithOne(newRoute);
     }
   }
 }

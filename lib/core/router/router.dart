@@ -12,5 +12,6 @@ class AppRouter extends _$AppRouter {
         ...coreRoutes,
         ...authRoutes,
         ...workoutRoutes,
+        ...settingRoutes,
       ];
 }

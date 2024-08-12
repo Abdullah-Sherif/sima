@@ -5,17 +5,19 @@ class WarningDialog extends StatelessWidget {
   const WarningDialog({
     super.key,
     required this.action,
-    required this.title,
+    this.title,
     required this.onConfirm,
     this.onCancel,
     this.additionalWarning,
+    this.additionalWarningColor,
   });
 
   final String action;
-  final String title;
+  final String? title;
   final Function() onConfirm;
   final Function()? onCancel;
   final String? additionalWarning;
+  final Color? additionalWarningColor;
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +36,19 @@ class WarningDialog extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '${context.appTexts.areYouSure} $action $title? ${additionalWarning ?? ''}',
+                  '${context.appTexts.areYouSure} $action${title != null ? " $title" : ''}?',
                   style: context.textTheme.titleLarge?.copyWith(fontSize: 30),
                   textAlign: TextAlign.center,
                 ),
+                if (additionalWarning != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      additionalWarning!,
+                      style: context.textTheme.titleLarge?.copyWith(fontSize: 30, color: additionalWarningColor),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

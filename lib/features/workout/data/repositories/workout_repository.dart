@@ -6,8 +6,8 @@ import 'package:sima/features/workout/barrel.dart';
 import 'package:sqflite/sqflite.dart';
 
 final workoutRepositoryProvider = Provider<WorkoutRepository>((ref) {
-  final db = ref.watch(databaseServiceProvider).db;
-  final repository = WorkoutRepository(db: db!);
+  final dbService = ref.watch(databaseServiceProvider);
+  final repository = WorkoutRepository(dbService: dbService);
   ref.onDispose(() {
     repository.dispose();
   });
@@ -15,7 +15,7 @@ final workoutRepositoryProvider = Provider<WorkoutRepository>((ref) {
 });
 
 class WorkoutRepository {
-  WorkoutRepository({required this.db}) {
+  WorkoutRepository({required this.dbService}) {
     _currentCycleController = StreamController<CycleEntity>.broadcast(
       onListen: _fetchCurrentCycle,
     );
@@ -26,9 +26,12 @@ class WorkoutRepository {
     _workoutsSubscription = StreamController<Map<String, WorkoutEntity>>.broadcast(
       onListen: _fetchCurrentCycle,
     );
+
+    db = dbService.db!;
   }
 
-  final Database db;
+  final DatabaseService dbService;
+  late final Database db;
   late final StreamController<CycleEntity> _currentCycleController;
   late final StreamController<List<ExerciseEntity>> _allExercisesController;
   late final StreamController<Map<String, WorkoutEntity>> _workoutsSubscription;
@@ -87,7 +90,7 @@ class WorkoutRepository {
       final emptyCurrentCycle = CycleEntity.fromJson(rawCurrentCycle);
       final Map<String, WorkoutEntity> existingWorkouts = emptyCurrentCycle.workouts;
       final Map<String, WorkoutEntity> mergedWorkouts = {};
-      
+
       existingWorkouts.forEach((key, value) {
         mergedWorkouts[key] = value;
       });
@@ -100,6 +103,31 @@ class WorkoutRepository {
       final updatedCycle = emptyCurrentCycle.copyWith(workouts: mergedWorkouts);
       _currentCycleController.add(updatedCycle);
       _workoutsSubscription.add(workouts);
+    }
+  }
+
+  Future<Either<Failure, Success>> deleteDataBase() async {
+    try {
+      await dbService.deleteSimaDatabase();
+      return const Right(Success());
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  //clear all data
+  Future<Either<Failure, Success>> clearAllData() async {
+    try {
+      await db.delete('past_cycles');
+      await db.delete('workouts');
+      await db.delete('exercises');
+      await db.delete('exercises_in_workout');
+
+      _fetchCurrentCycle();
+      _fetchAllExercises();
+      return const Right(Success());
+    } catch (e) {
+      return Left(Failure(e.toString()));
     }
   }
 
