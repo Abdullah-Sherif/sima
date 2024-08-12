@@ -62,7 +62,7 @@ class ForgetPasswordPage extends HookConsumerWidget {
                 children: [
                   Text(
                     context.appTexts.forgotPasswordMessage,
-                    style: context.textTheme.titleLarge?.copyWith(fontSize: 35),
+                    style: context.textTheme.titleLarge?.copyWith(fontSize: 25),
                     textAlign: TextAlign.center,
                   ),
                   Expanded(

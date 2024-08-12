@@ -35,20 +35,22 @@ class WarningDialog extends StatelessWidget {
             width: context.percentOfWidth(0.8),
             child: Column(
               children: [
-                Text(
-                  '${context.appTexts.areYouSure} $action${title != null ? " $title" : ''}?',
-                  style: context.textTheme.titleLarge?.copyWith(fontSize: 30),
+                RichText(
                   textAlign: TextAlign.center,
-                ),
-                if (additionalWarning != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      additionalWarning!,
-                      style: context.textTheme.titleLarge?.copyWith(fontSize: 30, color: additionalWarningColor),
-                      textAlign: TextAlign.center,
-                    ),
+                  text: TextSpan(
+                    style: context.textTheme.titleLarge?.copyWith(fontSize: 25),
+                    children: [
+                      TextSpan(
+                        text: '${context.appTexts.areYouSure} $action${title != null ? " $title" : ''}?',
+                      ),
+                      if (additionalWarning != null)
+                        TextSpan(
+                          text: ' $additionalWarning',
+                          style: context.textTheme.titleLarge?.copyWith(fontSize: 25, color: additionalWarningColor),
+                        ),
+                    ],
                   ),
+                ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

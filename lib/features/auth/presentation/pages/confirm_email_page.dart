@@ -77,6 +77,7 @@ class ConfirmEmailPage extends HookConsumerWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           toolbarHeight: context.percentOfSafeHeight(0.06),
           leadingWidth: 130,
           leading: TextButton(
@@ -96,19 +97,19 @@ class ConfirmEmailPage extends HookConsumerWidget {
             child: Column(
               children: [
                 SizedBox(
-                  width: 350,
+                  width: 250,
                   child: FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Text(
                       context.appTexts.confirmEmail,
-                      style: context.textTheme.titleLarge?.copyWith(fontSize: 60),
+                      style: context.textTheme.titleLarge,
                     ),
                   ),
                 ),
                 Expanded(child: SvgPicture.asset('assets/confirm_light.svg')),
                 Text(
                   context.appTexts.checkEmailForLink,
-                  style: context.textTheme.titleLarge?.copyWith(fontSize: 40),
+                  style: context.textTheme.titleLarge?.copyWith(fontSize: 20),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 25),

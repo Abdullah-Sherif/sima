@@ -26,6 +26,7 @@ class ExerciseDetailPage extends HookConsumerWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           leading: BackButton(
             style: ButtonStyle(iconSize: MaterialStateProperty.all(30)),
           ),

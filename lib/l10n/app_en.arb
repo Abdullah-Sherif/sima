@@ -67,7 +67,7 @@
   "addExercise": "Add Exercise",
   "add": "Add",
   "complete": "Complete",
-  "actionIrreversible": "This action is irreversible",
+  "actionIrreversible": "This action is irreversible!",
   "noVideoExercise": "No video available for this exercise",
   "workout": "Workout",
   "account": "Account",

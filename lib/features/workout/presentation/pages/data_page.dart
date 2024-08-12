@@ -14,7 +14,7 @@ class DataPage extends StatelessWidget {
         children: [
           Text(
             context.appTexts.data,
-            style: context.textTheme.titleLarge?.copyWith(fontSize: 60),
+            style: context.textTheme.titleLarge?.copyWith(fontSize: 40),
           ),
           const SizedBox(height: 30),
           CustomTextButton(
@@ -24,7 +24,7 @@ class DataPage extends StatelessWidget {
             },
             backgroundColor: Colors.transparent,
             textColor: context.theme.colorScheme.secondary,
-            textSize: 50,
+            textSize: 32,
             height: 300,
             width: context.percentOfWidth(0.85),
             borderColor: Colors.black,
@@ -43,7 +43,7 @@ class DataPage extends StatelessWidget {
             },
             backgroundColor: Colors.transparent,
             textColor: context.theme.colorScheme.secondary,
-            textSize: 50,
+            textSize: 32,
             height: 300,
             width: context.percentOfWidth(0.85),
             borderColor: Colors.black,

@@ -102,7 +102,7 @@ class ResetPasswordPage extends HookConsumerWidget {
                 children: [
                   Text(
                     context.appTexts.resetPasswordPageMessage,
-                    style: context.textTheme.titleLarge?.copyWith(fontSize: 35),
+                    style: context.textTheme.titleLarge?.copyWith(fontSize: 30),
                     textAlign: TextAlign.center,
                   ),
                   const Spacer(),

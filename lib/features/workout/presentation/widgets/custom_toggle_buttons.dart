@@ -30,7 +30,7 @@ class CustomToggleButtons extends StatelessWidget {
               );
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
               decoration: BoxDecoration(
                 color: isSelected ? context.theme.colorScheme.secondary : context.theme.colorScheme.background,
                 borderRadius: BorderRadius.circular(6),

@@ -44,16 +44,16 @@ class SignInPage extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: 350,
+                    width: 250,
                     child: FittedBox(
                       fit: BoxFit.fitWidth,
                       child: Text(
                         context.appTexts.welcomeBack,
-                        style: context.textTheme.titleLarge?.copyWith(fontSize: 50),
+                        style: context.textTheme.titleLarge,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 30),
                   Expanded(
                     child: SvgPicture.asset(
                       'assets/welcome_light.svg',

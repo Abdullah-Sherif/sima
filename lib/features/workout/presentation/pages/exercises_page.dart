@@ -68,6 +68,7 @@ class ExercisesPage extends HookConsumerWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
+        centerTitle: true,
         leading: BackButton(
           style: ButtonStyle(iconSize: MaterialStateProperty.all(30)),
         ),
@@ -87,7 +88,7 @@ class ExercisesPage extends HookConsumerWidget {
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       final exercise = exercises.elementAt(index);
-            
+
                       return Column(
                         children: [
                           if (index != 0) const SizedBox(height: 10),
@@ -126,7 +127,7 @@ class _CustomExerciseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 75,
+      height: 85,
       child: FittedBox(
         fit: BoxFit.contain,
         child: TextButton(
@@ -134,12 +135,11 @@ class _CustomExerciseTile extends StatelessWidget {
             fixedSize: MaterialStateProperty.all(
               Size(
                 context.percentOfWidth(0.8),
-                75,
+                85,
               ),
             ),
             padding: MaterialStateProperty.all(const EdgeInsets.symmetric(
               horizontal: 20,
-              vertical: 10,
             )),
             backgroundColor: MaterialStateProperty.all(
               isEditing && selectedExercises!.value.contains(exercise.key)
@@ -173,6 +173,7 @@ class _CustomExerciseTile extends StatelessWidget {
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   exercise.name,

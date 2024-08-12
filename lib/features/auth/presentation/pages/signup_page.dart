@@ -74,7 +74,7 @@ class SignUpPage extends HookConsumerWidget {
                 children: [
                   Text(
                     context.appTexts.register,
-                    style: context.textTheme.titleLarge?.copyWith(fontSize: 65),
+                    style: context.textTheme.titleLarge?.copyWith(fontSize: 40),
                   ),
                   const SizedBox(height: 10),
                   Text(

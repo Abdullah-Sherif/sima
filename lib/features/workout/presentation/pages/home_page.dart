@@ -61,7 +61,7 @@ class _WorkoutName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       workout?.name ?? 'Empty',
-      style: context.textTheme.titleLarge?.copyWith(fontSize: 50),
+      style: context.textTheme.titleLarge?.copyWith(fontSize: 40),
     );
   }
 }
@@ -142,12 +142,12 @@ class _WorkoutExercises extends HookConsumerWidget {
 
     return workout == null
         ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Center(
               child: Text(
                 textAlign: TextAlign.center,
                 context.appTexts.homeEmptyMessage,
-                style: context.textTheme.titleLarge?.copyWith(fontSize: 40, letterSpacing: 2),
+                style: context.textTheme.titleLarge?.copyWith(fontSize: 30, letterSpacing: 2),
               ),
             ),
           )

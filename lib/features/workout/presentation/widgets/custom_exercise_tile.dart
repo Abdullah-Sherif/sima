@@ -61,7 +61,7 @@ class CustomExerciseTile extends HookWidget {
     late final Color borderColor;
 
     if (exercise.isCompleted) {
-      borderColor = CustomColors.green;
+      borderColor = isActiveWorkout != 1 ? CustomColors.green : context.theme.colorScheme.primary;
     } else if (isExpanded) {
       borderColor = CustomColors.black;
     } else if (isActiveWorkout != -1) {
