@@ -11,7 +11,7 @@ class WorkoutCyclePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final workouts = ref.watch(fetchWorkoutsControllerProvider).workouts;
+    final workouts = ref.watch(fetchCyclesControllerProvider).workouts;
     final expandedCycle = useState(List.generate(workouts.length, (index) => false));
 
     useEffect(() {

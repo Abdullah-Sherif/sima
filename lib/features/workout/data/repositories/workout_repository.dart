@@ -57,10 +57,8 @@ class WorkoutRepository {
         return const Right([]);
       }
 
-      List<Map<String, dynamic>> updatedCycles = rawCycles..removeLast();
-
-      final List<CycleEntity> pastCycles = List.generate(updatedCycles.length, (i) {
-        final Map<String, dynamic> rawCycle = updatedCycles[i];
+      final List<CycleEntity> pastCycles = List.generate(rawCycles.length - 1, (i) {
+        final Map<String, dynamic> rawCycle = rawCycles[i];
         return CycleEntity.fromJson(rawCycle);
       });
 
@@ -136,25 +134,61 @@ class WorkoutRepository {
     }
   }
 
-  Future<Either<Failure, Success>> addCycle(CycleEntity cycle) async {
+  Future<Either<Failure, Success>> addCycle(String newCycleKey, DateTime newStartDate) async {
     try {
-      final workouts = cycle.workouts;
-      final cycleJson = cycle.toJson()..remove('workouts');
-      await db.insert(
-        'past_cycles',
-        cycleJson,
-        conflictAlgorithm: ConflictAlgorithm.replace,
+      final cycle = CycleEntity(
+        key: newCycleKey,
+        startDate: newStartDate,
       );
 
-      for (final workout in workouts.values) {
-        if (workout.exercises != null) {
-          for (final exercise in workout.exercises!.toList()) {
-            updateExerciseInWorkout(workout.key, exercise.key, exercise);
-          }
-        }
+      await db.transaction((txn) async {
+        final rawWorkouts = await txn.query('workouts');
+        final workouts = {for (var e in rawWorkouts) e['id'].toString(): WorkoutEntity.fromJson(e)};
+        final cycleJson = cycle.toJson()
+          ..remove('workouts')
+          ..addAll({'workouts': '{}'});
 
-        updateWorkout(workout.key, workout.toJson());
-      }
+        await txn.insert(
+          'past_cycles',
+          cycleJson,
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+
+        for (final workout in workouts.values) {
+          final rawExercisesInWorkout = await txn.query(
+            'exercises_in_workout',
+            where: 'workout_id = ?',
+            whereArgs: [workout.key],
+          );
+          final exercisesKeys = [for (var e in rawExercisesInWorkout) e['exercise_id'].toString()];
+
+          if (exercisesKeys.isNotEmpty) {
+            for (final exerciseKey in exercisesKeys) {
+              final rawExercise = await txn.query('exercises', where: 'id = ?', whereArgs: [int.parse(exerciseKey)]);
+              final exerciseEntity = ExerciseEntity.fromJson(rawExercise.first);
+              final updatedExercise = exerciseEntity.resetAllSets();
+              await txn.update('exercises', updatedExercise.toJson()..remove('force_complete'), where: 'id = ?', whereArgs: [int.parse(exerciseKey)]);
+
+              await txn.update(
+                'exercises_in_workout',
+                {'force_completed': 0},
+                where: 'workout_id = ? AND exercise_id = ?',
+                whereArgs: [workout.key, exerciseKey],
+              );
+            }
+          }
+
+          await txn.update(
+            'workouts',
+            {'force_completed': 0},
+            where: 'id = ?',
+            whereArgs: [workout.key],
+          );
+        }
+      });
+
+      _fetchCurrentCycle();
+      _fetchAllExercises();
       return const Right(Success());
     } catch (e) {
       return Left(Failure(e.toString()));
@@ -199,28 +233,30 @@ class WorkoutRepository {
     }
   }
 
-  Future<Either<Failure, Success>> updateExerciseInWorkout(
-      String workoutId, String exerciseId, ExerciseEntity newWorkoutExercise) async {
+  Future<Either<Failure, Success>> updateExerciseInWorkout(String workoutId, String exerciseId, ExerciseEntity newWorkoutExercise,
+      {Transaction? txn}) async {
     final Map<String, dynamic> newJson = newWorkoutExercise.toJson();
 
     final forceComplete = newJson['force_complete'];
     final exerciseData = Map<String, dynamic>.from(newJson)..remove('force_complete');
 
-    await db.update(
+    final database = txn ?? db;
+
+    await database.update(
       'exercises_in_workout',
       {'force_completed': forceComplete},
       where: 'workout_id = ? AND exercise_id = ?',
       whereArgs: [workoutId, exerciseId],
     );
 
-    await db.update(
+    await database.update(
       'exercises',
       exerciseData,
       where: 'id = ?',
       whereArgs: [exerciseId],
     );
 
-    final List<Map<String, dynamic>> rawUpdatedExercise = await db.rawQuery(
+    final List<Map<String, dynamic>> rawUpdatedExercise = await database.rawQuery(
       'SELECT e.id AS id, eiw.force_completed AS force_complete, e.name AS name, e.description AS description, e.type AS type, e.max AS max, e.video_path AS videoPath, e.sets AS sets FROM exercises_in_workout AS eiw JOIN exercises AS e ON eiw.exercise_id = e.id WHERE eiw.workout_id = ? AND e.id = ?',
       [workoutId, exerciseId],
     );
@@ -284,12 +320,16 @@ class WorkoutRepository {
     }
   }
 
-  Future<Either<Failure, Success>> updateWorkout(String workoutId, Map<String, dynamic> updates) async {
+  Future<Either<Failure, Success>> updateWorkout(String workoutId, Map<String, dynamic> updates, {Transaction? txn}) async {
     try {
       if (updates.containsKey('exercises')) {
         updates.remove('exercises');
       }
-      await db.update('workouts', updates, where: 'id = ?', whereArgs: [workoutId]);
+
+      final database = txn ?? db;
+
+      await database.update('workouts', updates, where: 'id = ?', whereArgs: [workoutId]);
+
       _fetchCurrentCycle();
       return const Right(Success());
     } catch (e) {

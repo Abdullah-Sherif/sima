@@ -30,10 +30,10 @@ class EditWorkoutsController extends StateNotifier<EditWorkoutsState> {
     });
   }
 
-  void updateWorkout(WorkoutEntity workout) {
+  Future<void> updateWorkout(WorkoutEntity workout) async{
     state = state.copyWith(status: FetchStatus.loading);
 
-    _workoutRepository.updateWorkout(workout.key, workout.toJson()).then((result) {
+    await _workoutRepository.updateWorkout(workout.key, workout.toJson()).then((result) {
       result.fold(
         (failure) => state = state.copyWith(status: FetchStatus.failure),
         (workouts) => state = state.copyWith(status: FetchStatus.success),
@@ -74,10 +74,10 @@ class EditWorkoutsController extends StateNotifier<EditWorkoutsState> {
     });
   }
 
-  void addWorkoutToPastCurrentCycle(WorkoutEntity workout) {
+  Future<void> addWorkoutToPastCurrentCycle(WorkoutEntity workout) async{
     state = state.copyWith(status: FetchStatus.loading);
 
-    _workoutRepository.addWorkoutToPastCurrentCycle(workout).then((result) {
+    await _workoutRepository.addWorkoutToPastCurrentCycle(workout).then((result) {
       result.fold(
         (failure) => state = state.copyWith(status: FetchStatus.failure),
         (workouts) => state = state.copyWith(status: FetchStatus.success),
@@ -85,7 +85,7 @@ class EditWorkoutsController extends StateNotifier<EditWorkoutsState> {
     });
   }
 
-  void addLogsToWorkoutExercises(WorkoutEntity workout, int cycleNum, int dayNum) {
+  Future<void> addLogsToWorkoutExercises(WorkoutEntity workout, int cycleNum, int dayNum) async{
     state = state.copyWith(status: FetchStatus.loading);
 
     Map<String, ExerciseEntity> newExercises = {};
@@ -106,7 +106,7 @@ class EditWorkoutsController extends StateNotifier<EditWorkoutsState> {
 
           newExercises[exercise.key] = newExercise;
 
-          _workoutRepository.updateExerciseInWorkout(workout.key, exercise.key, newExercise).then((result) {
+         await _workoutRepository.updateExerciseInWorkout(workout.key, exercise.key, newExercise).then((result) {
             result.fold(
               (failure) => state = state.copyWith(status: FetchStatus.failure),
               (success) => state = state.copyWith(status: FetchStatus.success),
@@ -117,12 +117,12 @@ class EditWorkoutsController extends StateNotifier<EditWorkoutsState> {
     }
   }
 
-  void completeWorkout(WorkoutEntity workout, int cycleNum, int dayNum) {
+  Future<void> completeWorkout(WorkoutEntity workout, int cycleNum, int dayNum) async{
     state = state.copyWith(status: FetchStatus.loading);
 
     final completeWorkout = workout.setForceComplete(true);
 
-    addLogsToWorkoutExercises(workout, cycleNum, dayNum);
+    await addLogsToWorkoutExercises(workout, cycleNum, dayNum);
 
     if (state.status == FetchStatus.success) {
       state = state.copyWith(status: FetchStatus.loading);
@@ -130,7 +130,7 @@ class EditWorkoutsController extends StateNotifier<EditWorkoutsState> {
       return;
     }
 
-    updateWorkout(completeWorkout);
+    await updateWorkout(completeWorkout);
 
     if (state.status == FetchStatus.success) {
       state = state.copyWith(status: FetchStatus.loading);
@@ -138,6 +138,6 @@ class EditWorkoutsController extends StateNotifier<EditWorkoutsState> {
       return;
     }
 
-    addWorkoutToPastCurrentCycle(completeWorkout);
+    await addWorkoutToPastCurrentCycle(completeWorkout);
   }
 }

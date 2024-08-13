@@ -9,7 +9,8 @@ class FetchCyclesState extends Equatable {
     this.pastCycles = const [],
     this.currentCycleStatus = FetchStatus.initial,
     this.pastCyclesStatus = FetchStatus.initial,
-
+    this.fetchWorkoutsStatus = FetchStatus.initial,
+    this.workouts = const {},
   });
 
   final CycleEntity currentCycle;
@@ -17,6 +18,8 @@ class FetchCyclesState extends Equatable {
   final FetchStatus currentCycleStatus;
   final FetchStatus pastCyclesStatus;
   final CycleEntity currentActiveCycle;
+  final FetchStatus fetchWorkoutsStatus;
+  final Map<String, WorkoutEntity> workouts;
 
   FetchCyclesState copyWith({
     CycleEntity? currentCycle,
@@ -24,6 +27,8 @@ class FetchCyclesState extends Equatable {
     FetchStatus? currentCycleStatus,
     FetchStatus? pastCyclesStatus,
     CycleEntity? currentActiveCycle,
+    FetchStatus? fetchWorkoutsStatus,
+    Map<String, WorkoutEntity>? workouts,
   }) {
     return FetchCyclesState(
       currentCycle: currentCycle ?? this.currentCycle,
@@ -31,9 +36,12 @@ class FetchCyclesState extends Equatable {
       currentCycleStatus: currentCycleStatus ?? this.currentCycleStatus,
       pastCyclesStatus: pastCyclesStatus ?? this.pastCyclesStatus,
       currentActiveCycle: currentActiveCycle ?? this.currentActiveCycle,
+      fetchWorkoutsStatus: fetchWorkoutsStatus ?? this.fetchWorkoutsStatus,
+      workouts: workouts ?? this.workouts,
     );
   }
 
   @override
-  List<Object?> get props => [currentCycle, pastCycles, currentCycleStatus, pastCyclesStatus, currentActiveCycle];
+  List<Object?> get props =>
+      [currentCycle, pastCycles, currentCycleStatus, pastCyclesStatus, currentActiveCycle, fetchWorkoutsStatus, workouts];
 }

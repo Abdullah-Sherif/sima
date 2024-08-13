@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,22 +17,20 @@ class HomeListeners extends HookConsumerWidget {
 
     ref.watch(fetchCyclesControllerProvider);
     ref.watch(fetchAllExercisesControllerProvider);
-    ref.watch(fetchWorkoutsControllerProvider);
     ref.watch(dateControllerProvider);
     ref.watch(workoutRepositoryProvider);
     ref.watch(editWorkoutExerciseControllerProvider);
     ref.watch(editWorkoutsControllerProvider);
     ref.watch(editExercisesControllerProvider);
 
-    useEffect((){
-      WidgetsBinding.instance.addPostFrameCallback((_) async{
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         ref.invalidate(workoutRepositoryProvider);
-
         final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
+
         await ref.read(workoutRepositoryProvider).initCycles();
         ref.read(fetchCyclesControllerProvider.notifier).init(currentDate);
         ref.read(fetchAllExercisesControllerProvider.notifier).init();
-        ref.read(fetchWorkoutsControllerProvider.notifier).init();
 
         final workout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
         final isActiveWorkout = ref.read(fetchCyclesControllerProvider.notifier).isActiveWorkout(currentDate);
@@ -41,30 +41,62 @@ class HomeListeners extends HookConsumerWidget {
 
     final currentDate = ref.watch(dateControllerProvider).currentDate;
     final currentCycle = ref.watch(fetchCyclesControllerProvider).currentCycle;
+    final currentFetchStatus = ref.watch(fetchCyclesControllerProvider).currentCycleStatus;
 
     useEffect(() {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final currentTrimmedDate = DateTime(currentDate.year, currentDate.month, currentDate.day);
+      Future<void> checkAndCompletePreviousWorkout(DateTime date) async {
+        final currentTrimmedDate = DateTime(date.year, date.month, date.day);
         final previousDate = currentTrimmedDate.subtract(const Duration(days: 1));
-        final currentCycleDate = DateTime(currentCycle.startDate.year, currentCycle.startDate.month, currentCycle.startDate.day);
+        CycleEntity? cycle = currentCycle;
+        WorkoutEntity? previousWorkout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(previousDate);
 
-        final previousWorkout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(previousDate);
-        final cycleNum = ref.watch(fetchCyclesControllerProvider).currentCycle.key;
-        final dayNum = previousDate.difference(currentCycleDate).inDays;
-        if (previousWorkout != null && !previousWorkout.isCompleted) {
-          ref.read(editWorkoutsControllerProvider.notifier).completeWorkout(previousWorkout, int.parse(cycleNum), dayNum);
+        if (previousWorkout == null) {
+          // If the current date is the start date of the current cycle, return
+          if (currentTrimmedDate.difference(currentCycle.startDate).inDays <= 0) {
+            return;
+          }
+          // Recursively call the function with the previous date
+          checkAndCompletePreviousWorkout(previousDate);
+          // Fetch the cycle for the previous date
+          cycle = ref.read(fetchCyclesControllerProvider.notifier).getCycle(previousDate);
+          if (cycle == null) {
+            return;
+          }
+          // Calculate the workout index and fetch the workout
+          final workoutIndex = previousDate.difference(cycle.startDate).inDays;
+          if (workoutIndex >= 0 && workoutIndex < cycle.workouts.length) {
+            previousWorkout = cycle.workouts.values.elementAt(workoutIndex);
+          } else {
+            return;
+          }
+        }
 
-          if (currentTrimmedDate.difference(currentCycleDate).inDays > currentCycle.workouts.length) {
+        final cycleNum = cycle.key;
+        final dayNum = previousDate.difference(cycle.startDate).inDays + 1;
+
+        if (!previousWorkout.isCompleted) {
+          // Complete the workout
+          await ref.read(editWorkoutsControllerProvider.notifier).completeWorkout(previousWorkout, int.parse(cycleNum), dayNum);
+          // Recursively call the function with the previous date
+          await checkAndCompletePreviousWorkout(previousDate);
+          // If the current date is beyond the last workout, add a new cycle
+          if (currentTrimmedDate.difference(currentCycle.startDate).inDays >= currentCycle.workouts.length) {
             ref.read(fetchCyclesControllerProvider.notifier).addNewCycle();
           }
         }
-      });
+      }
+
+      if (currentFetchStatus == FetchStatus.success && currentCycle.key != '') {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          checkAndCompletePreviousWorkout(currentDate);
+        });
+      }
 
       return null;
-    }, [currentDate]);
+    }, [currentDate, currentFetchStatus]);
 
-    final fetchStatus = ref.watch(fetchCyclesControllerProvider).currentCycleStatus == FetchStatus.success &&
-        ref.watch(fetchWorkoutsControllerProvider).status == FetchStatus.success &&
+    final fetchStatus = currentFetchStatus == FetchStatus.success &&
+        ref.watch(fetchCyclesControllerProvider).fetchWorkoutsStatus == FetchStatus.success &&
         ref.watch(fetchAllExercisesControllerProvider).status == FetchStatus.success;
 
     useEffect(() {

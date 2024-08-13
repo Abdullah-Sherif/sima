@@ -113,7 +113,9 @@ class _WorkoutExercises extends HookConsumerWidget {
       if (editStatus == FetchStatus.failure ||
           editWorkoutsStatus == FetchStatus.failure ||
           editExercisesInWorkoutStatus == FetchStatus.failure) {
-        showSnackbar(context: context, text: context.appTexts.errorOccured);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showSnackbar(context: context, text: context.appTexts.errorOccured);
+        });
       }
       return null;
     }, [editStatus]);

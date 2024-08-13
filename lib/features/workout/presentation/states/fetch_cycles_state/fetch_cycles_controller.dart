@@ -6,7 +6,8 @@ import 'package:sima/features/workout/barrel.dart';
 
 import 'fetch_cycles_state.dart';
 
-final initialCycle = CycleEntity(key: '', workouts: {}, startDate: DateTime.now());
+final initialCycle =
+    CycleEntity(key: '', workouts: {}, startDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
 
 final fetchCyclesControllerProvider = StateNotifierProvider.autoDispose<FetchCyclesController, FetchCyclesState>((ref) {
   return FetchCyclesController(
@@ -24,10 +25,12 @@ class FetchCyclesController extends StateNotifier<FetchCyclesState> {
   final WorkoutRepository _repository;
 
   StreamSubscription<CycleEntity>? _currentCycleSubscription;
+  StreamSubscription<Map<String, WorkoutEntity>>? _workoutsSubscription;
 
-  void init(DateTime currentDate) {
+  void init(DateTime currentDate) async {
     _fetchCurrentCycle();
-    _fetchPastCycles();
+    await _fetchPastCycles();
+    _fetchWorkouts();
     updateAciveCycle(currentDate);
   }
 
@@ -44,7 +47,7 @@ class FetchCyclesController extends StateNotifier<FetchCyclesState> {
     });
   }
 
-  void _fetchPastCycles() async {
+  Future<void> _fetchPastCycles() async {
     state = state.copyWith(pastCyclesStatus: FetchStatus.loading);
 
     final result = await _repository.fetchPastCycles();
@@ -55,37 +58,70 @@ class FetchCyclesController extends StateNotifier<FetchCyclesState> {
     );
   }
 
+  void _fetchWorkouts() {
+    if (_workoutsSubscription != null) {
+      _workoutsSubscription!.cancel();
+    }
+
+    state = state.copyWith(fetchWorkoutsStatus: FetchStatus.loading);
+
+    _workoutsSubscription = _repository.workoutsStream.listen((workouts) {
+      state = state.copyWith(workouts: workouts, fetchWorkoutsStatus: FetchStatus.success);
+    });
+  }
+
   void updateAciveCycle(DateTime currentDate) {
     CycleEntity currentActiveCycle;
     if (state.currentActiveCycle.key == '') {
-      currentActiveCycle = state.currentCycle;
-    } else if (state.currentCycle.startDate.isBefore(currentDate) || state.currentCycle.startDate.isAtSameMomentAs(currentDate)) {
-      final currentCycleLength = state.currentCycle.workouts.length;
-      final diff = currentDate.difference(state.currentActiveCycle.startDate).inDays;
-      if (diff >= currentCycleLength) {
-        currentActiveCycle = state.currentCycle.copyWith(
-          key: (int.parse(state.currentActiveCycle.key) + 1).toString(),
-          startDate: state.currentActiveCycle.startDate.add(Duration(days: currentCycleLength)),
-        );
-      } else if (diff < 0) {
-        currentActiveCycle = state.currentCycle.copyWith(
-          key: (int.parse(state.currentActiveCycle.key) - 1).toString(),
-          startDate: state.currentActiveCycle.startDate.subtract(Duration(days: currentCycleLength)),
-        );
-      } else if (int.parse(state.currentActiveCycle.key) < int.parse(state.currentCycle.key)) {
+      if (state.currentCycle.startDate.isBefore(currentDate) || state.currentCycle.startDate.isAtSameMomentAs(currentDate)) {
         currentActiveCycle = state.currentCycle;
       } else {
-        currentActiveCycle =
-            state.currentCycle.copyWith(key: state.currentActiveCycle.key, startDate: state.currentActiveCycle.startDate);
+        currentActiveCycle = state.pastCycles.lastWhere(
+            (cycle) => cycle.startDate.isBefore(currentDate) || cycle.startDate.isAtSameMomentAs(currentDate), orElse: () {
+          return state.pastCycles.first;
+        });
       }
+    } else if (state.currentCycle.startDate.isBefore(currentDate) || state.currentCycle.startDate.isAtSameMomentAs(currentDate)) {
+      final currentCycleLength = state.currentCycle.workouts.length;
+      final diff = currentDate.difference(state.currentCycle.startDate).inDays;
+      if (currentCycleLength == 0) {
+        currentActiveCycle = state.currentCycle;
+      }
+      else{final multiplier = diff ~/ currentCycleLength;
+      currentActiveCycle = state.currentCycle.copyWith(
+        key: (int.parse(state.currentCycle.key) + multiplier).toString(),
+        startDate: state.currentCycle.startDate.add(Duration(days: currentCycleLength * multiplier)),
+        workouts: multiplier > 0 ? state.workouts : state.currentCycle.workouts,
+      );}
     } else {
       currentActiveCycle = state.pastCycles.lastWhere(
           (cycle) => cycle.startDate.isBefore(currentDate) || cycle.startDate.isAtSameMomentAs(currentDate), orElse: () {
-        return state.currentCycle;
+        return state.pastCycles.first;
       });
     }
 
     state = state.copyWith(currentActiveCycle: currentActiveCycle);
+  }
+
+  CycleEntity? getCycle(DateTime date) {
+    final currentDateOnly = DateTime(date.year, date.month, date.day);
+    final currentCycleDateOnly = DateTime(state.currentActiveCycle.startDate.year, state.currentActiveCycle.startDate.month,
+        state.currentActiveCycle.startDate.day);
+    final diff = currentDateOnly.difference(currentCycleDateOnly).inDays;
+
+    if (diff == 0) {
+      return state.currentActiveCycle;
+    } else if (diff > 0 && diff < state.currentCycle.workouts.length) {
+      return state.currentCycle;
+    } else if (diff < 0) {
+      final pastCycle = state.pastCycles
+          .lastWhere((cycle) => cycle.startDate.isBefore(date) || cycle.startDate.isAtSameMomentAs(date), orElse: () {
+        return CycleEntity(key: '', startDate: DateTime.now());
+      });
+      return pastCycle.key != '' ? pastCycle : null;
+    } else {
+      return null;
+    }
   }
 
   void refreshActiveCycle() {
@@ -105,12 +141,12 @@ class FetchCyclesController extends StateNotifier<FetchCyclesState> {
     }
   }
 
-    int isActiveWorkout(DateTime currentDate) {
+  int isActiveWorkout(DateTime currentDate) {
     final dateNow = DateTime.now();
     final currentDateOnly = DateTime(currentDate.year, currentDate.month, currentDate.day);
     final dateNowOnly = DateTime(dateNow.year, dateNow.month, dateNow.day);
     final diff = currentDateOnly.difference(dateNowOnly).inDays;
-  
+
     if (diff == 0) {
       return 0;
     } else if (diff > 0) {
@@ -123,45 +159,28 @@ class FetchCyclesController extends StateNotifier<FetchCyclesState> {
   void addNewCycle() {
     state = state.copyWith(pastCyclesStatus: FetchStatus.loading, currentCycleStatus: FetchStatus.loading);
 
-    final newCycle = CycleEntity(
-      key: (int.parse(state.currentCycle.key) + 1).toString(),
-      startDate: state.currentCycle.startDate.add(Duration(days: state.currentCycle.workouts.length)),
-    );
-
-    final workouts = state.currentCycle.workouts;
-
-    final resetWorkouts = workouts.map((key, value) {
-      WorkoutEntity newWorkout = value.setForceComplete(false);
-
-      if (newWorkout.exercises != null) {
-        final newExercises = {for (var exercise in value.exercises!) exercise.key: exercise.resetAllSets()};
-
-        newWorkout = newWorkout.setExercises(newExercises);
-      }
-
-      return MapEntry(newWorkout.key, newWorkout);
-    });
-    final newCycleWithWorkouts = newCycle.copyWith(workouts: resetWorkouts);
-
-    _repository.addCycle(newCycleWithWorkouts).then((result) {
+    _repository
+        .addCycle(
+      (int.parse(state.currentCycle.key) + 1).toString(),
+      (state.currentCycle.startDate.add(Duration(days: state.currentCycle.workouts.length))),
+    )
+        .then((result) {
       result.fold(
         (failure) {
           state = state.copyWith(pastCyclesStatus: FetchStatus.failure, currentCycleStatus: FetchStatus.failure);
         },
         (success) {
           state = state.copyWith(pastCyclesStatus: FetchStatus.success, currentCycleStatus: FetchStatus.success);
+          _fetchPastCycles();
         },
       );
     });
-
-    if(state.pastCyclesStatus == FetchStatus.success){
-      _fetchPastCycles();
-    }
   }
 
   @override
   void dispose() {
     _currentCycleSubscription?.cancel();
+    _workoutsSubscription?.cancel();
     super.dispose();
   }
 }
