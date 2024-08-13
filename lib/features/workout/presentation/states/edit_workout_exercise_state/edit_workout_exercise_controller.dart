@@ -86,59 +86,50 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
     }
   }
 
-  void updateSetReps(SetEntity set, String workoutKey, int reps) {
-    final exercise = state.activeExercise;
-    if (exercise != null) {
-      final updatedSets = exercise.currentSets.map((key, s) {
-        if (key == set.key) {
-          return MapEntry(key, set.setReps(reps));
-        }
-        return MapEntry(key, s);
-      });
+  void updateSetReps(SetEntity set, String workoutKey, int reps, ExerciseEntity exercise) {
+    final updatedSets = exercise.currentSets.map((key, s) {
+      if (key == set.key) {
+        return MapEntry(key, set.setReps(reps));
+      }
+      return MapEntry(key, s);
+    });
 
-      final updatedExercise = exercise.copyWith(
-        currentSets: updatedSets,
-      );
+    final updatedExercise = exercise.copyWith(
+      currentSets: updatedSets,
+    );
 
-      updateExerciseInWorkout(updatedExercise, workoutKey);
-    }
+    updateExerciseInWorkout(updatedExercise, workoutKey);
   }
 
-  void updateSetWeight(SetEntity set, String workoutKey, int weight) {
-    final exercise = state.activeExercise;
-    if (exercise != null) {
-      final updatedSets = exercise.currentSets.map((key, s) {
-        if (key == set.key) {
-          return MapEntry(key, set.setWeight(weight));
-        }
-        return MapEntry(key, s);
-      });
+  void updateSetWeight(SetEntity set, String workoutKey, int weight, ExerciseEntity exercise) {
+    final updatedSets = exercise.currentSets.map((key, s) {
+      if (key == set.key) {
+        return MapEntry(key, set.setWeight(weight));
+      }
+      return MapEntry(key, s);
+    });
 
-      final updatedExercise = exercise.copyWith(
-        currentSets: updatedSets,
-        max: exercise.max < weight ? weight : exercise.max,
-      );
+    final updatedExercise = exercise.copyWith(
+      currentSets: updatedSets,
+      max: exercise.max < weight ? weight : exercise.max,
+    );
 
-      updateExerciseInWorkout(updatedExercise, workoutKey);
-    }
+    updateExerciseInWorkout(updatedExercise, workoutKey);
   }
 
-  void updateSetDuration(SetEntity set, String workoutKey, int duration) {
-    final exercise = state.activeExercise;
-    if (exercise != null) {
-      final updatedSets = exercise.currentSets.map((key, s) {
-        if (key == set.key) {
-          return MapEntry(key, set.setDuration(duration));
-        }
-        return MapEntry(key, s);
-      });
+  void updateSetDuration(SetEntity set, String workoutKey, int duration, ExerciseEntity exercise) {
+    final updatedSets = exercise.currentSets.map((key, s) {
+      if (key == set.key) {
+        return MapEntry(key, set.setDuration(duration));
+      }
+      return MapEntry(key, s);
+    });
 
-      final updatedExercise = exercise.copyWith(
-        currentSets: updatedSets,
-      );
+    final updatedExercise = exercise.copyWith(
+      currentSets: updatedSets,
+    );
 
-      updateExerciseInWorkout(updatedExercise, workoutKey);
-    }
+    updateExerciseInWorkout(updatedExercise, workoutKey);
   }
 
   void completeCurrentAndExpandNext(WorkoutEntity workout, String currentExerciseKey) {

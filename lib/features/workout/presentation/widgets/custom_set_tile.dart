@@ -9,8 +9,10 @@ class CustomSetTile extends HookConsumerWidget {
     super.key,
     required this.set,
     required this.setNum,
+    required this.exercise,
   });
 
+  final ExerciseEntity exercise;
   final SetEntity set;
   final int setNum;
 
@@ -59,6 +61,7 @@ class CustomSetTile extends HookConsumerWidget {
                                 set,
                                 workout!.key,
                                 value != '' ? int.parse(value) : 0,
+                                exercise,
                               );
                         });
                       }
@@ -73,6 +76,7 @@ class CustomSetTile extends HookConsumerWidget {
                                 set,
                                 workout!.key,
                                 value != '' ? int.parse(value) : 0,
+                                exercise,
                               );
                         });
                       }
@@ -93,6 +97,7 @@ class CustomSetTile extends HookConsumerWidget {
                                 set,
                                 workout!.key,
                                 selectedTimeInSeconds,
+                                exercise,
                               );
                         }
                       },

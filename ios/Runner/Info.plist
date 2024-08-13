@@ -7,7 +7,7 @@
 		<key>FlutterDeepLinkingEnabled</key>
 		<true/>
 		<key>CFBundleDisplayName</key>
-		<string>Sima</string>
+		<string>SIMA</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-		<string>sima</string>
+		<string>SIMA</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>

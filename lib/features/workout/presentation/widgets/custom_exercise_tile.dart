@@ -138,6 +138,7 @@ class CustomExerciseTile extends HookWidget {
                                 return CustomSetTile(
                                   set: set,
                                   setNum: index + 1,
+                                  exercise: exercise,
                                 );
                               },
                               itemCount: exercise.currentSets.length,

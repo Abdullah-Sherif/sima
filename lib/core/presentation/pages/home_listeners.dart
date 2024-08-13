@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sima/core/barrel.dart';
 import 'package:sima/features/barrel.dart';
 
 class HomeListeners extends HookConsumerWidget {
@@ -10,6 +11,8 @@ class HomeListeners extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = useState(true);
+
     ref.watch(fetchCyclesControllerProvider);
     ref.watch(fetchAllExercisesControllerProvider);
     ref.watch(fetchWorkoutsControllerProvider);
@@ -60,6 +63,17 @@ class HomeListeners extends HookConsumerWidget {
       return null;
     }, [currentDate]);
 
-    return child;
+    final fetchStatus = ref.watch(fetchCyclesControllerProvider).currentCycleStatus == FetchStatus.success &&
+        ref.watch(fetchWorkoutsControllerProvider).status == FetchStatus.success &&
+        ref.watch(fetchAllExercisesControllerProvider).status == FetchStatus.success;
+
+    useEffect(() {
+      if (fetchStatus && isLoading.value) {
+        isLoading.value = false;
+      }
+      return null;
+    }, [fetchStatus]);
+
+    return isLoading.value ? const SafeArea(child: Scaffold(body: Center(child: CircularProgressIndicator()))) : child;
   }
 }
