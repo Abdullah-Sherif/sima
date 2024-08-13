@@ -22,14 +22,14 @@ class HomeListeners extends HookConsumerWidget {
     ref.watch(editWorkoutsControllerProvider);
     ref.watch(editExercisesControllerProvider);
 
-    useEffect(() {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    useEffect((){
+      WidgetsBinding.instance.addPostFrameCallback((_) async{
         ref.invalidate(workoutRepositoryProvider);
 
         final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
+        await ref.read(workoutRepositoryProvider).initCycles();
         ref.read(fetchCyclesControllerProvider.notifier).init(currentDate);
         ref.read(fetchAllExercisesControllerProvider.notifier).init();
-        ref.read(workoutRepositoryProvider).initCycles();
         ref.read(fetchWorkoutsControllerProvider.notifier).init();
 
         final workout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);

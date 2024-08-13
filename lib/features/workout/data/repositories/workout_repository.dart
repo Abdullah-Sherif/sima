@@ -40,7 +40,7 @@ class WorkoutRepository {
   Stream<List<ExerciseEntity>> get allExercisesStream => _allExercisesController.stream;
   Stream<Map<String, WorkoutEntity>> get workoutsStream => _workoutsSubscription.stream;
 
-  void initCycles() async {
+  Future<void> initCycles() async {
     final List<Map<String, dynamic>> rawCycles = await db.query('past_cycles', orderBy: 'id ASC');
     if (rawCycles.isEmpty) {
       final cycle = CycleEntity(key: '1', startDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
@@ -51,11 +51,16 @@ class WorkoutRepository {
 
   Future<Either<Failure, List<CycleEntity>>> fetchPastCycles() async {
     try {
-      final List<Map<String, dynamic>> rawCycles = await db.query('past_cycles', orderBy: 'id ASC')
-        ..removeLast();
+      final List<Map<String, dynamic>> rawCycles = await db.query('past_cycles', orderBy: 'id ASC');
 
-      final List<CycleEntity> pastCycles = List.generate(rawCycles.length, (i) {
-        final Map<String, dynamic> rawCycle = rawCycles[i];
+      if (rawCycles.isEmpty || rawCycles.length == 1) {
+        return const Right([]);
+      }
+
+      List<Map<String, dynamic>> updatedCycles = rawCycles..removeLast();
+
+      final List<CycleEntity> pastCycles = List.generate(updatedCycles.length, (i) {
+        final Map<String, dynamic> rawCycle = updatedCycles[i];
         return CycleEntity.fromJson(rawCycle);
       });
 
