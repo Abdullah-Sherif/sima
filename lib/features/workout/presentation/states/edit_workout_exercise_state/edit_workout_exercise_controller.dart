@@ -30,12 +30,12 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
     );
   }
 
-  void updateExerciseInWorkout(ExerciseEntity exercise, String workoutKey) {
+  Future<void> updateExerciseInWorkout(ExerciseEntity exercise, String workoutKey)async {
     state = state.copyWith(
       status: FetchStatus.loading,
     );
 
-    _workoutRepository.updateExerciseInWorkout(workoutKey, exercise.key, exercise).then((result) {
+    await _workoutRepository.updateExerciseInWorkout(workoutKey, exercise.key, exercise).then((result) {
       result.fold(
         (failure) {
           state = state.copyWith(
@@ -51,14 +51,14 @@ class EditWorkoutExerciseController extends StateNotifier<EditWorkoutExerciseSta
     });
   }
 
-  void forceCompleteExercise(bool? value, WorkoutEntity workout) {
+  Future<void> forceCompleteExercise(bool? value, WorkoutEntity workout)async {
     final exercise = state.activeExercise;
     if (exercise != null && value != null) {
       final updatedExercise = exercise.copyWith(
         forceCompleted: value,
       );
 
-      updateExerciseInWorkout(updatedExercise, workout.key);
+      await updateExerciseInWorkout(updatedExercise, workout.key);
       if (updatedExercise.isCompleted) {
         completeCurrentAndExpandNext(workout, exercise.key);
       }

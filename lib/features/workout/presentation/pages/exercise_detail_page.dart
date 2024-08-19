@@ -84,124 +84,129 @@ class _InfoTab extends HookConsumerWidget {
         horizontal: 30,
         vertical: 40,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${context.appTexts.desc}:',
-            style: context.textTheme.titleLarge,
-          ),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Text(
-              exercise.description,
-              style: context.textTheme.titleMedium,
-            ),
-          ),
-          const SizedBox(height: 40),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-            child: Row(
-              children: [
-                exercise.type == ExerciseType.reps
-                    ? Text(
-                        '${context.appTexts.maxWeight}:',
-                        style: context.textTheme.titleLarge,
-                      )
-                    : Text(
-                        '${context.appTexts.maxDur}:',
-                        style: context.textTheme.titleLarge,
-                      ),
-                const Spacer(),
-                exercise.type == ExerciseType.reps
-                    ? Text(
-                        '${exercise.max} kg',
-                        style: context.textTheme.titleMedium,
-                      )
-                    : Text(
-                        context.convertSecondsToTime(exercise.max),
-                        style: context.textTheme.titleMedium,
-                      ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 40),
-          Text('${context.appTexts.video}:', style: context.textTheme.titleLarge),
-          const SizedBox(height: 20),
-          if (exercise.videoPath != null)
-            Center(
-              child: Container(
-                constraints: BoxConstraints(maxHeight: context.percentOfHeight(0.3)),
-                child: PersonalizedVideoPlayer(
-                  videoPath: exercise.videoPath!,
+      child: SingleChildScrollView(
+        child: SizedBox(
+          height: context.percentOfSafeHeight(0.7),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${context.appTexts.desc}:',
+                style: context.textTheme.titleLarge,
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(40, 0, 20, 0),
+                child: Text(
+                  exercise.description,
+                  style: context.textTheme.titleMedium,
                 ),
               ),
-            ),
-          const SizedBox(height: 20),
-          Center(
-            child: CustomTextButton(
-              width: context.percentOfWidth(0.3),
-              height: 40,
-              onPressed: exercise.videoPath != null
-                  ? () {
-                      ref.read(editExercisesControllerProvider.notifier).updateExercise(exercise.copyWith(videoPath: null));
-                    }
-                  : () async {
-                      final picker = ImagePicker();
-                      final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+              const SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                child: Row(
+                  children: [
+                    exercise.type == ExerciseType.reps
+                        ? Text(
+                            '${context.appTexts.maxWeight}:',
+                            style: context.textTheme.titleLarge,
+                          )
+                        : Text(
+                            '${context.appTexts.maxDur}:',
+                            style: context.textTheme.titleLarge,
+                          ),
+                    const Spacer(),
+                    exercise.type == ExerciseType.reps
+                        ? Text(
+                            '${exercise.max} kg',
+                            style: context.textTheme.titleMedium,
+                          )
+                        : Text(
+                            context.convertSecondsToTime(exercise.max),
+                            style: context.textTheme.titleMedium,
+                          ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
+              Text('${context.appTexts.video}:', style: context.textTheme.titleLarge),
+              const SizedBox(height: 20),
+              if (exercise.videoPath != null)
+                Center(
+                  child: Container(
+                    constraints: BoxConstraints(maxHeight: context.percentOfHeight(0.3)),
+                    child: PersonalizedVideoPlayer(
+                      videoPath: exercise.videoPath!,
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 20),
+              Center(
+                child: CustomTextButton(
+                  width: context.percentOfWidth(0.3),
+                  height: 40,
+                  onPressed: exercise.videoPath != null
+                      ? () {
+                          ref.read(editExercisesControllerProvider.notifier).updateExercise(exercise.copyWith(videoPath: null));
+                        }
+                      : () async {
+                          final picker = ImagePicker();
+                          final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
 
-                      if (pickedFile != null) {
-                        ref
-                            .read(editExercisesControllerProvider.notifier)
-                            .updateExercise(exercise.copyWith(videoPath: pickedFile.path));
-                      }
-                    },
-              text: exercise.videoPath != null ? context.appTexts.deleteVideo : context.appTexts.addVideo,
-            ),
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              CustomTextButton(
-                width: context.percentOfWidth(0.4),
-                height: 50,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return CustomCreateExerciseDialog(
-                        initialExercise: exercise,
-                      );
-                    },
-                  );
-                },
-                text: context.appTexts.edit,
+                          if (pickedFile != null) {
+                            ref
+                                .read(editExercisesControllerProvider.notifier)
+                                .updateExercise(exercise.copyWith(videoPath: pickedFile.path));
+                          }
+                        },
+                  text: exercise.videoPath != null ? context.appTexts.deleteVideo : context.appTexts.addVideo,
+                ),
               ),
               const Spacer(),
-              CustomTextButton(
-                width: context.percentOfWidth(0.4),
-                height: 50,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return WarningDialog(
-                        action: context.appTexts.delete,
-                        title: exercise.name,
-                        onConfirm: () {
-                          Navigator.of(context).pop();
-                          ref.read(editExercisesControllerProvider.notifier).deleteExercise(exercise.key);
+              Row(
+                children: [
+                  CustomTextButton(
+                    width: context.percentOfWidth(0.4),
+                    height: 50,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomCreateExerciseDialog(
+                            initialExercise: exercise,
+                          );
                         },
                       );
                     },
-                  );
-                },
-                text: context.appTexts.delete,
-              ),
+                    text: context.appTexts.edit,
+                  ),
+                  const Spacer(),
+                  CustomTextButton(
+                    width: context.percentOfWidth(0.4),
+                    height: 50,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return WarningDialog(
+                            action: context.appTexts.delete,
+                            title: exercise.name,
+                            onConfirm: () {
+                              Navigator.of(context).pop();
+                              ref.read(editExercisesControllerProvider.notifier).deleteExercise(exercise.key);
+                            },
+                          );
+                        },
+                      );
+                    },
+                    text: context.appTexts.delete,
+                  ),
+                ],
+              )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }

@@ -39,6 +39,10 @@ class PersonalizedVideoPlayer extends HookWidget {
         ? CustomVideoPlayer(
             customVideoPlayerController: customVideoPlayerController.value!,
           )
-        : const CircularProgressIndicator();
+        : const SizedBox(
+            width: 10,
+            height: 50,
+            child: Center(child: CircularProgressIndicator()),
+          );
   }
 }

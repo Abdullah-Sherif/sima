@@ -132,7 +132,7 @@ class CustomSetTile extends HookConsumerWidget {
                           final dayNum = DateTime(currentDate.year, currentDate.month, currentDate.day)
                               .difference(DateTime(currentActiveCycle.startDate.year, currentActiveCycle.startDate.month,
                                   currentActiveCycle.startDate.day))
-                              .inDays;
+                              .inDays +1;
                           showDialog(
                             context: context,
                             builder: (context) {

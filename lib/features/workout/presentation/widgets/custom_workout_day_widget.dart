@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -99,10 +101,13 @@ class CustomWorkoutDayWidget extends HookConsumerWidget {
                   ),
                   Align(
                     alignment: Alignment.center,
-                    child: CustomExpandorButton(
-                      isExpanded: isExpanded,
-                      iconSize: 20,
-                      onExpand: onExpand,
+                    child: SizedBox(
+                      width: 40,
+                      child: CustomExpandorButton(
+                        isExpanded: isExpanded,
+                        iconSize: 20,
+                        onExpand: onExpand,
+                      ),
                     ),
                   ),
                 ],
@@ -239,29 +244,32 @@ class _WorkoutDayAndName extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      width: isExpanded ? context.percentOfWidth(0.4) : context.percentOfWidth(0.7),
+      width: isExpanded ? context.percentOfWidth(0.45) : context.percentOfWidth(0.7),
       child: TweenAnimationBuilder<double>(
         tween: Tween<double>(
-          begin: 30,
-          end: isExpanded ? 25 : 30,
+          begin: 25,
+          end: isExpanded ? 20 : 25,
         ),
         duration: const Duration(milliseconds: 300),
         builder: (context, fontSize, child) {
           return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
                 '${context.appTexts.day} $dayNum',
                 style: context.textTheme.titleLarge?.copyWith(fontSize: fontSize),
               ),
               Text(
-                '|',
+                '  |  ',
                 style: context.textTheme.titleLarge?.copyWith(fontSize: fontSize),
               ),
-              Text(
-                workout.name,
-                style: context.textTheme.titleLarge?.copyWith(fontSize: fontSize),
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  workout.name,
+                  style: context.textTheme.titleLarge?.copyWith(fontSize: fontSize),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
             ],
           );

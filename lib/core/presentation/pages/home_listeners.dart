@@ -79,10 +79,10 @@ class HomeListeners extends HookConsumerWidget {
           await ref.read(editWorkoutsControllerProvider.notifier).completeWorkout(previousWorkout, int.parse(cycleNum), dayNum);
           // Recursively call the function with the previous date
           await checkAndCompletePreviousWorkout(previousDate);
-          // If the current date is beyond the last workout, add a new cycle
-          if (currentTrimmedDate.difference(currentCycle.startDate).inDays >= currentCycle.workouts.length) {
-            ref.read(fetchCyclesControllerProvider.notifier).addNewCycle();
-          }
+        }
+        // If the current date is beyond the last workout, add a new cycle
+        if (currentTrimmedDate.difference(currentCycle.startDate).inDays >= currentCycle.workouts.length) {
+          ref.read(fetchCyclesControllerProvider.notifier).addNewCycle();
         }
       }
 

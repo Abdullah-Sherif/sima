@@ -14,12 +14,11 @@ class WorkoutDayNavBar extends ConsumerWidget {
     final currentDate = ref.watch(dateControllerProvider).dateWithOffset;
     int dayNum = currentDate.difference(cycle.startDate).inDays + 1;
 
-    if(dayNum > cycle.workouts.length) {
+    if (dayNum > cycle.workouts.length) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(fetchCyclesControllerProvider.notifier).updateAciveCycle(currentDate);
       });
     }
-    
 
     return cycle.workouts.isNotEmpty
         ? SizedBox(

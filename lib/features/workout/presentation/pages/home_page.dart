@@ -17,13 +17,11 @@ class HomePage extends ConsumerWidget {
     final workout = ref.read(fetchCyclesControllerProvider.notifier).getWorkout(currentDate);
 
     final isActiveWorkout = ref.read(fetchCyclesControllerProvider.notifier).isActiveWorkout(currentDate);
-    final workoutIsCompleted = workout?.exercisesIsCompleted;
+    final workoutIsCompleted = workout != null && (workout.exercisesIsCompleted || workout.isRestDay);
     ref.watch(fetchCyclesControllerProvider).currentCycle;
     late final Color borderColor;
 
-    if (workoutIsCompleted == null) {
-      borderColor = context.theme.colorScheme.primary;
-    } else if (isActiveWorkout == 0) {
+    if (isActiveWorkout == 0) {
       borderColor = workoutIsCompleted ? CustomColors.green : CustomColors.black;
     } else if (isActiveWorkout == 1) {
       borderColor = context.theme.colorScheme.primary;
@@ -61,7 +59,7 @@ class _WorkoutName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       workout?.name ?? 'Empty',
-      style: context.textTheme.titleLarge?.copyWith(fontSize: 40),
+      style: context.textTheme.titleLarge?.copyWith(fontSize: 35),
     );
   }
 }
@@ -101,9 +99,10 @@ class _WorkoutExercises extends HookConsumerWidget {
     final isActiveWorkout = ref.watch(fetchCyclesControllerProvider.notifier).isActiveWorkout(currentDate);
     final cycleNum = currentActiveCycle.key;
     final dayNum = DateTime(currentDate.year, currentDate.month, currentDate.day)
-        .difference(
-            DateTime(currentActiveCycle.startDate.year, currentActiveCycle.startDate.month, currentActiveCycle.startDate.day))
-        .inDays;
+            .difference(
+                DateTime(currentActiveCycle.startDate.year, currentActiveCycle.startDate.month, currentActiveCycle.startDate.day))
+            .inDays +
+        1;
 
     final editStatus = ref.watch(editWorkoutExerciseControllerProvider).status;
     final editWorkoutsStatus = ref.watch(editWorkoutsControllerProvider).status;
@@ -189,11 +188,14 @@ class _WorkoutExercises extends HookConsumerWidget {
                                 action: context.appTexts.complete.toLowerCase(),
                                 title: context.appTexts.workout.toLowerCase(),
                                 additionalWarning: context.appTexts.actionIrreversible,
-                                onConfirm: () {
-                                  ref.read(editWorkoutExerciseControllerProvider.notifier).forceCompleteExercise(true, workout);
-                                  ref
-                                      .read(editWorkoutsControllerProvider.notifier)
-                                      .completeWorkout(workout, int.parse(cycleNum), dayNum);
+                                onConfirm: () async {
+                                  await ref
+                                      .read(editWorkoutExerciseControllerProvider.notifier)
+                                      .forceCompleteExercise(true, workout);
+                                  ref.read(editWorkoutsControllerProvider.notifier).completeWorkout(
+                                      workout.setForceCompleteExercise(exercise.key, value ?? exercise.isCompleted),
+                                      int.parse(cycleNum),
+                                      dayNum);
                                 },
                               ),
                             );

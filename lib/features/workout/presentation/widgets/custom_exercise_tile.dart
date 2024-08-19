@@ -90,11 +90,22 @@ class CustomExerciseTile extends HookWidget {
                 children: [
                   SizedBox(
                     width: width * 0.4,
-                    child: Text(
-                      exercise.name,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: context.textTheme.titleMedium?.copyWith(fontSize: 23),
+                    child: Builder(
+                      builder: (BuildContext context) {
+                        return GestureDetector(
+                          onTap: () {
+                            final RenderBox renderBox = context.findRenderObject() as RenderBox;
+                            final Offset offset = renderBox.localToGlobal(Offset.zero);
+                            _showFullNameDialog(context, offset, exercise.name);
+                          },
+                          child: Text(
+                            exercise.name,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: context.textTheme.titleMedium,
+                          ),
+                        );
+                      },
                     ),
                   ),
                   const Spacer(),
@@ -155,6 +166,38 @@ class CustomExerciseTile extends HookWidget {
       ),
     );
   }
+}
+
+void _showFullNameDialog(BuildContext context, Offset offset, String exerciseName) {
+  showDialog(
+    context: context,
+    barrierColor: Colors.transparent,
+    builder: (BuildContext context) {
+      return Stack(
+        children: [
+          Positioned(
+            left: offset.dx,
+            top: offset.dy,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey[200],
+                  border: Border.all(color: Colors.black, width: 1),
+                ),
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  exerciseName,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class _SetTitles extends StatelessWidget {
