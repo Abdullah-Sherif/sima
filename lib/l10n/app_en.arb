@@ -83,5 +83,6 @@
   "passChanged": "Password changed successfully",
   "currentPass": "Current Password",
   "newPass": "New Password",
-  "changePasswordPageMessage": "Please enter your current and new password below"
+  "changePasswordPageMessage": "Please enter your current and new password below",
+  "search": "Search"
 }

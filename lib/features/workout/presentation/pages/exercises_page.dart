@@ -22,6 +22,10 @@ class ExercisesPage extends HookConsumerWidget {
     final editExercisesStatus = ref.watch(editExercisesControllerProvider).status;
     final editWorkoutsStatus = ref.watch(editWorkoutsControllerProvider).status;
 
+    final isSearchVisible = useState(false);
+    final searchController = useTextEditingController();
+    final filteredExercises = useState<List<ExerciseEntity>>(exercises);
+
     useEffect(() {
       if (editExercisesStatus == FetchStatus.failure || editWorkoutsStatus == FetchStatus.failure) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -31,82 +35,126 @@ class ExercisesPage extends HookConsumerWidget {
       return null;
     }, [editExercisesStatus]);
 
-    return Scaffold(
-      floatingActionButton: SizedBox(
-        width: 70,
-        height: 70,
-        child: FloatingActionButton(
-          backgroundColor: context.theme.colorScheme.secondary,
-          onPressed: () {
-            if (isEditing) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return WarningDialog(
-                      action: context.appTexts.add.toLowerCase(),
-                      title: context.appTexts.exercises.toLowerCase(),
-                      onConfirm: () {
-                        ref
-                            .read(editWorkoutsControllerProvider.notifier)
-                            .setExercisesToWorkout(workoutKey!, selectedExercises!.value);
-                        Navigator.of(context).pop();
-                      });
-                },
-              );
-            } else {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return const CustomCreateExerciseDialog();
-                },
-              );
-            }
-          },
-          child: Icon(
-            isEditing ? Icons.check : Icons.add,
-            color: context.theme.colorScheme.background,
+    useEffect(() {
+      final searchText = searchController.text.toLowerCase();
+      filteredExercises.value = exercises.where((exercise) => exercise.name.toLowerCase().contains(searchText)).toList();
+
+      return null;
+    }, [exercises]);
+
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        floatingActionButton: SizedBox(
+          width: 70,
+          height: 70,
+          child: FloatingActionButton(
+            backgroundColor: context.theme.colorScheme.secondary,
+            onPressed: () {
+              if (isEditing) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return WarningDialog(
+                        action: context.appTexts.add.toLowerCase(),
+                        title: context.appTexts.exercises.toLowerCase(),
+                        onConfirm: () {
+                          ref
+                              .read(editWorkoutsControllerProvider.notifier)
+                              .setExercisesToWorkout(workoutKey!, selectedExercises!.value);
+                          Navigator.of(context).pop();
+                        });
+                  },
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const CustomCreateExerciseDialog();
+                  },
+                );
+              }
+            },
+            child: Icon(
+              isEditing ? Icons.check : Icons.add,
+              color: context.theme.colorScheme.background,
+            ),
           ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      appBar: AppBar(
-        centerTitle: true,
-        leading: BackButton(
-          style: ButtonStyle(iconSize: MaterialStateProperty.all(30)),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        appBar: AppBar(
+          centerTitle: true,
+          leading: BackButton(
+            style: ButtonStyle(iconSize: MaterialStateProperty.all(30)),
+          ),
+          title: Text(
+            context.appTexts.exercises,
+            style: context.textTheme.titleLarge?.copyWith(fontSize: 35),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                isSearchVisible.value = !isSearchVisible.value;
+                if (!isSearchVisible.value) {
+                  searchController.clear();
+                  filteredExercises.value = exercises;
+                }
+              },
+              icon: const Icon(Icons.search),
+            ),
+          ],
         ),
-        title: Text(
-          context.appTexts.exercises,
-          style: context.textTheme.titleLarge?.copyWith(fontSize: 35),
-        ),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: editExercisesStatus != FetchStatus.loading
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      final exercise = exercises.elementAt(index);
-
-                      return Column(
-                        children: [
-                          if (index != 0) const SizedBox(height: 10),
-                          _CustomExerciseTile(
-                            exercise: exercise,
-                            isEditing: isEditing,
-                            selectedExercises: selectedExercises,
-                            exerciseIndex: index,
-                          ),
-                        ],
-                      );
+        body: Column(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: isSearchVisible.value ? 60.0 : 0.0,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CustomTextInput(
+                    controller: searchController,
+                    hintText: context.appTexts.search,
+                    onChanged: (p0) {
+                      filteredExercises.value = exercises.where((exercise) => exercise.name.toLowerCase().contains(p0)).toList();
                     },
-                    itemCount: exercises.length,
                   ),
-                )
-              : const CircularProgressIndicator(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Center(
+              child: editExercisesStatus != FetchStatus.loading
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 20,
+                      ),
+                      child: SizedBox(
+                        height: context.percentOfSafeHeight(0.8),
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            final exercise = filteredExercises.value.elementAt(index);
+
+                            return Column(
+                              children: [
+                                if (index != 0) const SizedBox(height: 10),
+                                _CustomExerciseTile(
+                                  exercise: exercise,
+                                  isEditing: isEditing,
+                                  selectedExercises: selectedExercises,
+                                  exerciseIndex: index,
+                                ),
+                              ],
+                            );
+                          },
+                          itemCount: filteredExercises.value.length,
+                        ),
+                      ),
+                    )
+                  : const CircularProgressIndicator(),
+            ),
+          ],
         ),
       ),
     );

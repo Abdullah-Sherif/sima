@@ -130,8 +130,13 @@ class _InfoTab extends HookConsumerWidget {
           Text('${context.appTexts.video}:', style: context.textTheme.titleLarge),
           const SizedBox(height: 20),
           if (exercise.videoPath != null)
-            PersonalizedVideoPlayer(
-              videoPath: exercise.videoPath!,
+            Center(
+              child: Container(
+                constraints: BoxConstraints(maxHeight: context.percentOfHeight(0.3)),
+                child: PersonalizedVideoPlayer(
+                  videoPath: exercise.videoPath!,
+                ),
+              ),
             ),
           const SizedBox(height: 20),
           Center(
