@@ -24,7 +24,9 @@ class ExercisesPage extends HookConsumerWidget {
 
     useEffect(() {
       if (editExercisesStatus == FetchStatus.failure || editWorkoutsStatus == FetchStatus.failure) {
-        showSnackbar(context: context, text: context.appTexts.errorOccured);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showSnackbar(context: context, text: context.appTexts.errorOccured);
+        });
       }
       return null;
     }, [editExercisesStatus]);

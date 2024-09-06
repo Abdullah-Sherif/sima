@@ -167,7 +167,8 @@ class WorkoutRepository {
               final rawExercise = await txn.query('exercises', where: 'id = ?', whereArgs: [int.parse(exerciseKey)]);
               final exerciseEntity = ExerciseEntity.fromJson(rawExercise.first);
               final updatedExercise = exerciseEntity.resetAllSets();
-              await txn.update('exercises', updatedExercise.toJson()..remove('force_complete'), where: 'id = ?', whereArgs: [int.parse(exerciseKey)]);
+              final exerciseData = updatedExercise.toJson()..remove('force_complete');
+              await txn.update('exercises', exerciseData, where: 'id = ?', whereArgs: [int.parse(exerciseKey)]);
 
               await txn.update(
                 'exercises_in_workout',
@@ -235,7 +236,11 @@ class WorkoutRepository {
 
   Future<Either<Failure, Success>> updateExerciseInWorkout(String workoutId, String exerciseId, ExerciseEntity newWorkoutExercise,
       {Transaction? txn}) async {
-    final Map<String, dynamic> newJson = newWorkoutExercise.toJson();
+    final exercise = await db
+        .query('exercises', where: 'id = ?', whereArgs: [exerciseId]).then((value) => ExerciseEntity.fromJson(value.first));
+    final logs = exercise.logs;
+
+    final Map<String, dynamic> newJson = newWorkoutExercise.copyWith(logs: logs).toJson();
 
     final forceComplete = newJson['force_complete'];
     final exerciseData = Map<String, dynamic>.from(newJson)..remove('force_complete');
@@ -267,6 +272,25 @@ class WorkoutRepository {
       return const Right(Success());
     } else {
       return const Left(Failure('Failed to update exercise'));
+    }
+  }
+
+  Future<Either<Failure, Success>> addLogsAndMaxToExercise(String exerciseId, ExerciseEntity newExercise) async {
+    try {
+      final rawExercise = await db.query('exercises', where: 'id = ?', whereArgs: [exerciseId]);
+      final exercise = ExerciseEntity.fromJson(rawExercise.first);
+      final updatedExercise = exercise.copyWith(
+        max: newExercise.max,
+        logs: [...exercise.logs, ...newExercise.logs],
+      );
+      final exerciseData = updatedExercise.toJson()..remove('force_complete');
+
+      await db.update('exercises', exerciseData, where: 'id = ?', whereArgs: [exerciseId]);
+
+      _fetchAllExercises();
+      return const Right(Success());
+    } catch (e) {
+      return Left(Failure(e.toString()));
     }
   }
 

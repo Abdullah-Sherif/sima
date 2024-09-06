@@ -106,7 +106,7 @@ class EditWorkoutsController extends StateNotifier<EditWorkoutsState> {
 
           newExercises[exercise.key] = newExercise;
 
-         await _workoutRepository.updateExerciseInWorkout(workout.key, exercise.key, newExercise).then((result) {
+         await _workoutRepository.addLogsAndMaxToExercise(exercise.key, newExercise).then((result) {
             result.fold(
               (failure) => state = state.copyWith(status: FetchStatus.failure),
               (success) => state = state.copyWith(status: FetchStatus.success),
